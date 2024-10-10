@@ -1,10 +1,10 @@
-package org.bilanzius.middleware;
+package org.bilanzius.commandController;
 
 import org.bilanzius.services.commands.HelpCommandService;
 
-public class Middleware {
+public class CommandController {
 
-    public Middleware() {}
+    public CommandController() {}
 
     public String handleInput(String input) {
 
