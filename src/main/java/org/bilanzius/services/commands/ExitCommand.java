@@ -1,8 +1,8 @@
-package org.bilanzius.services.commands.exitCommand;
+package org.bilanzius.services.commands;
 
-import org.bilanzius.services.CommandService;
+import org.bilanzius.services.Command;
 
-public class ExitCommandService implements CommandService {
+public class ExitCommand implements Command {
 
     @Override
     public String execute(String[] arguments) {

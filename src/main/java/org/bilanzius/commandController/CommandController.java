@@ -1,24 +1,24 @@
 package org.bilanzius.commandController;
 
-import org.bilanzius.services.CommandService;
-import org.bilanzius.services.commands.bilanziusCommand.BilanziusCommandService;
-import org.bilanzius.services.commands.helpCommand.HelpCommandService;
-import org.bilanzius.services.commands.exitCommand.ExitCommandService;
+import org.bilanzius.services.Command;
+import org.bilanzius.services.commands.BilanziusCommand;
+import org.bilanzius.services.commands.HelpCommand;
+import org.bilanzius.services.commands.ExitCommand;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandController {
 
-    private final Map<Commands, CommandService> commandMap;
+    private final Map<Commands, Command> commandMap;
 
     public CommandController() {
 
         commandMap = new HashMap<>();
 
-        commandMap.put(Commands.EXIT, new ExitCommandService());
-        commandMap.put(Commands.HELP, new HelpCommandService());
-        commandMap.put(Commands.BILANZIUS, new BilanziusCommandService());
+        commandMap.put(Commands.EXIT, new ExitCommand());
+        commandMap.put(Commands.HELP, new HelpCommand());
+        commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }
@@ -30,7 +30,7 @@ public class CommandController {
         String[] arguments = parts.length > 1 ? parts[1].split(" ") : new String[0];
 
         Commands command = Commands.fromString(commandStr);
-        CommandService commandService = commandMap.get(command);
+        Command commandService = commandMap.get(command);
 
         if (commandService != null) {
             return commandService.execute(arguments);

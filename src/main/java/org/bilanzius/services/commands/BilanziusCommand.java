@@ -1,16 +1,16 @@
-package org.bilanzius.services.commands.bilanziusCommand;
+package org.bilanzius.services.commands;
 
-import org.bilanzius.services.CommandService;
+import org.bilanzius.services.Command;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class BilanziusCommandService implements CommandService {
+public class BilanziusCommand implements Command {
 
     private final Map<BilanziusCommandArguments, Supplier<String>> commandMap;
 
-    public BilanziusCommandService() {
+    public BilanziusCommand() {
         commandMap = new HashMap<>();
 
         commandMap.put(BilanziusCommandArguments.VERSION, this::getVersion);

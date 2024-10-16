@@ -1,9 +1,9 @@
-package org.bilanzius.services.commands.helpCommand;
-import org.bilanzius.services.CommandService;
+package org.bilanzius.services.commands;
+import org.bilanzius.services.Command;
 
 import static org.bilanzius.commandController.Commands.getAllCommands;
 
-public class HelpCommandService implements CommandService {
+public class HelpCommand implements Command {
 
     @Override
     public String execute(String[] arguments) {

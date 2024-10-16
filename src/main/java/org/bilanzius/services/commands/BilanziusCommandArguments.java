@@ -1,4 +1,4 @@
-package org.bilanzius.services.commands.bilanziusCommand;
+package org.bilanzius.services.commands;
 
 import java.util.Arrays;
 

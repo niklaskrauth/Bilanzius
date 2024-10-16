@@ -1,6 +1,6 @@
 package org.bilanzius.commandController;
 
-import org.bilanzius.services.commands.bilanziusCommand.BilanziusCommandArguments;
+import org.bilanzius.services.commands.BilanziusCommandArguments;
 
 import java.util.Arrays;
 
