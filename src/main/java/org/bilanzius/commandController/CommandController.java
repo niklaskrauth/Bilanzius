@@ -1,36 +1,41 @@
 package org.bilanzius.commandController;
 
-import org.bilanzius.services.commands.HelpCommandService;
+import org.bilanzius.services.Command;
+import org.bilanzius.services.commands.BilanziusCommand;
+import org.bilanzius.services.commands.HelpCommand;
+import org.bilanzius.services.commands.ExitCommand;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommandController {
 
-    public CommandController() {}
+    private final Map<Commands, Command> commandMap;
+
+    public CommandController() {
+
+        commandMap = new HashMap<>();
+
+        commandMap.put(Commands.EXIT, new ExitCommand());
+        commandMap.put(Commands.HELP, new HelpCommand());
+        commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
+
+        //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
+    }
 
     public String handleInput(String input) {
 
-        // Jeder Befehl hat seine eigenen Case wenn es mehr als 1 Zeile Code ist
-        // Dort wird dann immer eine Klasse aufgerufen um den Befehl zu verarbeiten
-        // Es sollte vermieden werden in einem Code viel Logik zu haben, am besten nur eine Methode in der Klasse die dann alles handelt
-        // In der Ordnerstruktur gibt es den "commands"-ordner, dort sind alle Klassen die die Befehle verarbeiten
-        // Für andere Sachen sollten weiter Ordner erstellt werden (z.B. Datenbank etc.)
-        // Beispielcode: /help -> HelpCommandService
+        String[] parts = input.split(" ", 2);
+        String commandStr = parts[0];
+        String[] arguments = parts.length > 1 ? parts[1].split(" ") : new String[0];
 
-        String output;
+        Commands command = Commands.fromString(commandStr);
+        Command commandService = commandMap.get(command);
 
-        switch (input) {
-            case "/exit":
-                System.exit(0);
-                output = "Goodbye User";
-                break;
-            case "/help":
-                HelpCommandService helpCommandService = new HelpCommandService();
-                output = helpCommandService.getAllCommands();
-                break;
-            default:
-                output = "Something went wrong :( ";
-                break;
+        if (commandService != null) {
+            return commandService.execute(arguments);
         }
 
-        return output;
+        return "Unknown command :( . Type /help for a list of commands.";
     }
 }
