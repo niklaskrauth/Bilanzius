@@ -12,7 +12,7 @@ public class Main {
 
         while(true) {
 
-            System.out.println("-----------------------------------------");
+            System.out.println("----------------------------------------------------------------------------------");
 
             CommandController commandController = new CommandController();
 
