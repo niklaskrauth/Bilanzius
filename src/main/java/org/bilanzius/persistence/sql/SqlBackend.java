@@ -12,11 +12,13 @@ import java.util.*;
 
 public class SqlBackend {
 
+    private static final String SQLLITE_CONNECTION_STRING = "jdbc:sqlite:database.sqlite";
+
     private final Map<Class<?>, SqlDataAdapter<?>> adapters = new HashMap<>();
     private Connection connection;
 
     public void connect() throws SQLException {
-        this.connection = DriverManager.getConnection("jdbc:sqlite:database.sqlite");
+        this.connection = DriverManager.getConnection(SQLLITE_CONNECTION_STRING);
     }
 
     public <T> void registerAdapter(Class<T> modelClass, SqlDataAdapter<T> adapter) {

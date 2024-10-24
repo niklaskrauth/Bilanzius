@@ -3,6 +3,7 @@ package org.bilanzius.persistence.sql;
 import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.UserDatabaseService;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.utils.HashedPassword;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -31,10 +32,10 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
         try {
             backend.execute("INSERT INTO users (user, password) VALUES (?,?)", stmt -> {
                 stmt.setString(1, user.getUsername());
-                stmt.setString(2, user.getHashedPassword());
+                stmt.setString(2, user.getHashedPassword().getPassword());
             });
         } catch (SQLException ex) {
-            throw new DatabaseException();
+            throw new DatabaseException(ex);
         }
     }
 
@@ -45,26 +46,37 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
                     .stream()
                     .findFirst();
         } catch (SQLException ex) {
-            throw new DatabaseException();
+            throw new DatabaseException(ex);
         }
     }
 
     @Override
-    public Optional<User> findUserWithCredentials(String username, String password) throws DatabaseException {
+    public Optional<User> findUserWithCredentials(String username, HashedPassword password) throws DatabaseException {
         try {
             return backend.query(User.class, "SELECT * FROM users WHERE user = ? AND password = ?", stmt -> {
                         stmt.setString(1, username);
-                        stmt.setString(2, password);
+                        stmt.setString(2, password.getPassword());
                     })
                     .stream()
                     .findFirst();
         } catch (SQLException ex) {
-            throw new DatabaseException();
+            throw new DatabaseException(ex);
         }
     }
 
     @Override
-    public void updateUser(User user) {
-        throw new UnsupportedOperationException();
+    public void updateUser(User user) throws DatabaseException {
+        if (!user.canBeUpdated()) {
+            throw new DatabaseException("User can't be updated.");
+        }
+
+        try {
+            backend.execute("UPDATE users SET password = ? WHERE id = ?", stmt -> {
+                stmt.setString(1, user.getHashedPassword().getPassword());
+                stmt.setInt(2, user.getId());
+            });
+        } catch (SQLException ex) {
+            throw new DatabaseException(ex);
+        }
     }
 }
