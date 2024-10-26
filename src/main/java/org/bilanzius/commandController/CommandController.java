@@ -1,24 +1,28 @@
 package org.bilanzius.commandController;
 
+import org.bilanzius.User;
 import org.bilanzius.services.Command;
-import org.bilanzius.services.commands.BilanziusCommand;
-import org.bilanzius.services.commands.HelpCommand;
-import org.bilanzius.services.commands.ExitCommand;
+import org.bilanzius.services.commands.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandController {
 
+    private User user;
     private final Map<Commands, Command> commandMap;
 
-    public CommandController() {
+    public CommandController(User user) {
+
+        this.user = user;
 
         commandMap = new HashMap<>();
 
         commandMap.put(Commands.EXIT, new ExitCommand());
         commandMap.put(Commands.HELP, new HelpCommand());
         commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
+        commandMap.put(Commands.DEPOSIT, new DepositCommand(this.user));
+        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(this.user));
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }

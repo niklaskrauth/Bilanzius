@@ -7,14 +7,16 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        System.out.println("Hello User");
+        User user = new User("User", 0);
+
+        System.out.println("Hello " + user.getUsername());
         Scanner input  = new Scanner(System.in);
 
         while(true) {
 
             System.out.println("----------------------------------------------------------------------------------");
 
-            CommandController commandController = new CommandController();
+            CommandController commandController = new CommandController(user);
 
             String stringInput = input.nextLine();
 

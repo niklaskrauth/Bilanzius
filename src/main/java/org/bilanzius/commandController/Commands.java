@@ -1,13 +1,17 @@
 package org.bilanzius.commandController;
 
 import org.bilanzius.services.commands.BilanziusCommandArguments;
+import org.bilanzius.services.commands.DepositCommandArguments;
+import org.bilanzius.services.commands.WithdrawCommandArgument;
 
 import java.util.Arrays;
 
 public enum Commands {
     EXIT("/exit", "Exit the application", null),
     HELP("/help", "Show all commands", null),
-    BILANZIUS("/bilanzius", "Get information about the application", BilanziusCommandArguments.getAllArguments());
+    BILANZIUS("/bilanzius", "Get information about the application", BilanziusCommandArguments.getAllArguments()),
+    DEPOSIT("/deposit", "Deposit money to your account", DepositCommandArguments.getAllArguments()),
+    WITHDRAW("/withdraw", "Withdraw money from your account", WithdrawCommandArgument.getAllArguments());
 
     // Hier werden die einzelnen Befehle hinzugefügt
 
