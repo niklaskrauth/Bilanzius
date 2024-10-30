@@ -2,6 +2,7 @@ package org.bilanzius.services.commands;
 
 import org.bilanzius.User;
 import org.bilanzius.services.Command;
+import org.bilanzius.utils.Localization;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +26,14 @@ public class DepositCommand implements Command {
     public String execute(String[] arguments) {
 
         if (arguments == null || arguments.length == 0) {
-            return "No arguments provided. Available arguments: " + DepositCommandArguments.getAllArguments();
+            return Localization.getInstance().getMessage("no_arguments_provided",
+                    DepositCommandArguments.getAllArguments());
         }
 
         DepositCommandArguments argument = DepositCommandArguments.fromString(arguments[0]);
         if (argument == null) {
-            return "Unknown argument. Available arguments: " + DepositCommandArguments.getAllArguments();
+            return Localization.getInstance().getMessage("unknown_argument",
+                    DepositCommandArguments.getAllArguments());
         }
 
         Function<String, String> command = commandMap.get(argument);
@@ -38,7 +41,7 @@ public class DepositCommand implements Command {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
-        return "Unknown argument. Available arguments: " + DepositCommandArguments.getAllArguments();
+        return Localization.getInstance().getMessage("unknown_argument", DepositCommandArguments.getAllArguments());
     }
 
     private String depositMoney(String argument) {
@@ -50,9 +53,9 @@ public class DepositCommand implements Command {
             depositMoney = Double.parseDouble(argument);
             user.setBalance(user.getBalance() + depositMoney);
 
-            return "Money successfully deposited. Your new balance is: " + user.getBalance();
+            return Localization.getInstance().getMessage("deposit_successful", user.getBalance());
         } catch (NumberFormatException e) {
-            return "Invalid amount. Please provide a valid number.";
+            return Localization.getInstance().getMessage("invalid_amount");
         }
     }
 }

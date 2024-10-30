@@ -1,6 +1,7 @@
 package org.bilanzius.services.commands;
 
 import org.bilanzius.services.Command;
+import org.bilanzius.utils.Localization;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,12 +23,14 @@ public class BilanziusCommand implements Command {
     public String execute(String[] arguments) {
 
         if (arguments == null || arguments.length == 0) {
-            return "No arguments provided. Available arguments: " + BilanziusCommandArguments.getAllArguments();
+            return Localization.getInstance().getMessage("no_arguments_provided",
+                    BilanziusCommandArguments.getAllArguments());
         }
 
         BilanziusCommandArguments argument = BilanziusCommandArguments.fromString(arguments[0]);
         if (argument == null) {
-            return "Unknown argument. Available arguments: " + BilanziusCommandArguments.getAllArguments();
+            return Localization.getInstance().getMessage("unknown_argument",
+                    BilanziusCommandArguments.getAllArguments());
         }
 
         Supplier<String> command = commandMap.get(argument);
@@ -35,18 +38,20 @@ public class BilanziusCommand implements Command {
             return command.get();
         }
 
-        return "Unknown argument. Available arguments: " + BilanziusCommandArguments.getAllArguments();
+        return Localization.getInstance().getMessage("unknown_argument",
+                BilanziusCommandArguments.getAllArguments());
     }
 
+//    TODO: get version from .env datei
     private String getVersion() {
-        return "Bilanzius version: 0.1.0";
+        return Localization.getInstance().getMessage("version", "0.1.3");
     }
 
     private String getAuthors() {
-        return "Authors: Lukas Hertkorn, Niklas Krauth, Lukas Melcher";
+        return Localization.getInstance().getMessage("authors_list");
     }
 
     private String getDescription() {
-        return "Bilanzius is a simple application that helps you to manage your finances.";
+        return Localization.getInstance().getMessage("bilanzius_description");
     }
 }
