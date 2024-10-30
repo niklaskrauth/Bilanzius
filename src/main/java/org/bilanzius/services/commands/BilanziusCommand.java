@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 public class BilanziusCommand implements Command {
 
     private final Map<BilanziusCommandArguments, Supplier<String>> commandMap;
+    private final Localization localization = Localization.getInstance();
 
     public BilanziusCommand() {
         commandMap = new HashMap<>();
@@ -23,14 +24,12 @@ public class BilanziusCommand implements Command {
     public String execute(String[] arguments) {
 
         if (arguments == null || arguments.length == 0) {
-            return Localization.getInstance().getMessage("no_arguments_provided",
-                    BilanziusCommandArguments.getAllArguments());
+            return localization.getMessage("no_arguments_provided", BilanziusCommandArguments.getAllArguments());
         }
 
         BilanziusCommandArguments argument = BilanziusCommandArguments.fromString(arguments[0]);
         if (argument == null) {
-            return Localization.getInstance().getMessage("unknown_argument",
-                    BilanziusCommandArguments.getAllArguments());
+            return localization.getMessage("unknown_argument", BilanziusCommandArguments.getAllArguments());
         }
 
         Supplier<String> command = commandMap.get(argument);
@@ -38,20 +37,19 @@ public class BilanziusCommand implements Command {
             return command.get();
         }
 
-        return Localization.getInstance().getMessage("unknown_argument",
-                BilanziusCommandArguments.getAllArguments());
+        return localization.getMessage("unknown_argument", BilanziusCommandArguments.getAllArguments());
     }
 
 //    TODO: get version from .env datei
     private String getVersion() {
-        return Localization.getInstance().getMessage("version", "0.1.3");
+        return localization.getMessage("version", "0.1.3");
     }
 
     private String getAuthors() {
-        return Localization.getInstance().getMessage("authors_list");
+        return localization.getMessage("authors_list");
     }
 
     private String getDescription() {
-        return Localization.getInstance().getMessage("bilanzius_description");
+        return localization.getMessage("bilanzius_description");
     }
 }

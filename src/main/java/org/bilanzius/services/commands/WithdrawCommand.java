@@ -12,6 +12,7 @@ public class WithdrawCommand implements Command {
 
     private User user;
     private final Map<WithdrawCommandArgument, Function<String, String>> commandMap;
+    private final Localization localization = Localization.getInstance();
 
 
     public WithdrawCommand(User user) {
@@ -26,13 +27,13 @@ public class WithdrawCommand implements Command {
     public String execute(String[] arguments) {
 
         if (arguments == null || arguments.length == 0) {
-            return Localization.getInstance().getMessage("no_arguments_provided",
+            return localization.getMessage("no_arguments_provided",
                     WithdrawCommandArgument.getAllArguments());
         }
 
         WithdrawCommandArgument argument = WithdrawCommandArgument.fromString(arguments[0]);
         if (argument == null) {
-            return Localization.getInstance().getMessage("unknown_argument",
+            return localization.getMessage("unknown_argument",
                     WithdrawCommandArgument.getAllArguments());
         }
 
@@ -41,7 +42,7 @@ public class WithdrawCommand implements Command {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
-        return Localization.getInstance().getMessage("unknown_argument", WithdrawCommandArgument.getAllArguments());
+        return localization.getMessage("unknown_argument", WithdrawCommandArgument.getAllArguments());
     }
 
     private String withdrawMoney(String argument) {
@@ -55,14 +56,14 @@ public class WithdrawCommand implements Command {
             user.setBalance(user.getBalance() - withdrawMoney);
 
             if (user.getBalance() < 0) {
-                outputText = Localization.getInstance().getMessage("withdraw_successful_dept", user.getBalance());
+                outputText = localization.getMessage("withdraw_successful_dept", user.getBalance());
             } else {
-                outputText = Localization.getInstance().getMessage("withdraw_successful", user.getBalance());
+                outputText = localization.getMessage("withdraw_successful", user.getBalance());
             }
 
             return outputText;
         } catch (NumberFormatException e) {
-            return Localization.getInstance().getMessage("invalid_amount");
+            return localization.getMessage("invalid_amount");
         }
     }
 }

@@ -12,6 +12,7 @@ public class CommandController {
 
     private User user;
     private final Map<Commands, Command> commandMap;
+    private final Localization localization = Localization.getInstance();
 
     public CommandController(User user) {
 
@@ -45,6 +46,6 @@ public class CommandController {
             return commandService.execute(arguments);
         }
 
-        return Localization.getInstance().getMessage("unknown_command");
+        return localization.getMessage("unknown_command");
     }
 }

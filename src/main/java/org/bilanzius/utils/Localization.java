@@ -8,8 +8,9 @@ import java.util.ResourceBundle;
 
 public class Localization {
     private static Localization instance;
-    private List<String> supportedLanguages = Arrays.asList("en", "de");
+    private final List<String> supportedLanguages = Arrays.asList("en", "de");
     private ResourceBundle messages;
+    private String currentLanguageCode;
 
     private Localization(String languageCode) {
         setLocale(languageCode);
@@ -27,8 +28,13 @@ public class Localization {
     }
 
     public void setLocale(String languageCode) {
+        this.currentLanguageCode = languageCode;
         Locale locale = new Locale(languageCode);
         messages = ResourceBundle.getBundle("messages", locale);
+    }
+
+    public String getCurrentLanguageCode() {
+        return this.currentLanguageCode;
     }
 
     public String getMessage(String key, Object... params) {

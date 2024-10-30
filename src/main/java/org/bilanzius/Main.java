@@ -6,11 +6,13 @@ import org.bilanzius.utils.Localization;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
+        Localization localization = Localization.getInstance();
 
         User user = new User("User", 0);
 
-        System.out.println(Localization.getInstance().getMessage("greeting", user.getUsername()));
+        System.out.println(localization.getMessage("greeting", user.getUsername()));
         Scanner input  = new Scanner(System.in);
 
         while(true) {

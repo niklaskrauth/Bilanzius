@@ -5,9 +5,10 @@ import org.bilanzius.services.Command;
 
 public class GetLanguagesCommand  implements Command {
 
+    private final Localization localization = Localization.getInstance();
+
     @Override
     public String execute(String[] arguments) {
-        Localization localization = Localization.getInstance();
         return localization.getMessage("available_languages");
     }
 }
