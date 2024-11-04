@@ -3,6 +3,7 @@ package org.bilanzius.commandController;
 import org.bilanzius.User;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.*;
+import org.bilanzius.utils.Localization;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ public class CommandController {
 
     private User user;
     private final Map<Commands, Command> commandMap;
+    private final Localization localization = Localization.getInstance();
 
     public CommandController(User user) {
 
@@ -18,11 +20,15 @@ public class CommandController {
 
         commandMap = new HashMap<>();
 
-        commandMap.put(Commands.EXIT, new ExitCommand());
+        commandMap.put(Commands.EXIT, new ExitCommand(this.user));
         commandMap.put(Commands.HELP, new HelpCommand());
         commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
         commandMap.put(Commands.DEPOSIT, new DepositCommand(this.user));
         commandMap.put(Commands.WITHDRAW, new WithdrawCommand(this.user));
+
+        // Sprachbefehle
+        commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
+        commandMap.put(Commands.SETLANGUAGE, new SetLanguageCommand());
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }
@@ -40,6 +46,6 @@ public class CommandController {
             return commandService.execute(arguments);
         }
 
-        return "Unknown command :( . Type /help for a list of commands.";
+        return localization.getMessage("unknown_command");
     }
 }

@@ -3,15 +3,21 @@ package org.bilanzius.commandController;
 import org.bilanzius.services.commands.BilanziusCommandArguments;
 import org.bilanzius.services.commands.DepositCommandArguments;
 import org.bilanzius.services.commands.WithdrawCommandArgument;
+import org.bilanzius.utils.Localization;
 
 import java.util.Arrays;
 
 public enum Commands {
-    EXIT("/exit", "Exit the application", null),
-    HELP("/help", "Show all commands", null),
-    BILANZIUS("/bilanzius", "Get information about the application", BilanziusCommandArguments.getAllArguments()),
-    DEPOSIT("/deposit", "Deposit money to your account", DepositCommandArguments.getAllArguments()),
-    WITHDRAW("/withdraw", "Withdraw money from your account", WithdrawCommandArgument.getAllArguments());
+    EXIT("/exit", Localization.getInstance().getMessage("exit_short_description"), null),
+    HELP("/help", Localization.getInstance().getMessage("help_short_description"), null),
+    BILANZIUS("/bilanzius", Localization.getInstance().getMessage("bilanzius_short_description"),
+            BilanziusCommandArguments.getAllArguments()),
+    DEPOSIT("/deposit", Localization.getInstance().getMessage("deposit_short_description"),
+            DepositCommandArguments.getAllArguments()),
+    WITHDRAW("/withdraw", Localization.getInstance().getMessage("withdraw_short_description"),
+            WithdrawCommandArgument.getAllArguments()),
+    GETLANGUAGES("/getLanguages", Localization.getInstance().getMessage("get_languages_description"), null),
+    SETLANGUAGE("/setLanguage", Localization.getInstance().getMessage("set_language_description"), null);
 
     // Hier werden die einzelnen Befehle hinzugefügt
 
