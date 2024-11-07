@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface UserDatabaseService {
 
-    void createUser(User user) throws DatabaseException;
+    void createUser(User user);
 
-    Optional<User> findUser(long id) throws DatabaseException;
+    Optional<User> findUser(long id);
 
-    Optional<User> findUserWithCredentials(String username, HashedPassword password) throws DatabaseException;
+    Optional<User> findUserWithCredentials(String username, HashedPassword password);
 
-    void updateUser(User user) throws DatabaseException;
+    void updateUser(User user);
 }

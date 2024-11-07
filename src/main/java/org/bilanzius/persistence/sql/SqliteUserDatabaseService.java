@@ -3,6 +3,7 @@ package org.bilanzius.persistence.sql;
 import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.UserDatabaseService;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.persistence.sql.adapter.SqlUserAdapter;
 import org.bilanzius.utils.HashedPassword;
 
 import java.sql.SQLException;
@@ -14,6 +15,8 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
 
     public SqliteUserDatabaseService(SqlBackend backend) throws SQLException {
         this.backend = backend;
+        this.backend.registerAdapter(User.class, new SqlUserAdapter());
+
         this.createSchema();
     }
 
@@ -28,7 +31,7 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
     }
 
     @Override
-    public void createUser(User user) throws DatabaseException {
+    public void createUser(User user) {
         try {
             backend.execute("INSERT INTO users (user, password) VALUES (?,?)", stmt -> {
                 stmt.setString(1, user.getUsername());
@@ -40,7 +43,7 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
     }
 
     @Override
-    public Optional<User> findUser(long id) throws DatabaseException {
+    public Optional<User> findUser(long id) {
         try {
             return backend.query(User.class, "SELECT * FROM users WHERE id = ?", stmt -> stmt.setLong(1, id))
                     .stream()
@@ -51,7 +54,7 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
     }
 
     @Override
-    public Optional<User> findUserWithCredentials(String username, HashedPassword password) throws DatabaseException {
+    public Optional<User> findUserWithCredentials(String username, HashedPassword password) {
         try {
             return backend.query(User.class, "SELECT * FROM users WHERE user = ? AND password = ?", stmt -> {
                         stmt.setString(1, username);
@@ -65,7 +68,7 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
     }
 
     @Override
-    public void updateUser(User user) throws DatabaseException {
+    public void updateUser(User user) {
         if (!user.canBeUpdated()) {
             throw new DatabaseException("User can't be updated.");
         }

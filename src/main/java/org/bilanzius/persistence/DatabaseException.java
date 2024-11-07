@@ -1,6 +1,6 @@
 package org.bilanzius.persistence;
 
-public class DatabaseException extends Exception {
+public class DatabaseException extends RuntimeException {
 
     public DatabaseException(Exception ex) {
         super(ex);
