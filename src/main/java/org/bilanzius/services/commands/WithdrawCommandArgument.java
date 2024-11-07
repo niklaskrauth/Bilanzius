@@ -2,15 +2,13 @@ package org.bilanzius.services.commands;
 
 import java.util.Arrays;
 
-public enum BilanziusCommandArguments {
-    VERSION("-version", "-v"),
-    AUTHORS("-authors", "-a"),
-    DESCRIPTION("-description", "-d");
+public enum WithdrawCommandArgument {
+    WITHDRAW("amount", "-a");
 
     private final String argument;
     private final String argumentShort;
 
-    BilanziusCommandArguments(String argument, String argumentShort) {
+    WithdrawCommandArgument(String argument, String argumentShort) {
         this.argument = argument;
         this.argumentShort = argumentShort;
     }
@@ -24,21 +22,20 @@ public enum BilanziusCommandArguments {
     }
 
     public static String getAllArguments() {
-
-        return Arrays.stream(BilanziusCommandArguments.values()).map(
+        return Arrays.stream(DepositCommandArguments.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
                 (a, b) -> a + ", " + b
         ).orElse("");
-
     }
 
-    public static BilanziusCommandArguments fromString(String argument) {
-        for (BilanziusCommandArguments c : BilanziusCommandArguments.values()) {
+    public static WithdrawCommandArgument fromString(String argument) {
+        for (WithdrawCommandArgument c : WithdrawCommandArgument.values()) {
             if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }
         return null;
     }
+
 }
