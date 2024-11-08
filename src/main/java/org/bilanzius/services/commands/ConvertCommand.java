@@ -8,6 +8,7 @@ import org.bilanzius.utils.Requests;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ConvertCommand implements Command {
@@ -16,7 +17,7 @@ public class ConvertCommand implements Command {
     private final Map<ConvertCommandArguments, Supplier<String>> commandMap;
     private final Localization localization = Localization.getInstance();
 
-    // TODO. Move this ito the .env file
+    // TODO: Move this ito the .env file
     private final String currencyUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json";
 
     // TODO: Figure this out https://prices.openfoodfacts.org/api/docs#/
@@ -64,7 +65,8 @@ public class ConvertCommand implements Command {
     private String convertToPorsche911Camera() {
 
         int porsche911CameraPrice = 128700;
-        return "You can buy this much of a Porsche 911 Camera: " + user.getBalance() / porsche911CameraPrice;
+        double part = user.getBalance() / porsche911CameraPrice;
+        return localization.getMessage("convert_buy_part_of", part, "Porsche 911 Camera");
     }
 
     private String convertToBitcoin() {
@@ -72,8 +74,7 @@ public class ConvertCommand implements Command {
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "btc");
-
-        return "Your Balance in Bitcoin is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", "Bitcoin", (user.getBalance() * exchangeRate));
     }
 
     private String convertToGermanDeutscheMark() {
@@ -81,17 +82,21 @@ public class ConvertCommand implements Command {
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "dem");
-
-        return "Your Balance in German Deutsche Mark is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", "German Deutsche Mark", (user.getBalance() * exchangeRate));
     }
 
     private String convertToSwissFranc() {
+
+        String currency = "Swiss Franc";
+        if (localization.getCurrentLanguageCode().equals("de")) {
+            currency = "Schweizer Franken";
+        }
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "chf");
 
-        return "Your Balance in Swiss Franc is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", currency, (user.getBalance() * exchangeRate));
     }
 
     private String convertToDogecoin() {
@@ -99,8 +104,7 @@ public class ConvertCommand implements Command {
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "doge");
-
-        return "Your Balance in Dogecoin is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", "Dogecoin", (user.getBalance() * exchangeRate));
     }
 
     private String convertToEthereum() {
@@ -108,8 +112,7 @@ public class ConvertCommand implements Command {
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "eth");
-
-        return "Your Balance in Ethereum is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", "Ethereum", (user.getBalance() * exchangeRate));
     }
 
     private String convertToHongKongDollar() {
@@ -117,35 +120,46 @@ public class ConvertCommand implements Command {
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "hkd");
-
-        return "Your Balance in Hong Kong Dollar is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", "Hong Kong Dollar", (user.getBalance() * exchangeRate));
     }
 
     private String convertToJamaicanDollar() {
 
+        String currency = "Jamaican Dollar";
+        if (localization.getCurrentLanguageCode().equals("de")) {
+            currency = "Jamaikanische Dollar";
+        }
+
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "jmd");
-
-        return "Your Balance in Jamaican Dollar is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", currency, (user.getBalance() * exchangeRate));
     }
 
     private String convertToNorthKoreanWon() {
 
+        String currency = "North Korean Won";
+        if (localization.getCurrentLanguageCode().equals("de")) {
+            currency = "Nordkoreanischer Won";
+        }
+
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "kpw");
-
-        return "Your Balance in North Korean Won is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", currency, (user.getBalance() * exchangeRate));
     }
 
     private String convertToRussianRuble() {
 
+        String currency = "Russian Ruble";
+        if (localization.getCurrentLanguageCode().equals("de")) {
+            currency = "Russischer Rubel";
+        }
+
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "rub");
-
-        return "Your Balance in Russian Rupee is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", currency, (user.getBalance() * exchangeRate));
     }
 
     private String convertToUsDollar() {
@@ -153,8 +167,7 @@ public class ConvertCommand implements Command {
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "usd");
-
-        return "Your Balance in USD is: " + user.getBalance() * exchangeRate;
+        return localization.getMessage("convert_balance", "US Dollar", (user.getBalance() * exchangeRate));
     }
 
     private double getCurrencyFromJson(JsonObject jsonObject, String currencyShort) {
