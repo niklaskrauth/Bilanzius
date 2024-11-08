@@ -53,6 +53,7 @@ public class WithdrawCommand implements Command {
         try {
 
             withdrawMoney = Double.parseDouble(argument);
+            withdrawMoney = Math.abs(withdrawMoney);
             user.setBalance(user.getBalance() - withdrawMoney);
 
             if (user.getBalance() < 0) {

@@ -25,6 +25,7 @@ public class CommandController {
         commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
         commandMap.put(Commands.DEPOSIT, new DepositCommand(this.user));
         commandMap.put(Commands.WITHDRAW, new WithdrawCommand(this.user));
+        commandMap.put(Commands.CONVERT, new ConvertCommand(this.user));
 
         // Sprachbefehle
         commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
