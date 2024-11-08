@@ -82,7 +82,7 @@ public class ConvertCommand implements Command {
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         double exchangeRate = getCurrencyFromJson(jsonObject, "dem");
-        return localization.getMessage("convert_balance", "German Deutsche Mark", (user.getBalance() * exchangeRate));
+        return localization.getMessage("convert_balance", "Deutsche Mark", (user.getBalance() * exchangeRate));
     }
 
     private String convertToSwissFranc() {
@@ -140,7 +140,7 @@ public class ConvertCommand implements Command {
 
         String currency = "North Korean Won";
         if (localization.getCurrentLanguageCode().equals("de")) {
-            currency = "Nordkoreanischer Won";
+            currency = "Nordkoreanische Won";
         }
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
