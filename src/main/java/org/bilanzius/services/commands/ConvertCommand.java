@@ -20,8 +20,7 @@ public class ConvertCommand implements Command {
     // TODO: Move this ito the .env file
     private final String currencyUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json";
 
-    // TODO: Figure this out https://prices.openfoodfacts.org/api/docs#/
-    // And get the price of bananas in EUR
+    // Price of food products: https://prices.openfoodfacts.org/api/docs#/
 
     public ConvertCommand(User user) {
         this.user = user;
