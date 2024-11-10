@@ -50,6 +50,7 @@ public class DepositCommand implements Command {
         try {
 
             depositMoney = Double.parseDouble(argument);
+            depositMoney = Math.abs(depositMoney);
             user.setBalance(user.getBalance() + depositMoney);
 
             return localization.getMessage("deposit_successful", user.getBalance());

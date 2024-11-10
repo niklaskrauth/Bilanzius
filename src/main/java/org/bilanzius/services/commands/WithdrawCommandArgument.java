@@ -22,7 +22,7 @@ public enum WithdrawCommandArgument {
     }
 
     public static String getAllArguments() {
-        return Arrays.stream(DepositCommandArguments.values()).map(
+        return Arrays.stream(WithdrawCommandArgument.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
                 (a, b) -> a + ", " + b
