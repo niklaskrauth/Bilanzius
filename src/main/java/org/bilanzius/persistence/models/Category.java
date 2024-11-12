@@ -2,9 +2,9 @@ package org.bilanzius.persistence.models;
 
 public class Category {
 
-    public static Category create(User user, String name, Double budget, Double amountSpent) {
+    public static Category create(User user, String name, Double budget) {
         return new Category(
-                0, user.getId(), name, budget, amountSpent
+                0, user.getId(), name, budget, 0.00
         );
     }
 

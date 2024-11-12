@@ -40,7 +40,7 @@ public class Test {
         userService.updateUser(user);
 
         // Create category
-        categoryService.createCategory(Category.create(user, "test", 5.00, 0.00));
+        categoryService.createCategory(Category.create(user, "test", 5.00));
 
         // Get category
         var category = categoryService.getCategoriesOfUser(user, 1).getFirst();
