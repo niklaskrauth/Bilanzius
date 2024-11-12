@@ -35,10 +35,10 @@ public class Main {
                 .findUserWithCredentials("TestUser", HashedPassword.fromPlainText("passwort1234"))
                 .orElseThrow();
 
-        System.out.println(localization.getMessage("greeting", databaseUser.getUsername()));
-        Scanner input  = new Scanner(System.in);
-
         User user = new User("User", 0);
+
+        System.out.println(localization.getMessage("greeting", user.getUsername()));
+        Scanner input  = new Scanner(System.in);
 
         while(true) {
 
