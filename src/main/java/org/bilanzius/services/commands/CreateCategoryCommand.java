@@ -45,7 +45,7 @@ public class CreateCategoryCommand implements Command  {
         return localization.getMessage("create_category_usage");
     }
 
-    private Boolean checkIfCategoryExists(String name) {
+    private boolean checkIfCategoryExists(String name) {
         // TODO implement check if category exists
         //        CategoryService categoryService = new SqliteCategoryService(new SqlBackend());
         //        categoryService.getCategoriesOfUserByName(user, name);

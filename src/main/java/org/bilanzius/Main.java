@@ -7,20 +7,26 @@ import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
 import org.bilanzius.utils.HashedPassword;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         // Connect to sqllite database
         var backend = new SqlBackend();
-        backend.connect();
+        UserDatabaseService userService = null;
+        try {
+            backend.connect();
+            userService = new SqliteUserDatabaseService(backend);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        // Setup
         Localization localization = Localization.getInstance();
-        UserDatabaseService userService = new SqliteUserDatabaseService(backend);
 
         // Create a new user with name "TestUser" and password "passwort1234"
+        assert userService != null;
         userService.createUser(org.bilanzius.persistence.models.User.createUser("TestUser",
                 HashedPassword.fromPlainText("passwort1234")));
 
@@ -29,10 +35,10 @@ public class Main {
                 .findUserWithCredentials("TestUser", HashedPassword.fromPlainText("passwort1234"))
                 .orElseThrow();
 
-        User user = new User("User", 0);
-
-        System.out.println(localization.getMessage("greeting", user.getUsername()));
+        System.out.println(localization.getMessage("greeting", databaseUser.getUsername()));
         Scanner input  = new Scanner(System.in);
+
+        User user = new User("User", 0);
 
         while(true) {
 
