@@ -13,8 +13,7 @@ public enum ConvertCommandArguments {
     NORTH_KOREAN_WON("northKoreanWon", "-kpw"),
     RUSSIAN_RUBLE("russianRuble", "-rub"),
     US_DOLLAR("usdDollar", "-usd"),
-    PORSCHE_911_CAMERA("porsche911Camera", "-p911c")
-    ;
+    PORSCHE_911_CAMERA("porsche911Camera", "-p911c");
 
     private final String argument;
     private final String argumentShort;

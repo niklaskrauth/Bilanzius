@@ -1,9 +1,6 @@
 package org.bilanzius.commandController;
 
-import org.bilanzius.services.commands.BilanziusCommandArguments;
-import org.bilanzius.services.commands.ConvertCommandArguments;
-import org.bilanzius.services.commands.DepositCommandArguments;
-import org.bilanzius.services.commands.WithdrawCommandArgument;
+import org.bilanzius.services.commands.*;
 import org.bilanzius.utils.Localization;
 
 import java.util.Arrays;
@@ -17,9 +14,14 @@ public enum Commands {
             DepositCommandArguments.getAllArguments()),
     WITHDRAW("/withdraw", Localization.getInstance().getMessage("withdraw_short_description"),
             WithdrawCommandArgument.getAllArguments()),
-    CONVERT("/convert", Localization.getInstance().getMessage("convert_short_description"), ConvertCommandArguments.getAllArguments()),
+    CONVERT("/convert", Localization.getInstance().getMessage("convert_short_description"),
+            ConvertCommandArguments.getAllArguments()),
     GETLANGUAGES("/getLanguages", Localization.getInstance().getMessage("get_languages_description"), null),
-    SETLANGUAGE("/setLanguage", Localization.getInstance().getMessage("set_language_description"), null);
+    SETLANGUAGE("/setLanguage", Localization.getInstance().getMessage("set_language_description"), null),
+    CREATECATEGORY("/createCategory", Localization.getInstance().getMessage("create_category_short_description"),
+            CreateCategoryCommandArguments.getAllArguments()),
+    GETCATEGORIES("/getCategories", Localization.getInstance().getMessage("get_categories_short_description"),
+            GetCategoryCommandArguments.getAllArguments());
 
     // Hier werden die einzelnen Befehle hinzugefügt
 

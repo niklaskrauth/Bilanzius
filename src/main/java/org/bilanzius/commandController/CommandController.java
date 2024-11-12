@@ -31,6 +31,10 @@ public class CommandController {
         commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
         commandMap.put(Commands.SETLANGUAGE, new SetLanguageCommand());
 
+        // Kategoriebefehle
+        commandMap.put(Commands.CREATECATEGORY, new CreateCategoryCommand(this.user));
+        commandMap.put(Commands.GETCATEGORIES, new GetCategoryCommand(this.user));
+
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }
 
