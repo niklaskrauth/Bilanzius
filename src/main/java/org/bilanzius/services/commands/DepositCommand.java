@@ -1,6 +1,6 @@
 package org.bilanzius.services.commands;
 
-import org.bilanzius.User;
+import org.bilanzius.persistence.models.User;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 

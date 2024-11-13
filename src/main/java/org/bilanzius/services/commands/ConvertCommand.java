@@ -1,14 +1,13 @@
 package org.bilanzius.services.commands;
 
 import com.google.gson.JsonObject;
-import org.bilanzius.User;
+import org.bilanzius.persistence.models.User;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 import org.bilanzius.utils.Requests;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ConvertCommand implements Command {

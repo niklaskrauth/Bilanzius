@@ -52,13 +52,17 @@ public class Test {
         categoryService.updateCategory(category);
 
         // Get category by name
-        var categoryTest = categoryService.getCategoriesOfUserByName(user, "Test").orElseThrow();
-        categoryTest.toString();
+        var categoryTest = categoryService.getCategoryOfUserByName(user, "Test").stream().findFirst().orElse(null);
+        assert categoryTest != null;
+        System.out.println(categoryTest);
 
         // Get exceeded categories
         categoryTest.setAmountSpent(15.00);
         categoryService.updateCategory(categoryTest);
         var exceededCategories = categoryService.getExceededCategoriesOfUser(user, 1).getFirst();
-        exceededCategories.toString();
+        System.out.println(exceededCategories.toString());
+
+        // Delete category
+        categoryService.deleteCategory(categoryTest);
     }
 }

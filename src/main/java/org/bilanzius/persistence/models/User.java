@@ -5,21 +5,31 @@ import org.bilanzius.utils.HashedPassword;
 public class User {
 
     public static User createUser(String username, HashedPassword password) {
-        return new User(0, username, password);
+        return new User(0, username, password, 0.0);
     }
 
     private final int id;
     private final String username;
     private HashedPassword hashedPassword;
+    private Double balance;
 
-    public User(int id, String username, HashedPassword hashedPassword) {
+    public User(int id, String username, HashedPassword hashedPassword, Double balance) {
         this.id = id;
         this.username = username;
         this.hashedPassword = hashedPassword;
+        this.balance = balance;
     }
 
     public boolean canBeUpdated() {
         return id > 0;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
     public int getId() {
@@ -44,6 +54,7 @@ public class User {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", hashedPassword='" + hashedPassword + '\'' +
+                ", balance='" + balance + '\'' +
                 '}';
     }
 }
