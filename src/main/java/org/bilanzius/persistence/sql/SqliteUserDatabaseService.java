@@ -25,7 +25,8 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user TEXT,
-                    password TEXT
+                    password TEXT,
+                    balance REAL DEFAULT 0.0
                 )
                 """);
     }
@@ -76,6 +77,22 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
         try {
             backend.execute("UPDATE users SET password = ? WHERE id = ?", stmt -> {
                 stmt.setString(1, user.getHashedPassword().getPassword());
+                stmt.setInt(2, user.getId());
+            });
+        } catch (SQLException ex) {
+            throw new DatabaseException(ex);
+        }
+    }
+
+    @Override
+    public void updateUserBalance(User user) {
+        if (!user.canBeUpdated()) {
+            throw new DatabaseException("User can't be updated.");
+        }
+
+        try {
+            backend.execute("UPDATE users SET balance = ? WHERE id = ?", stmt -> {
+                stmt.setDouble(1, user.getBalance());
                 stmt.setInt(2, user.getId());
             });
         } catch (SQLException ex) {

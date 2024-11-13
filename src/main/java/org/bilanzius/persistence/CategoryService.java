@@ -12,10 +12,11 @@ public interface CategoryService {
 
     List<Category> getCategoriesOfUser(User user, int limit);
 
-    Optional<Category> getCategoriesOfUserByName(User user, String name);
+    Optional<Category> getCategoryOfUserByName(User user, String name);
 
     List<Category> getExceededCategoriesOfUser(User user, int limit);
 
     void updateCategory(Category category);
 
+    void deleteCategory(Category category);
 }
