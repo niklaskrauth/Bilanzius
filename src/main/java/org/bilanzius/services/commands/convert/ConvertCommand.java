@@ -1,4 +1,4 @@
-package org.bilanzius.services.commands;
+package org.bilanzius.services.commands.convert;
 
 import com.google.gson.JsonObject;
 import org.bilanzius.persistence.models.User;

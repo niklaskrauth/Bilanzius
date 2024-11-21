@@ -1,15 +1,16 @@
-package org.bilanzius.services.commands;
+package org.bilanzius.services.commands.bilanzius;
 
 import java.util.Arrays;
 
-public enum CreateCategoryCommandArguments {
-    NAME("name", "-n"),
-    BUDGET("budget", "-b");
+public enum BilanziusCommandArguments {
+    VERSION("-version", "-v"),
+    AUTHORS("-authors", "-a"),
+    DESCRIPTION("-description", "-d");
 
     private final String argument;
     private final String argumentShort;
 
-    CreateCategoryCommandArguments(String argument, String argumentShort) {
+    BilanziusCommandArguments(String argument, String argumentShort) {
         this.argument = argument;
         this.argumentShort = argumentShort;
     }
@@ -23,15 +24,17 @@ public enum CreateCategoryCommandArguments {
     }
 
     public static String getAllArguments() {
-        return Arrays.stream(CreateCategoryCommandArguments.values()).map(
+
+        return Arrays.stream(BilanziusCommandArguments.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
                 (a, b) -> a + ", " + b
         ).orElse("");
+
     }
 
-    public static CreateCategoryCommandArguments fromString(String argument) {
-        for (CreateCategoryCommandArguments c : CreateCategoryCommandArguments.values()) {
+    public static BilanziusCommandArguments fromString(String argument) {
+        for (BilanziusCommandArguments c : BilanziusCommandArguments.values()) {
             if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }

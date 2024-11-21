@@ -1,5 +1,4 @@
-package org.bilanzius.services.commands;
-
+package org.bilanzius.services.commands.exit;
 
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.services.Command;

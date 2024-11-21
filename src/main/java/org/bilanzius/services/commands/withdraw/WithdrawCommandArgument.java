@@ -1,15 +1,14 @@
-package org.bilanzius.services.commands;
+package org.bilanzius.services.commands.withdraw;
 
 import java.util.Arrays;
 
-public enum DeleteCategoryCommandArguments {
-    NAME("name", "-n"),
-    ALL("all", "-a");
+public enum WithdrawCommandArgument {
+    WITHDRAW("amount", "-a");
 
     private final String argument;
     private final String argumentShort;
 
-    DeleteCategoryCommandArguments(String argument, String argumentShort) {
+    WithdrawCommandArgument(String argument, String argumentShort) {
         this.argument = argument;
         this.argumentShort = argumentShort;
     }
@@ -23,15 +22,15 @@ public enum DeleteCategoryCommandArguments {
     }
 
     public static String getAllArguments() {
-        return Arrays.stream(DeleteCategoryCommandArguments.values()).map(
+        return Arrays.stream(WithdrawCommandArgument.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
                 (a, b) -> a + ", " + b
         ).orElse("");
     }
 
-    public static DeleteCategoryCommandArguments fromString(String argument) {
-        for (DeleteCategoryCommandArguments c : DeleteCategoryCommandArguments.values()) {
+    public static WithdrawCommandArgument fromString(String argument) {
+        for (WithdrawCommandArgument c : WithdrawCommandArgument.values()) {
             if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }

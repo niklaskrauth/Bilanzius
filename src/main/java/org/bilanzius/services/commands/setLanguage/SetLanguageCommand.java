@@ -1,4 +1,4 @@
-package org.bilanzius.services.commands;
+package org.bilanzius.services.commands.setLanguage;
 
 import org.bilanzius.utils.Localization;
 import org.bilanzius.services.Command;

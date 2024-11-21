@@ -5,13 +5,15 @@ import org.bilanzius.utils.HashedPassword;
 
 import java.util.Optional;
 
-public interface UserDatabaseService {
+public interface UserService {
 
     void createUser(User user);
 
     Optional<User> findUser(long id);
 
     Optional<User> findUserWithCredentials(String username, HashedPassword password);
+
+    Optional<User> findUserWithName(String username);
 
     void updateUser(User user);
 

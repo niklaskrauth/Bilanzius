@@ -2,7 +2,7 @@ package org.bilanzius.persistence.sql.test;
 
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.TransactionService;
-import org.bilanzius.persistence.UserDatabaseService;
+import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
@@ -20,7 +20,7 @@ public class Test {
         backend.connect();
 
         // Setup
-        UserDatabaseService userService = new SqliteUserDatabaseService(backend);
+        UserService userService = new SqliteUserDatabaseService(backend);
         TransactionService transactionService = new SqliteTransactionService(backend);
         CategoryService categoryService = new SqliteCategoryService(backend);
 
