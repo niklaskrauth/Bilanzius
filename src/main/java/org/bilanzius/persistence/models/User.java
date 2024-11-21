@@ -11,9 +11,9 @@ public class User {
     private final int id;
     private final String username;
     private HashedPassword hashedPassword;
-    private Double balance;
+    private double balance;
 
-    public User(int id, String username, HashedPassword hashedPassword, Double balance) {
+    public User(int id, String username, HashedPassword hashedPassword, double balance) {
         this.id = id;
         this.username = username;
         this.hashedPassword = hashedPassword;
@@ -28,7 +28,7 @@ public class User {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
