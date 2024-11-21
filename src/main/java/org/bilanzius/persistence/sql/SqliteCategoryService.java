@@ -28,7 +28,7 @@ public class SqliteCategoryService implements CategoryService {
                 CREATE TABLE IF NOT EXISTS categorys (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     userId INTEGER,
-                    name TEXT
+                    name TEXT,
                     budget REAL(2),
                     amountSpent REAL(2),
                     FOREIGN KEY(userId) REFERENCES users(id),
@@ -68,7 +68,7 @@ public class SqliteCategoryService implements CategoryService {
     }
 
     @Override
-    public Optional<Category> getCategoriesOfUserByName(User user, String name) {
+    public Optional<Category> getCategoryOfUserByName(User user, String name) {
         try {
             return backend.query(Category.class, "SELECT * FROM categorys WHERE userId = ? AND name = ?",
                     stmt -> {
@@ -106,6 +106,16 @@ public class SqliteCategoryService implements CategoryService {
                         stmt.setDouble(3, category.getAmountSpent());
                         stmt.setInt(4, category.getCategoryId());
                     });
+        } catch (SQLException ex) {
+            throw new DatabaseException(ex);
+        }
+    }
+
+    @Override
+    public void deleteCategory(Category category) {
+        try {
+            backend.execute("DELETE FROM categorys WHERE id = ?",
+                    stmt -> stmt.setInt(1, category.getCategoryId()));
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }

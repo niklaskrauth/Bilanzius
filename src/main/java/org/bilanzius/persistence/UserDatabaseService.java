@@ -14,4 +14,6 @@ public interface UserDatabaseService {
     Optional<User> findUserWithCredentials(String username, HashedPassword password);
 
     void updateUser(User user);
+
+    void updateUserBalance(User user);
 }

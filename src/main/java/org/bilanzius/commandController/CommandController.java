@@ -1,6 +1,9 @@
 package org.bilanzius.commandController;
 
-import org.bilanzius.User;
+import org.bilanzius.persistence.CategoryService;
+import org.bilanzius.persistence.TransactionService;
+import org.bilanzius.persistence.UserDatabaseService;
+import org.bilanzius.persistence.models.User;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.*;
 import org.bilanzius.utils.Localization;
@@ -10,30 +13,36 @@ import java.util.Map;
 
 public class CommandController {
 
-    private User user;
+    UserDatabaseService userService;
+    TransactionService transactionService;
+    CategoryService categoryService;
     private final Map<Commands, Command> commandMap;
     private final Localization localization = Localization.getInstance();
 
-    public CommandController(User user) {
+    public CommandController(User user, UserDatabaseService userService,
+                             CategoryService categoryService, TransactionService transactionService) {
 
-        this.user = user;
+        this.userService = userService;
+        this.categoryService = categoryService;
+        this.transactionService = transactionService;
 
         commandMap = new HashMap<>();
 
-        commandMap.put(Commands.EXIT, new ExitCommand(this.user));
+        commandMap.put(Commands.EXIT, new ExitCommand(user));
         commandMap.put(Commands.HELP, new HelpCommand());
         commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
-        commandMap.put(Commands.DEPOSIT, new DepositCommand(this.user));
-        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(this.user));
-        commandMap.put(Commands.CONVERT, new ConvertCommand(this.user));
+        commandMap.put(Commands.DEPOSIT, new DepositCommand(user));
+        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user));
+        commandMap.put(Commands.CONVERT, new ConvertCommand(user));
 
         // Sprachbefehle
         commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
         commandMap.put(Commands.SETLANGUAGE, new SetLanguageCommand());
 
         // Kategoriebefehle
-        commandMap.put(Commands.CREATECATEGORY, new CreateCategoryCommand(this.user));
-        commandMap.put(Commands.GETCATEGORIES, new GetCategoryCommand(this.user));
+        commandMap.put(Commands.CREATECATEGORY, new CreateCategoryCommand(user, this.categoryService));
+        commandMap.put(Commands.GETCATEGORIES, new GetCategoryCommand(user, this.categoryService));
+        commandMap.put(Commands.DELETECATEGORY, new DeleteCategoryCommand(user, this.categoryService));
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }
@@ -53,4 +62,5 @@ public class CommandController {
 
         return localization.getMessage("unknown_command");
     }
+
 }

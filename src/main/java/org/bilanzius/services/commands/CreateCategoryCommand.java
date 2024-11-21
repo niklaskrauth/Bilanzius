@@ -1,16 +1,20 @@
 package org.bilanzius.services.commands;
 
-import org.bilanzius.User;
+import org.bilanzius.persistence.CategoryService;
+import org.bilanzius.persistence.models.Category;
+import org.bilanzius.persistence.models.User;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
 public class CreateCategoryCommand implements Command  {
 
     private User user;
+    CategoryService categoryService;
     private final Localization localization = Localization.getInstance();
 
-    public CreateCategoryCommand(User user) {
+    public CreateCategoryCommand(User user, CategoryService categoryService) {
         this.user = user;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -46,10 +50,8 @@ public class CreateCategoryCommand implements Command  {
     }
 
     private boolean checkIfCategoryExists(String name) {
-        // TODO implement check if category exists
-        //        CategoryService categoryService = new SqliteCategoryService(new SqlBackend());
-        //        categoryService.getCategoriesOfUserByName(user, name);
-        return false;
+        Category category = categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
+        return category != null && category.getName().equals(name);
     }
 
     private String createCategory(String name, Double budget) {
@@ -57,8 +59,7 @@ public class CreateCategoryCommand implements Command  {
             return localization.getMessage("category_already_exists", name);
         }
 
-//        CategoryService categoryService = new SqliteCategoryService(new SqlBackend());
-//        categoryService.createCategory(Category.create(user, name, budget));
+        categoryService.createCategory(Category.create(user, name, budget));
         return localization.getMessage("category_created", name, budget);
     }
 }

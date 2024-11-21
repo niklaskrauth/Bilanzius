@@ -20,8 +20,10 @@ public enum Commands {
     SETLANGUAGE("/setLanguage", Localization.getInstance().getMessage("set_language_description"), null),
     CREATECATEGORY("/createCategory", Localization.getInstance().getMessage("create_category_short_description"),
             CreateCategoryCommandArguments.getAllArguments()),
-    GETCATEGORIES("/getCategories", Localization.getInstance().getMessage("get_categories_short_description"),
-            GetCategoryCommandArguments.getAllArguments());
+    GETCATEGORIES("/getCategory", Localization.getInstance().getMessage("get_category_short_description"),
+            GetCategoryCommandArguments.getAllArguments()),
+    DELETECATEGORY("/deleteCategory", Localization.getInstance().getMessage("delete_category_short_description"),
+            DeleteCategoryCommandArguments.getAllArguments());
 
     // Hier werden die einzelnen Befehle hinzugefügt
 
