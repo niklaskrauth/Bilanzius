@@ -12,14 +12,13 @@ import static org.bilanzius.utils.HashedPassword.fromPlainText;
 public class SingUp {
 
     private UserService userService;
-    private Localization localization;
+    private Localization localization = Localization.getInstance();
 
-    public SingUp(UserService userService, Localization localization) {
+    public SingUp(UserService userService) {
         this.userService = userService;
-        this.localization = localization;
     }
 
-    public User login(Scanner input) {
+    public User waitUntilLoggedIn (Scanner input) {
 
         while (true) {
 
@@ -27,10 +26,6 @@ public class SingUp {
 
             System.out.println("Username:");
             String stringInput = input.nextLine();
-
-            if (stringInput == null) {
-                return null;
-            }
 
             Optional<org.bilanzius.persistence.models.User> userOptional = userService.findUserWithName(stringInput);
             if (userOptional.isPresent()) {
@@ -49,6 +44,7 @@ public class SingUp {
                 } else {
                     System.out.println(localization.getMessage("wrongPassword"));
                 }
+
             } else {
                 System.out.println(localization.getMessage("wrongUsername"));
             }

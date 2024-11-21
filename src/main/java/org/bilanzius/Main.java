@@ -40,7 +40,7 @@ public class Main {
             userService.createUser(User.createUser("TestUser2",
                     fromPlainText("passwort5678")));
 
-            SingUp singUp = new SingUp(userService, localization);
+            SingUp singUp = new SingUp(userService);
 
             System.out.println(localization.getMessage("greeting"));
 
@@ -48,7 +48,7 @@ public class Main {
 
             while (true) {
 
-               User user = singUp.login(input);
+               User user = singUp.waitUntilLoggedIn(input);
 
                while (user != null) {
 
