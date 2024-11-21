@@ -54,18 +54,18 @@ public class GetCategoryCommand implements Command {
             return localization.getMessage("no_exceeded_categories");
         }
         return categories.stream()
-                .map(category -> String.format("%s: Budget = %.2f, Amount Spent = %.2f", category.getName(),
-                        category.getBudget(), category.getAmountSpent()))
+                .map(category -> localization.getMessage("get_category_information",
+                        category.getName(), category.getBudget(), category.getAmountSpent()))
                 .collect(Collectors.joining("\n"));
     }
 
     private String categoryByName(String name) {
         Category category = categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
         if (category == null) {
-            return localization.getMessage("no_categories_with_name", name);
+            return localization.getMessage("no_category_with_name", name);
         }
-        return String.format("%s: Budget = %.2f, Amount Spent = %.2f", category.getName(),
-                category.getBudget(), category.getAmountSpent());
+        return localization.getMessage("get_category_information", category.getName(), category.getBudget(),
+                category.getAmountSpent());
     }
 
     private String allCategories() {
@@ -74,8 +74,8 @@ public class GetCategoryCommand implements Command {
             return localization.getMessage("no_categories_created");
         }
         return categories.stream()
-                .map(category -> String.format("%s: Budget = %.2f, Amount Spent = %.2f", category.getName(),
-                        category.getBudget(), category.getAmountSpent()))
+                .map(category -> localization.getMessage("get_category_information",
+                        category.getName(), category.getBudget(), category.getAmountSpent()))
                 .collect(Collectors.joining("\n"));
     }
 }

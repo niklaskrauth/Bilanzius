@@ -62,4 +62,5 @@ public class CommandController {
 
         return localization.getMessage("unknown_command");
     }
+
 }

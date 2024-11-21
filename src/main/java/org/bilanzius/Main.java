@@ -47,12 +47,11 @@ public class Main {
         System.out.println(localization.getMessage("greeting", databaseUser.getUsername()));
         Scanner input  = new Scanner(System.in);
 
+        CommandController commandController = new CommandController(databaseUser, userService, categoryService,
+                transactionService);
+
         while(true) {
-
             System.out.println("----------------------------------------------------------------------------------");
-
-            CommandController commandController = new CommandController(databaseUser, userService, categoryService,
-                    transactionService);
 
             String stringInput = input.nextLine();
 

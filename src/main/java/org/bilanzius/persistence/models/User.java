@@ -24,7 +24,7 @@ public class User {
         return id > 0;
     }
 
-    public Double getBalance() {
+    public double getBalance() {
         return balance;
     }
 

@@ -18,10 +18,12 @@ public class DeleteCategoryCommand implements Command {
     CategoryService categoryService;
     private final Map<DeleteCategoryCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
+    private final Scanner scanner;
 
     public DeleteCategoryCommand(User user, CategoryService categoryService) {
         this.user = user;
         this.categoryService = categoryService;
+        this.scanner = new Scanner(System.in);
 
         commandMap = new HashMap<>();
         commandMap.put(DeleteCategoryCommandArguments.ALL, s -> deleteAllCategories());
@@ -50,9 +52,9 @@ public class DeleteCategoryCommand implements Command {
     private String deleteCategoryByName(String name) {
         Category category = categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
         if (category == null) {
-            return localization.getMessage("no_categories_with_name", name);
+            return localization.getMessage("no_category_with_name", name);
         }
-        if (!validateDeleteAction(localization.getMessage("ask_for_deletion_category", category.getName()))) {
+        if (validateDeleteAction(localization.getMessage("ask_for_deletion_category", category.getName()))) {
             return localization.getMessage("no_categories_deleted");
         }
         categoryService.deleteCategory(category);
@@ -64,7 +66,7 @@ public class DeleteCategoryCommand implements Command {
         if (categories.isEmpty()) {
             return localization.getMessage("no_categories_created");
         }
-        if (!validateDeleteAction(localization.getMessage("ask_for_deletion_of_all_categories"))) {
+        if (validateDeleteAction(localization.getMessage("ask_for_deletion_of_all_categories"))) {
             return localization.getMessage("no_categories_deleted");
         }
         for (Category category : categories) {
@@ -74,9 +76,8 @@ public class DeleteCategoryCommand implements Command {
     }
 
     private boolean validateDeleteAction(String message){
-        Scanner scanner = new Scanner(System.in);
         System.out.println(message + " (yes/no): ");
-        String response = scanner.nextLine().trim().toLowerCase();
-        return response.equals("yes") || response.equals("y");
+        String response = this.scanner.nextLine().trim().toLowerCase();
+        return !response.equals("yes") && !response.equals("y");
     }
 }
