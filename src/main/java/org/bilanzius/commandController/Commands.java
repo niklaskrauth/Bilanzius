@@ -1,6 +1,12 @@
 package org.bilanzius.commandController;
 
-import org.bilanzius.services.commands.*;
+import org.bilanzius.services.commands.bilanzius.BilanziusCommandArguments;
+import org.bilanzius.services.commands.convert.ConvertCommandArguments;
+import org.bilanzius.services.commands.createCategory.CreateCategoryCommandArguments;
+import org.bilanzius.services.commands.deleteCategory.DeleteCategoryCommandArguments;
+import org.bilanzius.services.commands.deposit.DepositCommandArguments;
+import org.bilanzius.services.commands.getCategory.GetCategoryCommandArguments;
+import org.bilanzius.services.commands.withdraw.WithdrawCommandArgument;
 import org.bilanzius.utils.Localization;
 
 import java.util.Arrays;

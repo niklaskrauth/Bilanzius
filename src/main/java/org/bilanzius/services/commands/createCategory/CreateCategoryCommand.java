@@ -1,4 +1,4 @@
-package org.bilanzius.services.commands;
+package org.bilanzius.services.commands.createCategory;
 
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.models.Category;

@@ -1,14 +1,14 @@
-package org.bilanzius.services.commands;
+package org.bilanzius.services.commands.deposit;
 
 import java.util.Arrays;
 
-public enum WithdrawCommandArgument {
-    WITHDRAW("amount", "-a");
+public enum DepositCommandArguments {
+    DEPOSIT("amount", "-a");
 
     private final String argument;
     private final String argumentShort;
 
-    WithdrawCommandArgument(String argument, String argumentShort) {
+    DepositCommandArguments(String argument, String argumentShort) {
         this.argument = argument;
         this.argumentShort = argumentShort;
     }
@@ -22,15 +22,15 @@ public enum WithdrawCommandArgument {
     }
 
     public static String getAllArguments() {
-        return Arrays.stream(WithdrawCommandArgument.values()).map(
+        return Arrays.stream(DepositCommandArguments.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
                 (a, b) -> a + ", " + b
         ).orElse("");
     }
 
-    public static WithdrawCommandArgument fromString(String argument) {
-        for (WithdrawCommandArgument c : WithdrawCommandArgument.values()) {
+    public static DepositCommandArguments fromString(String argument) {
+        for (DepositCommandArguments c : DepositCommandArguments.values()) {
             if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }

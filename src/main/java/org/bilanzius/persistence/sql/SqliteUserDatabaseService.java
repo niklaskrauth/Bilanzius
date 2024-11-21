@@ -1,7 +1,7 @@
 package org.bilanzius.persistence.sql;
 
 import org.bilanzius.persistence.DatabaseException;
-import org.bilanzius.persistence.UserDatabaseService;
+import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.adapter.SqlUserAdapter;
 import org.bilanzius.utils.HashedPassword;
@@ -9,7 +9,7 @@ import org.bilanzius.utils.HashedPassword;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class SqliteUserDatabaseService implements UserDatabaseService {
+public class SqliteUserDatabaseService implements UserService {
 
     private final SqlBackend backend;
 
@@ -60,6 +60,19 @@ public class SqliteUserDatabaseService implements UserDatabaseService {
             return backend.query(User.class, "SELECT * FROM users WHERE user = ? AND password = ?", stmt -> {
                         stmt.setString(1, username);
                         stmt.setString(2, password.getPassword());
+                    })
+                    .stream()
+                    .findFirst();
+        } catch (SQLException ex) {
+            throw new DatabaseException(ex);
+        }
+    }
+
+    @Override
+    public Optional<User> findUserWithName(String username) {
+        try {
+            return backend.query(User.class, "SELECT * FROM users WHERE user = ?", stmt -> {
+                        stmt.setString(1, username);
                     })
                     .stream()
                     .findFirst();

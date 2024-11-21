@@ -1,14 +1,15 @@
-package org.bilanzius.services.commands;
+package org.bilanzius.services.commands.deleteCategory;
 
 import java.util.Arrays;
 
-public enum DepositCommandArguments {
-    DEPOSIT("amount", "-a");
+public enum DeleteCategoryCommandArguments {
+    NAME("name", "-n"),
+    ALL("all", "-a");
 
     private final String argument;
     private final String argumentShort;
 
-    DepositCommandArguments(String argument, String argumentShort) {
+    DeleteCategoryCommandArguments(String argument, String argumentShort) {
         this.argument = argument;
         this.argumentShort = argumentShort;
     }
@@ -22,15 +23,15 @@ public enum DepositCommandArguments {
     }
 
     public static String getAllArguments() {
-        return Arrays.stream(DepositCommandArguments.values()).map(
+        return Arrays.stream(DeleteCategoryCommandArguments.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
                 (a, b) -> a + ", " + b
         ).orElse("");
     }
 
-    public static DepositCommandArguments fromString(String argument) {
-        for (DepositCommandArguments c : DepositCommandArguments.values()) {
+    public static DeleteCategoryCommandArguments fromString(String argument) {
+        for (DeleteCategoryCommandArguments c : DeleteCategoryCommandArguments.values()) {
             if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }

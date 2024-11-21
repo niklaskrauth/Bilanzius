@@ -2,10 +2,20 @@ package org.bilanzius.commandController;
 
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.TransactionService;
-import org.bilanzius.persistence.UserDatabaseService;
+import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.services.Command;
-import org.bilanzius.services.commands.*;
+import org.bilanzius.services.commands.bilanzius.BilanziusCommand;
+import org.bilanzius.services.commands.convert.ConvertCommand;
+import org.bilanzius.services.commands.createCategory.CreateCategoryCommand;
+import org.bilanzius.services.commands.deleteCategory.DeleteCategoryCommand;
+import org.bilanzius.services.commands.deposit.DepositCommand;
+import org.bilanzius.services.commands.exit.ExitCommand;
+import org.bilanzius.services.commands.getCategory.GetCategoryCommand;
+import org.bilanzius.services.commands.getLanguage.GetLanguagesCommand;
+import org.bilanzius.services.commands.help.HelpCommand;
+import org.bilanzius.services.commands.setLanguage.SetLanguageCommand;
+import org.bilanzius.services.commands.withdraw.WithdrawCommand;
 import org.bilanzius.utils.Localization;
 
 import java.util.HashMap;
@@ -13,13 +23,13 @@ import java.util.Map;
 
 public class CommandController {
 
-    UserDatabaseService userService;
+    UserService userService;
     TransactionService transactionService;
     CategoryService categoryService;
     private final Map<Commands, Command> commandMap;
     private final Localization localization = Localization.getInstance();
 
-    public CommandController(User user, UserDatabaseService userService,
+    public CommandController(User user, UserService userService,
                              CategoryService categoryService, TransactionService transactionService) {
 
         this.userService = userService;

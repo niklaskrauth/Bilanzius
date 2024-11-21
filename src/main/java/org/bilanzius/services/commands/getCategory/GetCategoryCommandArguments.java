@@ -1,4 +1,4 @@
-package org.bilanzius.services.commands;
+package org.bilanzius.services.commands.getCategory;
 
 import java.util.Arrays;
 
