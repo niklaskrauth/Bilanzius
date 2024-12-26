@@ -11,7 +11,7 @@ public class BankAccount {
     private final int accountId;
     private final int userId;
     private String name;
-    private Double balance;
+    private final Double balance;
 
     public BankAccount(int accountId, int userId, String name, Double balance) {
         this.accountId = accountId;

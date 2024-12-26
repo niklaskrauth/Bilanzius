@@ -12,7 +12,7 @@ import static org.bilanzius.utils.HashedPassword.fromPlainText;
 public class SignUp {
 
     private UserService userService;
-    private Localization localization = Localization.getInstance();
+    private final Localization localization = Localization.getInstance();
 
     public SignUp(UserService userService) {
         this.userService = userService;
