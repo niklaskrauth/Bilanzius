@@ -3,7 +3,6 @@ package org.bilanzius.persistence.sql;
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.models.BankAccount;
-import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.adapter.SqlBankAccountAdapter;
 
@@ -86,7 +85,7 @@ public class SqlliteBankAccountService implements BankAccountService {
                     stmt -> {
                         stmt.setString(1, bankAccount.getName());
                         stmt.setDouble(2, bankAccount.getBalance());
-                        stmt.setInt(4, bankAccount.getAccountId());
+                        stmt.setInt(3, bankAccount.getAccountId());
                     });
         } catch (SQLException ex) {
             throw new DatabaseException(ex);

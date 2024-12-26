@@ -38,7 +38,10 @@ public class Test {
         BankAccount bankAccount = bankAccountService.getBankAccountsOfUserByName(user, "testBankAccount").orElseThrow();
         // Update bank account balance
         bankAccountService.updateBankAccountBalance(bankAccount, 5.00);
-        System.out.println(bankAccountService.getBankAccountsOfUserByName(user, "testBankAccount").orElseThrow());
+        // change bank account name
+        bankAccount.setName("changedBankAccount");
+        bankAccountService.updateBankAccount(bankAccount);
+        System.out.println(bankAccountService.getBankAccountsOfUserByName(user, "changedBankAccount").orElseThrow());
         // delete bank account
         bankAccountService.deleteBankAccount(bankAccount);
 
