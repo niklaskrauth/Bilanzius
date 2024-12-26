@@ -9,12 +9,12 @@ import java.util.Scanner;
 
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
-public class SingUp {
+public class SignUp {
 
     private UserService userService;
     private Localization localization = Localization.getInstance();
 
-    public SingUp(UserService userService) {
+    public SignUp(UserService userService) {
         this.userService = userService;
     }
 
