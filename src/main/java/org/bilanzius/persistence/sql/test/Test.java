@@ -1,15 +1,14 @@
 package org.bilanzius.persistence.sql.test;
 
+import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.UserService;
+import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteCategoryService;
-import org.bilanzius.persistence.sql.SqliteTransactionService;
-import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
+import org.bilanzius.persistence.sql.*;
 import org.bilanzius.utils.HashedPassword;
 
 public class Test {
@@ -23,6 +22,7 @@ public class Test {
         UserService userService = new SqliteUserDatabaseService(backend);
         TransactionService transactionService = new SqliteTransactionService(backend);
         CategoryService categoryService = new SqliteCategoryService(backend);
+        BankAccountService bankAccountService = new SqlliteBankAccountService(backend);
 
         // Create a new user with name "test2" and password "passwort123"
         userService.createUser(User.createUser("test2", HashedPassword.fromPlainText("passwort123")));
@@ -31,6 +31,16 @@ public class Test {
         var user = userService
                 .findUserWithCredentials("test2", HashedPassword.fromPlainText("passwort123"))
                 .orElseThrow();
+
+        // Create bank account
+        bankAccountService.createBankAccount(BankAccount.create(user, "testBankAccount"));
+        bankAccountService.getBankAccountsOfUser(user, 1).forEach(System.out::println);
+        BankAccount bankAccount = bankAccountService.getBankAccountsOfUserByName(user, "testBankAccount").orElseThrow();
+        // Update bank account balance
+        bankAccountService.updateBankAccountBalance(bankAccount, 5.00);
+        System.out.println(bankAccountService.getBankAccountsOfUserByName(user, "testBankAccount").orElseThrow());
+        // delete bank account
+        bankAccountService.deleteBankAccount(bankAccount);
 
         // create transaction
         transactionService.saveTransaction(Transaction.create(user, 5.00, "5€"));
