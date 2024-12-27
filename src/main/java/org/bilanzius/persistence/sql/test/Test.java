@@ -42,15 +42,6 @@ public class Test {
         bankAccount.setName("changedBankAccount");
         bankAccountService.updateBankAccount(bankAccount);
         System.out.println(bankAccountService.getBankAccountsOfUserByName(user, "changedBankAccount").orElseThrow());
-        // delete bank account
-        bankAccountService.deleteBankAccount(bankAccount);
-
-        // create transaction
-        transactionService.saveTransaction(Transaction.create(user, 5.00, "5€"));
-
-        // Update password
-        user.setHashedPassword(HashedPassword.fromPlainText("kuchen123"));
-        userService.updateUser(user);
 
         // Create category
         categoryService.createCategory(Category.create(user, "test", 5.00));
@@ -75,7 +66,13 @@ public class Test {
         var exceededCategories = categoryService.getExceededCategoriesOfUser(user, 1).getFirst();
         System.out.println(exceededCategories.toString());
 
-        // Delete category
-        categoryService.deleteCategory(categoryTest);
+        // create transaction
+        transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, 5.00, "5€"));
+        transactionService.saveTransaction(Transaction.create(user, bankAccount, 10.00, "10€"));
+
+        // Update password
+        user.setHashedPassword(HashedPassword.fromPlainText("kuchen123"));
+        userService.updateUser(user);
+
     }
 }
