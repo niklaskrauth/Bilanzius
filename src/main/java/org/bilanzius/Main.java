@@ -1,13 +1,12 @@
 package org.bilanzius;
 
 import org.bilanzius.commandController.CommandController;
+import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.UserService;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteCategoryService;
-import org.bilanzius.persistence.sql.SqliteTransactionService;
-import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
+import org.bilanzius.persistence.models.BankAccount;
+import org.bilanzius.persistence.sql.*;
 import org.bilanzius.utils.Localization;
 import org.bilanzius.persistence.models.User;
 
@@ -24,12 +23,14 @@ public class Main {
         UserService userService;
         TransactionService transactionService;
         CategoryService categoryService;
+        BankAccountService bankAccountService;
 
         try {
             backend.connect();
             userService = new SqliteUserDatabaseService(backend);
             transactionService = new SqliteTransactionService(backend);
             categoryService = new SqliteCategoryService(backend);
+            bankAccountService = new SqliteBankAccountService(backend);
 
             Localization localization = Localization.getInstance();
 
@@ -40,7 +41,7 @@ public class Main {
             userService.createUser(User.createUser("TestUser2",
                     fromPlainText("passwort5678")));
 
-            SignUp signUp = new SignUp(userService);
+            SignUp signUp = new SignUp(userService, bankAccountService);
 
             System.out.println(localization.getMessage("greeting"));
 
@@ -48,7 +49,9 @@ public class Main {
 
             while (true) {
 
-               User user = signUp.waitUntilLoggedIn(input);
+               User user = signUp.waitUntilLoggedIn(input); //TODO: Implement Register @Niklas
+
+               BankAccount bankAccount = signUp.waitUntilBankAccountSelect(input, user);
 
                while (user != null) {
 
@@ -56,7 +59,8 @@ public class Main {
 
                    String stringInput = input.nextLine();
 
-                   CommandController commandController = new CommandController(user, userService, categoryService, transactionService);
+                   CommandController commandController = new CommandController(user, userService, bankAccountService,
+                           categoryService, transactionService, bankAccount);
 
                    String stringOutput = commandController.handleInput(stringInput);
                    System.out.println(stringOutput);

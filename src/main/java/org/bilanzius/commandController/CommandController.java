@@ -1,8 +1,10 @@
 package org.bilanzius.commandController;
 
+import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.UserService;
+import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.bilanzius.BilanziusCommand;
@@ -26,15 +28,17 @@ public class CommandController {
     UserService userService;
     TransactionService transactionService;
     CategoryService categoryService;
+    BankAccountService bankAccountService;
     private final Map<Commands, Command> commandMap;
     private final Localization localization = Localization.getInstance();
 
-    public CommandController(User user, UserService userService,
-                             CategoryService categoryService, TransactionService transactionService) {
+    public CommandController(User user, UserService userService, BankAccountService bankAccountService,
+                             CategoryService categoryService, TransactionService transactionService, BankAccount selectedBankAccount) {
 
         this.userService = userService;
         this.categoryService = categoryService;
         this.transactionService = transactionService;
+        this.bankAccountService = bankAccountService;
 
         commandMap = new HashMap<>();
 

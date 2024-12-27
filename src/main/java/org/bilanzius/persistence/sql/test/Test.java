@@ -22,7 +22,7 @@ public class Test {
         UserService userService = new SqliteUserDatabaseService(backend);
         TransactionService transactionService = new SqliteTransactionService(backend);
         CategoryService categoryService = new SqliteCategoryService(backend);
-        BankAccountService bankAccountService = new SqlliteBankAccountService(backend);
+        BankAccountService bankAccountService = new SqliteBankAccountService(backend);
 
         // Create a new user with name "test2" and password "passwort123"
         userService.createUser(User.createUser("test2", HashedPassword.fromPlainText("passwort123")));

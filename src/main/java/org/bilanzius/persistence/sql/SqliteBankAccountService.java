@@ -12,11 +12,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class SqlliteBankAccountService implements BankAccountService {
+public class SqliteBankAccountService implements BankAccountService {
 
     private final SqlBackend backend;
 
-    public SqlliteBankAccountService(SqlBackend backend) throws SQLException {
+    public SqliteBankAccountService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(BankAccount.class, new SqlBankAccountAdapter());
 

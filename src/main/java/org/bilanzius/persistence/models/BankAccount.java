@@ -40,7 +40,6 @@ public class BankAccount {
         return balance;
     }
 
-
     @Override
     public String toString() {
         return "Account{ " +
