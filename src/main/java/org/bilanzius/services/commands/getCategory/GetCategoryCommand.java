@@ -3,9 +3,12 @@ package org.bilanzius.services.commands.getCategory;
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.persistence.sql.SqlBackend;
+import org.bilanzius.persistence.sql.SqliteCategoryService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +22,9 @@ public class GetCategoryCommand implements Command {
     private final Map<GetCategoryCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
 
-    public GetCategoryCommand(User user, CategoryService categoryService) {
+    public GetCategoryCommand(User user, SqlBackend backend) throws SQLException {
         this.user = user;
-        this.categoryService = categoryService;
+        this.categoryService = SqliteCategoryService.getInstance(backend);
 
         commandMap = new HashMap<>();
         commandMap.put(GetCategoryCommandArguments.ALL, s -> allCategories());

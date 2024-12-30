@@ -1,9 +1,6 @@
 package org.bilanzius;
 
 import org.bilanzius.commandController.CommandController;
-import org.bilanzius.persistence.BankAccountService;
-import org.bilanzius.persistence.CategoryService;
-import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.sql.*;
@@ -21,16 +18,10 @@ public class Main {
         // Connect to sqllite database
         var backend = new SqlBackend();
         UserService userService;
-        TransactionService transactionService;
-        CategoryService categoryService;
-        BankAccountService bankAccountService;
 
         try {
             backend.connect();
             userService = SqliteUserDatabaseService.getInstance(backend);
-            transactionService = SqliteTransactionService.getInstance(backend);
-            categoryService = SqliteCategoryService.getInstance(backend);
-            bankAccountService = SqliteBankAccountService.getInstance(backend);
 
             Localization localization = Localization.getInstance();
 
@@ -41,7 +32,7 @@ public class Main {
             userService.createUser(User.createUser("TestUser2",
                     fromPlainText("passwort5678")));
 
-            SignUp signUp = new SignUp(userService, bankAccountService);
+            SignUp signUp = new SignUp(backend);
 
             System.out.println(localization.getMessage("greeting"));
 
@@ -59,8 +50,7 @@ public class Main {
 
                    String stringInput = input.nextLine();
 
-                   CommandController commandController = new CommandController(user, userService, bankAccountService,
-                           categoryService, transactionService, bankAccount);
+                   CommandController commandController = new CommandController(user, backend, bankAccount);
 
                    String stringOutput = commandController.handleInput(stringInput);
                    System.out.println(stringOutput);

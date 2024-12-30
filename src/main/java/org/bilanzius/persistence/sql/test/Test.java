@@ -32,7 +32,6 @@ public class Test {
                 .findUserWithCredentials("test2", HashedPassword.fromPlainText("passwort123"))
                 .orElseThrow();
 
-        BankAccountService bankAccountService2 = SqliteBankAccountService.getInstance(backend);
 
         // Create bank account
         bankAccountService.createBankAccount(BankAccount.create(user, "testBankAccount"));
@@ -69,7 +68,7 @@ public class Test {
         System.out.println(exceededCategories.toString());
 
         // create transaction
-        transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, 5.00, "5€"));
+        transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, -5.00, "-5€"));
         transactionService.saveTransaction(Transaction.create(user, bankAccount, 10.00, "10€"));
 
         // Update password

@@ -14,7 +14,7 @@ public class SqliteUserDatabaseService implements UserService {
     private static SqliteUserDatabaseService instance;
     private final SqlBackend backend;
 
-    private SqliteUserDatabaseService(SqlBackend backend) throws SQLException {
+    public SqliteUserDatabaseService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(User.class, new SqlUserAdapter());
 
@@ -34,7 +34,7 @@ public class SqliteUserDatabaseService implements UserService {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user TEXT,
                     password TEXT,
-                    balance REAL DEFAULT 0.0
+                    mainBankAccountId INTEGER DEFAULT NULL
                 )
                 """);
     }
@@ -79,11 +79,8 @@ public class SqliteUserDatabaseService implements UserService {
     @Override
     public Optional<User> findUserWithName(String username) {
         try {
-            return backend.query(User.class, "SELECT * FROM users WHERE user = ?", stmt -> {
-                        stmt.setString(1, username);
-                    })
-                    .stream()
-                    .findFirst();
+            return backend.query(User.class, "SELECT * FROM users WHERE user = ?",
+                    stmt -> stmt.setString(1, username)).stream().findFirst();
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
@@ -106,14 +103,14 @@ public class SqliteUserDatabaseService implements UserService {
     }
 
     @Override
-    public void updateUserBalance(User user) {
+    public void updateUserMainAccountId(User user) {
         if (!user.canBeUpdated()) {
             throw new DatabaseException("User can't be updated.");
         }
 
         try {
-            backend.execute("UPDATE users SET balance = ? WHERE id = ?", stmt -> {
-                stmt.setDouble(1, user.getBalance());
+            backend.execute("UPDATE users SET mainAccountId = ? WHERE id = ?", stmt -> {
+                stmt.setDouble(1, user.getMainAccountId());
                 stmt.setInt(2, user.getId());
             });
         } catch (SQLException ex) {

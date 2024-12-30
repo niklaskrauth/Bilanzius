@@ -1,9 +1,17 @@
 package org.bilanzius.services.commands.withdraw;
 
+import org.bilanzius.persistence.BankAccountService;
+import org.bilanzius.persistence.TransactionService;
+import org.bilanzius.persistence.models.BankAccount;
+import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.persistence.sql.SqlBackend;
+import org.bilanzius.persistence.sql.SqliteBankAccountService;
+import org.bilanzius.persistence.sql.SqliteTransactionService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -13,10 +21,16 @@ public class WithdrawCommand implements Command {
     private User user;
     private final Map<WithdrawCommandArgument, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
+    private final TransactionService transactionService;
+    private final BankAccount selectedBankAccount;
+    private final BankAccountService bankAccountService;
 
 
-    public WithdrawCommand(User user) {
+    public WithdrawCommand(User user, SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
         this.user = user;
+        this.transactionService = SqliteTransactionService.getInstance(backend);
+        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.selectedBankAccount = selectedBankAccount;
 
         commandMap = new HashMap<>();
         commandMap.put(WithdrawCommandArgument.WITHDRAW, this::withdrawMoney);
@@ -54,12 +68,13 @@ public class WithdrawCommand implements Command {
 
             withdrawMoney = Double.parseDouble(argument);
             withdrawMoney = Math.abs(withdrawMoney);
-            user.setBalance(user.getBalance() - withdrawMoney);
+            transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, -withdrawMoney, "Withdraw" + withdrawMoney));
 
-            if (user.getBalance() < 0) {
-                outputText = localization.getMessage("withdraw_successful_dept", user.getBalance());
+            double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+            if (balance < 0) {
+                outputText = localization.getMessage("withdraw_successful_dept", balance);
             } else {
-                outputText = localization.getMessage("withdraw_successful", user.getBalance());
+                outputText = localization.getMessage("withdraw_successful", balance);
             }
 
             return outputText;

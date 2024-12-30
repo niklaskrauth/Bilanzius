@@ -33,7 +33,7 @@ public class SqliteCategoryService implements CategoryService {
 
     private void createSchema() throws SQLException {
         this.backend.execute("""
-                CREATE TABLE IF NOT EXISTS categorys (
+                CREATE TABLE IF NOT EXISTS categories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     userId INTEGER,
                     name TEXT,
@@ -48,7 +48,7 @@ public class SqliteCategoryService implements CategoryService {
     @Override
     public void createCategory(Category category){
         try {
-            backend.execute("INSERT INTO categorys (userId, name, budget, amountSpent) VALUES (?,?,?,?)",
+            backend.execute("INSERT INTO categories (userId, name, budget, amountSpent) VALUES (?,?,?,?)",
                     stmt -> {
                         stmt.setInt(1, category.getUserId());
                         stmt.setString(2, category.getName());
@@ -61,10 +61,21 @@ public class SqliteCategoryService implements CategoryService {
     }
 
     @Override
+    public Optional<Category> getCategory(long id) {
+        try {
+            return backend.query(Category.class, "SELECT * FROM categories WHERE id = ?", stmt -> stmt.setLong(1, id))
+                    .stream()
+                    .findFirst();
+        } catch (SQLException ex) {
+            throw new DatabaseException(ex);
+        }
+    }
+
+    @Override
     public List<Category> getCategoriesOfUser(User user, int limit) {
         try {
             Collection<Category> categories = backend.query(Category.class,
-                    "SELECT * FROM categorys WHERE userId = ? LIMIT ?",
+                    "SELECT * FROM categories WHERE userId = ? LIMIT ?",
                     stmt -> {
                         stmt.setInt(1, user.getId());
                         stmt.setInt(2, limit);
@@ -78,7 +89,7 @@ public class SqliteCategoryService implements CategoryService {
     @Override
     public Optional<Category> getCategoryOfUserByName(User user, String name) {
         try {
-            return backend.query(Category.class, "SELECT * FROM categorys WHERE userId = ? AND name = ?",
+            return backend.query(Category.class, "SELECT * FROM categories WHERE userId = ? AND name = ?",
                     stmt -> {
                         stmt.setInt(1, user.getId());
                         stmt.setString(2, name);
@@ -93,7 +104,7 @@ public class SqliteCategoryService implements CategoryService {
     public List<Category> getExceededCategoriesOfUser(User user, int limit) {
         try {
             Collection<Category> categories = backend.query(Category.class,
-                    "SELECT * FROM categorys WHERE userId = ? AND amountSpent > budget LIMIT ?",
+                    "SELECT * FROM categories WHERE userId = ? AND amountSpent > budget LIMIT ?",
                     stmt -> {
                         stmt.setInt(1, user.getId());
                         stmt.setInt(2, limit);
@@ -107,7 +118,7 @@ public class SqliteCategoryService implements CategoryService {
     @Override
     public void updateCategory(Category category) {
         try {
-            backend.execute("UPDATE categorys SET name = ?, budget = ?, amountSpent = ? WHERE id = ?",
+            backend.execute("UPDATE categories SET name = ?, budget = ?, amountSpent = ? WHERE id = ?",
                     stmt -> {
                         stmt.setString(1, category.getName());
                         stmt.setDouble(2, category.getBudget());
@@ -122,7 +133,7 @@ public class SqliteCategoryService implements CategoryService {
     @Override
     public void deleteCategory(Category category) {
         try {
-            backend.execute("DELETE FROM categorys WHERE id = ?",
+            backend.execute("DELETE FROM categories WHERE id = ?",
                     stmt -> stmt.setInt(1, category.getCategoryId()));
         } catch (SQLException ex) {
             throw new DatabaseException(ex);

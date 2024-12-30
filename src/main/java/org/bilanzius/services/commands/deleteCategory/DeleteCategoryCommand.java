@@ -3,9 +3,12 @@ package org.bilanzius.services.commands.deleteCategory;
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.persistence.sql.SqlBackend;
+import org.bilanzius.persistence.sql.SqliteCategoryService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +23,9 @@ public class DeleteCategoryCommand implements Command {
     private final Localization localization = Localization.getInstance();
     private final Scanner scanner;
 
-    public DeleteCategoryCommand(User user, CategoryService categoryService) {
+    public DeleteCategoryCommand(User user, SqlBackend backend) throws SQLException {
         this.user = user;
-        this.categoryService = categoryService;
+        this.categoryService = SqliteCategoryService.getInstance(backend);
         this.scanner = new Scanner(System.in);
 
         commandMap = new HashMap<>();

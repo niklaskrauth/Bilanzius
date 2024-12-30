@@ -2,6 +2,7 @@ package org.bilanzius.persistence.sql;
 
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.adapter.SqlBankAccountAdapter;
@@ -16,10 +17,12 @@ public class SqliteBankAccountService implements BankAccountService {
 
     private final SqlBackend backend;
     private static SqliteBankAccountService instance;
+    private final UserService userService;
 
     private SqliteBankAccountService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(BankAccount.class, new SqlBankAccountAdapter());
+        this.userService = SqliteUserDatabaseService.getInstance(backend);
         this.createSchema();
     }
 
@@ -51,6 +54,25 @@ public class SqliteBankAccountService implements BankAccountService {
                         stmt.setInt(1, bankAccount.getUserId());
                         stmt.setString(2, bankAccount.getName());
                     });
+
+            Optional<User> userOptional = userService.findUser(bankAccount.getUserId()).stream().findFirst();
+            if (userOptional.isEmpty()) return;
+
+            User user = userOptional.get();
+            if (user.getMainAccountId() == null) {
+                user.setMainAccountId(bankAccount.getAccountId());
+                userService.updateUserMainAccountId(user);
+            }
+        } catch (SQLException ex) {
+            throw new DatabaseException(ex);
+        }
+    }
+
+    @Override
+    public Optional<BankAccount> getBankAccount(long id) {
+        try {
+            return backend.query(BankAccount.class, "SELECT * FROM bankAccounts WHERE id = ?",
+                            stmt -> stmt.setLong(1, id)).stream().findFirst();
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }

@@ -4,8 +4,12 @@ import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.persistence.sql.SqlBackend;
+import org.bilanzius.persistence.sql.SqliteBankAccountService;
+import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -17,9 +21,9 @@ public class SignUp {
     private final BankAccountService bankAccountService;
     private final Localization localization = Localization.getInstance();
 
-    public SignUp(UserService userService, BankAccountService bankAccountService) {
-        this.userService = userService;
-        this.bankAccountService = bankAccountService;
+    public SignUp(SqlBackend backend) throws SQLException {
+        this.userService = SqliteUserDatabaseService.getInstance(backend);
+        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
     }
 
     public User waitUntilLoggedIn (Scanner input) {
@@ -68,6 +72,8 @@ public class SignUp {
                 }
                 System.out.println(localization.getMessage("wrongBankAccountName"));
             }
+        } else if (bankAccountService.getBankAccountsOfUser(user, 1).size() == 1){
+            return bankAccountService.getBankAccountsOfUser(user, 1).getFirst();
         }
         System.out.println(localization.getMessage("noBankAccountsYet"));
         System.out.println("----------------------------------------------------------------------------------");

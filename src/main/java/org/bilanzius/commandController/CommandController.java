@@ -6,6 +6,7 @@ import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.persistence.sql.*;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.bilanzius.BilanziusCommand;
 import org.bilanzius.services.commands.convert.ConvertCommand;
@@ -20,6 +21,7 @@ import org.bilanzius.services.commands.setLanguage.SetLanguageCommand;
 import org.bilanzius.services.commands.withdraw.WithdrawCommand;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,31 +34,30 @@ public class CommandController {
     private final Map<Commands, Command> commandMap;
     private final Localization localization = Localization.getInstance();
 
-    public CommandController(User user, UserService userService, BankAccountService bankAccountService,
-                             CategoryService categoryService, TransactionService transactionService, BankAccount selectedBankAccount) {
+    public CommandController(User user, SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
 
-        this.userService = userService;
-        this.categoryService = categoryService;
-        this.transactionService = transactionService;
-        this.bankAccountService = bankAccountService;
+        this.categoryService = SqliteCategoryService.getInstance(backend);
+        this.transactionService = SqliteTransactionService.getInstance(backend);
+        this.userService = SqliteUserDatabaseService.getInstance(backend);
+        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
 
         commandMap = new HashMap<>();
 
         commandMap.put(Commands.EXIT, new ExitCommand(user));
         commandMap.put(Commands.HELP, new HelpCommand());
         commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
-        commandMap.put(Commands.DEPOSIT, new DepositCommand(user));
-        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user));
-        commandMap.put(Commands.CONVERT, new ConvertCommand(user));
+        commandMap.put(Commands.DEPOSIT, new DepositCommand(user, backend, selectedBankAccount));
+        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user, backend, selectedBankAccount));
+        commandMap.put(Commands.CONVERT, new ConvertCommand(backend, selectedBankAccount));
 
         // Sprachbefehle
         commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
         commandMap.put(Commands.SETLANGUAGE, new SetLanguageCommand());
 
         // Kategoriebefehle
-        commandMap.put(Commands.CREATECATEGORY, new CreateCategoryCommand(user, this.categoryService));
-        commandMap.put(Commands.GETCATEGORIES, new GetCategoryCommand(user, this.categoryService));
-        commandMap.put(Commands.DELETECATEGORY, new DeleteCategoryCommand(user, this.categoryService));
+        commandMap.put(Commands.CREATECATEGORY, new CreateCategoryCommand(user, backend));
+        commandMap.put(Commands.GETCATEGORIES, new GetCategoryCommand(user, backend));
+        commandMap.put(Commands.DELETECATEGORY, new DeleteCategoryCommand(user, backend));
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }
