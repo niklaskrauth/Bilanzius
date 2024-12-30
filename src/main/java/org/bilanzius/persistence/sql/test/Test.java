@@ -19,10 +19,10 @@ public class Test {
         backend.connect();
 
         // Setup
-        UserService userService = new SqliteUserDatabaseService(backend);
-        TransactionService transactionService = new SqliteTransactionService(backend);
-        CategoryService categoryService = new SqliteCategoryService(backend);
-        BankAccountService bankAccountService = new SqliteBankAccountService(backend);
+        UserService userService = SqliteUserDatabaseService.getInstance(backend);
+        TransactionService transactionService = SqliteTransactionService.getInstance(backend);
+        CategoryService categoryService = SqliteCategoryService.getInstance(backend);
+        BankAccountService bankAccountService = SqliteBankAccountService.getInstance(backend);
 
         // Create a new user with name "test2" and password "passwort123"
         userService.createUser(User.createUser("test2", HashedPassword.fromPlainText("passwort123")));
@@ -31,6 +31,8 @@ public class Test {
         var user = userService
                 .findUserWithCredentials("test2", HashedPassword.fromPlainText("passwort123"))
                 .orElseThrow();
+
+        BankAccountService bankAccountService2 = SqliteBankAccountService.getInstance(backend);
 
         // Create bank account
         bankAccountService.createBankAccount(BankAccount.create(user, "testBankAccount"));

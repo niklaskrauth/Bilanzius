@@ -11,13 +11,21 @@ import java.util.List;
 
 public class SqliteTransactionService implements TransactionService {
 
+    private static SqliteTransactionService instance;
     private final SqlBackend backend;
 
-    public SqliteTransactionService(SqlBackend backend) throws SQLException {
+    private SqliteTransactionService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(Transaction.class, new SqlTransactionAdapter());
 
         this.createSchema();
+    }
+
+    public static synchronized SqliteTransactionService getInstance(SqlBackend backend) throws SQLException {
+        if (instance == null) {
+            instance = new SqliteTransactionService(backend);
+        }
+        return instance;
     }
 
     private void createSchema() throws SQLException {
@@ -25,6 +33,8 @@ public class SqliteTransactionService implements TransactionService {
                 CREATE TABLE IF NOT EXISTS transactions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     userId INTEGER,
+                    accountId INTEGER,
+                    categoryId INTEGER,
                     created DATETIME DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
                     description TEXT,
                     money REAL(2),
@@ -37,11 +47,13 @@ public class SqliteTransactionService implements TransactionService {
     @Override
     public void saveTransaction(Transaction transaction) {
         try {
-            this.backend.execute("INSERT INTO transactions (userId, description, money) VALUES (?,?,?)",
+            this.backend.execute("INSERT INTO transactions (userId, accountId, categoryId, description, money) VALUES (?,?,?,?,?)",
                     stmt -> {
                         stmt.setInt(1, transaction.getUserId());
-                        stmt.setString(2, transaction.getDescription());
-                        stmt.setDouble(3, transaction.getMoney());
+                        stmt.setInt(2, transaction.getAccountId());
+                        stmt.setObject(3, transaction.getCategoryId() == -1 ? null : transaction.getCategoryId(), java.sql.Types.INTEGER);
+                        stmt.setString(4, transaction.getDescription());
+                        stmt.setDouble(5, transaction.getMoney());
                     });
         } catch (SQLException ex) {
             throw new DatabaseException(ex);

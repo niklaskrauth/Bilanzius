@@ -14,13 +14,21 @@ import java.util.Optional;
 
 public class SqliteCategoryService implements CategoryService {
 
+    private static SqliteCategoryService instance;
     private final SqlBackend backend;
 
-    public SqliteCategoryService(SqlBackend backend) throws SQLException {
+    private SqliteCategoryService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(Category.class, new SqlCategoryAdapter());
 
         this.createSchema();
+    }
+
+    public static synchronized SqliteCategoryService getInstance(SqlBackend backend) throws SQLException {
+        if (instance == null) {
+            instance = new SqliteCategoryService(backend);
+        }
+        return instance;
     }
 
     private void createSchema() throws SQLException {

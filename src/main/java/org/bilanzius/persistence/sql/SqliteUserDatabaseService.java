@@ -11,13 +11,21 @@ import java.util.Optional;
 
 public class SqliteUserDatabaseService implements UserService {
 
+    private static SqliteUserDatabaseService instance;
     private final SqlBackend backend;
 
-    public SqliteUserDatabaseService(SqlBackend backend) throws SQLException {
+    private SqliteUserDatabaseService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(User.class, new SqlUserAdapter());
 
         this.createSchema();
+    }
+
+    public static synchronized SqliteUserDatabaseService getInstance(SqlBackend backend) throws SQLException {
+        if (instance == null) {
+            instance = new SqliteUserDatabaseService(backend);
+        }
+        return instance;
     }
 
     private void createSchema() throws SQLException {

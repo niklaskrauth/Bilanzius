@@ -15,12 +15,19 @@ import java.util.Optional;
 public class SqliteBankAccountService implements BankAccountService {
 
     private final SqlBackend backend;
+    private static SqliteBankAccountService instance;
 
-    public SqliteBankAccountService(SqlBackend backend) throws SQLException {
+    private SqliteBankAccountService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(BankAccount.class, new SqlBankAccountAdapter());
-
         this.createSchema();
+    }
+
+    public static synchronized SqliteBankAccountService getInstance(SqlBackend backend) throws SQLException {
+        if (instance == null) {
+            instance = new SqliteBankAccountService(backend);
+        }
+        return instance;
     }
 
     private void createSchema() throws SQLException {

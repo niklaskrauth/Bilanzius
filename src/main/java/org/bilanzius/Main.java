@@ -27,10 +27,10 @@ public class Main {
 
         try {
             backend.connect();
-            userService = new SqliteUserDatabaseService(backend);
-            transactionService = new SqliteTransactionService(backend);
-            categoryService = new SqliteCategoryService(backend);
-            bankAccountService = new SqliteBankAccountService(backend);
+            userService = SqliteUserDatabaseService.getInstance(backend);
+            transactionService = SqliteTransactionService.getInstance(backend);
+            categoryService = SqliteCategoryService.getInstance(backend);
+            bankAccountService = SqliteBankAccountService.getInstance(backend);
 
             Localization localization = Localization.getInstance();
 
