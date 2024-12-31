@@ -41,6 +41,7 @@ public class Main {
 
                User user = signUp.waitUntilLoggedIn(input); //TODO: Implement Register @Niklas
                BankAccount bankAccount = signUp.waitUntilBankAccountSelect(input, user);
+               user = userService.findUser(user.getId()).orElse(user);
 
                while (user != null) {
 

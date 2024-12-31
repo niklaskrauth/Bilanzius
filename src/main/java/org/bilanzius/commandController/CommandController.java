@@ -12,6 +12,7 @@ import org.bilanzius.services.commands.bilanzius.BilanziusCommand;
 import org.bilanzius.services.commands.convert.ConvertCommand;
 import org.bilanzius.services.commands.createBankAccount.CreateBankAccountCommand;
 import org.bilanzius.services.commands.createCategory.CreateCategoryCommand;
+import org.bilanzius.services.commands.deleteBankAccount.DeleteBankAccountCommand;
 import org.bilanzius.services.commands.deleteCategory.DeleteCategoryCommand;
 import org.bilanzius.services.commands.deposit.DepositCommand;
 import org.bilanzius.services.commands.exit.ExitCommand;
@@ -64,7 +65,7 @@ public class CommandController {
         //Bankkonto Befehle
         commandMap.put(Commands.CREATEBANKACCOUNT, new CreateBankAccountCommand(user, backend));
         commandMap.put(Commands.GETBANKACCOUNT, new GetBankAccountCommand(user, backend));
-//        commandMap.put(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user, backend));
+        commandMap.put(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user, backend));
 //        commandMap.put(Commands.UPDATEBANKACCOUNT, new UpdateBankAccountCommand(user, backend));
 //        commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, backend));
 

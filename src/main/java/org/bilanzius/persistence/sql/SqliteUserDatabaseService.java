@@ -34,7 +34,7 @@ public class SqliteUserDatabaseService implements UserService {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user TEXT,
                     password TEXT,
-                    mainBankAccountId INTEGER DEFAULT NULL
+                    mainBankAccountId INTEGER DEFAULT 0
                 )
                 """);
     }
@@ -109,8 +109,8 @@ public class SqliteUserDatabaseService implements UserService {
         }
 
         try {
-            backend.execute("UPDATE users SET mainAccountId = ? WHERE id = ?", stmt -> {
-                stmt.setDouble(1, user.getMainAccountId());
+            backend.execute("UPDATE users SET mainBankAccountId = ? WHERE id = ?", stmt -> {
+                stmt.setInt(1, user.getMainBankAccountId());
                 stmt.setInt(2, user.getId());
             });
         } catch (SQLException ex) {

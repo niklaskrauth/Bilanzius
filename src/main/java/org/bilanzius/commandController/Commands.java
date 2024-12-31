@@ -33,7 +33,9 @@ public enum Commands {
             DeleteCategoryCommandArguments.getAllArguments()),
     CREATEBANKACCOUNT("/createBankAccount",Localization.getInstance().getMessage("create_bank_account_short_description") , null ),
     GETBANKACCOUNT("/getBankAccount", Localization.getInstance().getMessage("get_bank_account_short_description"),
-            GetBankAccountCommandArguments.getAllArguments());
+            GetBankAccountCommandArguments.getAllArguments()),
+    DELETEBANKACCOUNT("/deleteBankAccount", Localization.getInstance().getMessage("delete_bank_account_short_description"),
+            DeleteCategoryCommandArguments.getAllArguments());
 
     // Hier werden die einzelnen Befehle hinzugefügt
 

@@ -57,10 +57,13 @@ public class SqliteBankAccountService implements BankAccountService {
 
             Optional<User> userOptional = userService.findUser(bankAccount.getUserId()).stream().findFirst();
             if (userOptional.isEmpty()) return;
+            Optional<BankAccount> bankAccountOptional = getBankAccountsOfUserByName(userOptional.get(), bankAccount.getName()).stream().findFirst();
+            if (bankAccountOptional.isEmpty()) return;
 
             User user = userOptional.get();
-            if (user.getMainAccountId() == null) {
-                user.setMainAccountId(bankAccount.getAccountId());
+            BankAccount databaseBankAccount = bankAccountOptional.get();
+            if (user.getMainBankAccountId() == 0) {
+                user.setMainAccountId(databaseBankAccount.getAccountId());
                 userService.updateUserMainAccountId(user);
             }
         } catch (SQLException ex) {
@@ -85,8 +88,7 @@ public class SqliteBankAccountService implements BankAccountService {
                             stmt -> {
                                 stmt.setInt(1, user.getId());
                                 stmt.setString(2, name);
-                            }).stream()
-                    .findFirst();
+                            }).stream().findFirst();
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
