@@ -16,7 +16,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GetCategoryCommand implements Command {
-
     private User user;
     CategoryService categoryService;
     private final Map<GetCategoryCommandArguments, Function<String, String>> commandMap;
@@ -37,7 +36,6 @@ public class GetCategoryCommand implements Command {
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", GetCategoryCommandArguments.getAllArguments());
         }
-
         GetCategoryCommandArguments argument = GetCategoryCommandArguments.fromString(arguments[0]);
         if (argument == null) {
             return localization.getMessage("unknown_argument", GetCategoryCommandArguments.getAllArguments());

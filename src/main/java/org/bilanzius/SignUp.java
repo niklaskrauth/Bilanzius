@@ -58,30 +58,32 @@ public class SignUp {
     }
 
     public BankAccount waitUntilBankAccountSelect(Scanner input, User user) {
-        System.out.println("----------------------------------------------------------------------------------");
+        if ((long) bankAccountService.getBankAccountsOfUser(user, 5).size() == 1){
+            BankAccount account = bankAccountService.getBankAccountsOfUser(user, 1).getFirst();
+            System.out.println(localization.getMessage("only_one_bank_account", account.getName()));
+            return account;
+        }
         if (!bankAccountService.getBankAccountsOfUser(user, 1).isEmpty()) {
-            System.out.println(localization.getMessage("selectBankAccount"));
+            System.out.println(localization.getMessage("select_bank_account"));
             bankAccountService.getBankAccountsOfUser(user, 10).forEach(account -> System.out.println(account.getName()));
             System.out.println("----------------------------------------------------------------------------------");
-            System.out.println(localization.getMessage("bankAccountName"));
+            System.out.println(localization.getMessage("bank_account_name"));
             while (true) {
                 String stringInput = input.nextLine();
                 BankAccount account = bankAccountService.getBankAccountsOfUserByName(user, stringInput).orElse(null);
                 if (account != null) {
                     return account;
                 }
-                System.out.println(localization.getMessage("wrongBankAccountName"));
+                System.out.println(localization.getMessage("wrong_bank_account_name"));
             }
-        } else if (bankAccountService.getBankAccountsOfUser(user, 1).size() == 1){
-            return bankAccountService.getBankAccountsOfUser(user, 1).getFirst();
         }
-        System.out.println(localization.getMessage("noBankAccountsYet"));
+        System.out.println(localization.getMessage("no_bank_accounts_yet"));
         System.out.println("----------------------------------------------------------------------------------");
-        System.out.println(localization.getMessage("bankAccountName"));
+        System.out.println(localization.getMessage("bank_account_name"));
         String stringInput = input.nextLine();
         BankAccount bankAccount = BankAccount.create(user, stringInput);
         bankAccountService.createBankAccount(bankAccount);
-        System.out.println(localization.getMessage("bankAccountCreated", stringInput));
+        System.out.println(localization.getMessage("bank_account_created", stringInput));
         return bankAccount;
     }
 }

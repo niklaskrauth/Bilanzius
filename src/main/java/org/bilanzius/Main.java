@@ -22,7 +22,6 @@ public class Main {
         try {
             backend.connect();
             userService = SqliteUserDatabaseService.getInstance(backend);
-
             Localization localization = Localization.getInstance();
 
             // Create a new user with name "TestUser" and password "passwort1234"
@@ -41,7 +40,6 @@ public class Main {
             while (true) {
 
                User user = signUp.waitUntilLoggedIn(input); //TODO: Implement Register @Niklas
-
                BankAccount bankAccount = signUp.waitUntilBankAccountSelect(input, user);
 
                while (user != null) {
@@ -54,14 +52,10 @@ public class Main {
 
                    String stringOutput = commandController.handleInput(stringInput);
                    System.out.println(stringOutput);
-
                }
-
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 }
