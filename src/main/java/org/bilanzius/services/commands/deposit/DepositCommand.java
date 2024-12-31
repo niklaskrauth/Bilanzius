@@ -9,6 +9,7 @@ import org.bilanzius.persistence.sql.SqlBackend;
 import org.bilanzius.persistence.sql.SqliteBankAccountService;
 import org.bilanzius.persistence.sql.SqliteTransactionService;
 import org.bilanzius.services.Command;
+import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.utils.Localization;
 
 import java.sql.SQLException;
@@ -16,13 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class DepositCommand implements Command {
+public class DepositCommand implements Command, BankAccountAware {
 
     private User user;
     private final Map<DepositCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
     private final TransactionService transactionService;
-    private final BankAccount selectedBankAccount;
+    private BankAccount selectedBankAccount;
     private final BankAccountService bankAccountService;
 
 
@@ -35,6 +36,11 @@ public class DepositCommand implements Command {
         commandMap = new HashMap<>();
         commandMap.put(DepositCommandArguments.DEPOSIT, this::depositMoney);
 
+    }
+
+    @Override
+    public void setSelectedBankAccount(BankAccount bankAccount) {
+        this.selectedBankAccount = bankAccount;
     }
 
     @Override

@@ -36,7 +36,8 @@ public enum Commands {
             GetBankAccountCommandArguments.getAllArguments()),
     DELETEBANKACCOUNT("/deleteBankAccount", Localization.getInstance().getMessage("delete_bank_account_short_description"),
             DeleteCategoryCommandArguments.getAllArguments()),
-    RENAMEBANKACCOUNT("/renameBankAccount", Localization.getInstance().getMessage("rename_bank_account_short_description"), null);
+    RENAMEBANKACCOUNT("/renameBankAccount", Localization.getInstance().getMessage("rename_bank_account_short_description"), null),
+    SWITCHBANKACCOUNT("/switchBankAccount", Localization.getInstance().getMessage("switch_bank_account_short_description"), null);
 
 
     // Hier werden die einzelnen Befehle hinzugefügt

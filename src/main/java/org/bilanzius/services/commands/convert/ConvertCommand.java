@@ -6,6 +6,7 @@ import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.sql.SqlBackend;
 import org.bilanzius.persistence.sql.SqliteBankAccountService;
 import org.bilanzius.services.Command;
+import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.utils.Localization;
 import org.bilanzius.utils.Requests;
 
@@ -14,12 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ConvertCommand implements Command {
+public class ConvertCommand implements Command, BankAccountAware {
 
     private final Map<ConvertCommandArguments, Supplier<String>> commandMap;
     private final Localization localization = Localization.getInstance();
     private final BankAccountService bankAccountService;
-    private final BankAccount selectedBankAccount;
+    private BankAccount selectedBankAccount;
 
     // TODO: Move this ito the .env file
     private final String currencyUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json";
@@ -42,6 +43,11 @@ public class ConvertCommand implements Command {
         commandMap.put(ConvertCommandArguments.RUSSIAN_RUBLE, this::convertToRussianRuble);
         commandMap.put(ConvertCommandArguments.US_DOLLAR, this::convertToUsDollar);
         commandMap.put(ConvertCommandArguments.PORSCHE_911_CAMERA, this::convertToPorsche911Camera);
+    }
+
+    @Override
+    public void setSelectedBankAccount(BankAccount bankAccount) {
+        this.selectedBankAccount = bankAccount;
     }
 
     @Override

@@ -43,13 +43,13 @@ public class Main {
                BankAccount bankAccount = signUp.waitUntilBankAccountSelect(input, user);
                user = userService.findUser(user.getId()).orElse(user);
 
+               CommandController commandController = new CommandController(user, backend, bankAccount);
+
                while (user != null) {
 
                    System.out.println("----------------------------------------------------------------------------------");
 
                    String stringInput = input.nextLine();
-
-                   CommandController commandController = new CommandController(user, backend, bankAccount);
 
                    String stringOutput = commandController.handleInput(stringInput);
                    System.out.println(stringOutput);

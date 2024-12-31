@@ -81,9 +81,8 @@ public class SignUp {
         System.out.println("----------------------------------------------------------------------------------");
         System.out.println(localization.getMessage("bank_account_name"));
         String stringInput = input.nextLine();
-        BankAccount bankAccount = BankAccount.create(user, stringInput);
-        bankAccountService.createBankAccount(bankAccount);
+        bankAccountService.createBankAccount(BankAccount.create(user, stringInput));
         System.out.println(localization.getMessage("bank_account_created", stringInput));
-        return bankAccount;
+        return bankAccountService.getBankAccountsOfUser(user, 1).getFirst();
     }
 }

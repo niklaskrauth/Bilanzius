@@ -8,6 +8,7 @@ import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.*;
 import org.bilanzius.services.Command;
+import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.services.commands.bilanzius.BilanziusCommand;
 import org.bilanzius.services.commands.convert.ConvertCommand;
 import org.bilanzius.services.commands.createBankAccount.CreateBankAccountCommand;
@@ -22,6 +23,7 @@ import org.bilanzius.services.commands.getLanguage.GetLanguagesCommand;
 import org.bilanzius.services.commands.help.HelpCommand;
 import org.bilanzius.services.commands.setLanguage.SetLanguageCommand;
 import org.bilanzius.services.commands.renameBankAccount.RenameBankAccountCommand;
+import org.bilanzius.services.commands.switchBankAccount.SwitchBankAccountCommand;
 import org.bilanzius.services.commands.withdraw.WithdrawCommand;
 import org.bilanzius.utils.Localization;
 
@@ -37,6 +39,7 @@ public class CommandController {
     BankAccountService bankAccountService;
     private final Map<Commands, Command> commandMap;
     private final Localization localization = Localization.getInstance();
+    private BankAccount selectedBankAccount;
 
     public CommandController(User user, SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
 
@@ -44,15 +47,16 @@ public class CommandController {
         this.transactionService = SqliteTransactionService.getInstance(backend);
         this.userService = SqliteUserDatabaseService.getInstance(backend);
         this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.selectedBankAccount = selectedBankAccount;
 
         commandMap = new HashMap<>();
 
         commandMap.put(Commands.EXIT, new ExitCommand(user));
         commandMap.put(Commands.HELP, new HelpCommand());
         commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
-        commandMap.put(Commands.DEPOSIT, new DepositCommand(user, backend, selectedBankAccount));
-        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user, backend, selectedBankAccount));
-        commandMap.put(Commands.CONVERT, new ConvertCommand(backend, selectedBankAccount));
+        commandMap.put(Commands.DEPOSIT, new DepositCommand(user, backend, this.selectedBankAccount));
+        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user, backend, this.selectedBankAccount));
+        commandMap.put(Commands.CONVERT, new ConvertCommand(backend, this.selectedBankAccount));
 
         // Sprachbefehle
         commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
@@ -68,7 +72,7 @@ public class CommandController {
         commandMap.put(Commands.GETBANKACCOUNT, new GetBankAccountCommand(user, backend));
         commandMap.put(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user, backend));
         commandMap.put(Commands.RENAMEBANKACCOUNT, new RenameBankAccountCommand(user, backend));
-//        commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, backend));
+        commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, backend, this));
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }
@@ -86,7 +90,22 @@ public class CommandController {
             return commandService.execute(arguments);
         }
 
+        System.out.println(this.selectedBankAccount);
+
         return localization.getMessage("unknown_command");
+    }
+
+    public BankAccount getSelectedBankAccount() {
+        return selectedBankAccount;
+    }
+
+    public void setSelectedBankAccount(BankAccount bankAccount) {
+        this.selectedBankAccount = bankAccount;
+        for (Command command : commandMap.values()) {
+            if (command instanceof BankAccountAware) {
+                ((BankAccountAware) command).setSelectedBankAccount(bankAccount);
+            }
+        }
     }
 
 }
