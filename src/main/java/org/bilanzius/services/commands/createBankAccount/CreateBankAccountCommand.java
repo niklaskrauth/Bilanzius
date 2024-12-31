@@ -9,6 +9,7 @@ import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class CreateBankAccountCommand implements Command {
     private User user;
@@ -20,17 +21,17 @@ public class CreateBankAccountCommand implements Command {
         this.bankAccountService = SqliteBankAccountService.getInstance(backend);
     }
 
-    public boolean checkCurrentBankAccountCount() {
-        return bankAccountService.getBankAccountsOfUser(user, 5).size() < 3;
-    }
-
     @Override
     public String execute(String[] arguments) {
         if (arguments.length != 1) {
             return localization.getMessage("create_bank_account_usage");
         }
-        if (!checkCurrentBankAccountCount()) {
+        List<BankAccount> bankAccountsOfUser = bankAccountService.getBankAccountsOfUser(user, 3);
+        if (bankAccountsOfUser.size() >= 3) {
             return localization.getMessage("max_number_bank_accounts_reached");
+        }
+        if (bankAccountsOfUser.stream().anyMatch(bankAccount -> bankAccount.getName().equals(arguments[0]))) {
+            return localization.getMessage("bank_account_with_name_already_exists", arguments[0]);
         }
         bankAccountService.createBankAccount(BankAccount.create(user, arguments[0]));
         return localization.getMessage("bank_account_created", arguments[0]);

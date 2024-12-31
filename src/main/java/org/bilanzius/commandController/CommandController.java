@@ -21,6 +21,7 @@ import org.bilanzius.services.commands.getCategory.GetCategoryCommand;
 import org.bilanzius.services.commands.getLanguage.GetLanguagesCommand;
 import org.bilanzius.services.commands.help.HelpCommand;
 import org.bilanzius.services.commands.setLanguage.SetLanguageCommand;
+import org.bilanzius.services.commands.renameBankAccount.RenameBankAccountCommand;
 import org.bilanzius.services.commands.withdraw.WithdrawCommand;
 import org.bilanzius.utils.Localization;
 
@@ -66,7 +67,7 @@ public class CommandController {
         commandMap.put(Commands.CREATEBANKACCOUNT, new CreateBankAccountCommand(user, backend));
         commandMap.put(Commands.GETBANKACCOUNT, new GetBankAccountCommand(user, backend));
         commandMap.put(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user, backend));
-//        commandMap.put(Commands.UPDATEBANKACCOUNT, new UpdateBankAccountCommand(user, backend));
+        commandMap.put(Commands.RENAMEBANKACCOUNT, new RenameBankAccountCommand(user, backend));
 //        commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, backend));
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
