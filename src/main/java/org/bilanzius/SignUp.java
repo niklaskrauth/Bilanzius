@@ -16,7 +16,6 @@ import java.util.Scanner;
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
 public class SignUp {
-
     private final UserService userService;
     private final BankAccountService bankAccountService;
     private final Localization localization = Localization.getInstance();

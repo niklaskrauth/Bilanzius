@@ -25,7 +25,6 @@ public class DepositCommand implements Command, BankAccountAware {
     private BankAccount selectedBankAccount;
     private final BankAccountService bankAccountService;
 
-
     public DepositCommand(User user, SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
         this.user = user;
         this.selectedBankAccount = selectedBankAccount;
@@ -34,7 +33,6 @@ public class DepositCommand implements Command, BankAccountAware {
 
         commandMap = new HashMap<>();
         commandMap.put(DepositCommandArguments.DEPOSIT, this::depositMoney);
-
     }
 
     @Override

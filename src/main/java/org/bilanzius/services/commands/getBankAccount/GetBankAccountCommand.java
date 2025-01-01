@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class GetBankAccountCommand implements Command {
     private User user;
-    BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
     private final Map<GetBankAccountCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
 

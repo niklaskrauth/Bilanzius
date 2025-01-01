@@ -11,9 +11,9 @@ public class BankAccount {
     private final int accountId;
     private final int userId;
     private String name;
-    private Double balance;
+    private double balance;
 
-    public BankAccount(int accountId, int userId, String name, Double balance) {
+    public BankAccount(int accountId, int userId, String name, double balance) {
         this.accountId = accountId;
         this.userId = userId;
         this.name = name;
@@ -36,11 +36,11 @@ public class BankAccount {
         this.name = name;
     }
 
-    public Double getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

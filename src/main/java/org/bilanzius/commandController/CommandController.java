@@ -1,9 +1,5 @@
 package org.bilanzius.commandController;
 
-import org.bilanzius.persistence.BankAccountService;
-import org.bilanzius.persistence.CategoryService;
-import org.bilanzius.persistence.TransactionService;
-import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.*;
@@ -32,20 +28,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandController {
-    UserService userService;
-    TransactionService transactionService;
-    CategoryService categoryService;
-    BankAccountService bankAccountService;
     private final Map<Commands, Command> commandMap;
     private final Localization localization = Localization.getInstance();
     private BankAccount selectedBankAccount;
 
     public CommandController(User user, SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
-
-        this.categoryService = SqliteCategoryService.getInstance(backend);
-        this.transactionService = SqliteTransactionService.getInstance(backend);
-        this.userService = SqliteUserDatabaseService.getInstance(backend);
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
         this.selectedBankAccount = selectedBankAccount;
 
         commandMap = new HashMap<>();

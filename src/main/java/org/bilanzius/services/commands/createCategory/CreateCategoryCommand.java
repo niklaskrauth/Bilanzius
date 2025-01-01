@@ -11,9 +11,8 @@ import org.bilanzius.utils.Localization;
 import java.sql.SQLException;
 
 public class CreateCategoryCommand implements Command  {
-
     private User user;
-    CategoryService categoryService;
+    private final CategoryService categoryService;
     private final Localization localization = Localization.getInstance();
 
     public CreateCategoryCommand(User user, SqlBackend backend) throws SQLException {

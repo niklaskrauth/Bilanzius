@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class ConvertCommand implements Command, BankAccountAware {
-
     private final Map<ConvertCommandArguments, Supplier<String>> commandMap;
     private final Localization localization = Localization.getInstance();
     private final BankAccountService bankAccountService;

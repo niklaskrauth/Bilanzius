@@ -16,8 +16,8 @@ import java.util.function.Function;
 
 public class DeleteBankAccountCommand implements Command {
     private User user;
-    BankAccountService bankAccountService;
-    UserService userService;
+    private final BankAccountService bankAccountService;
+    private final UserService userService;
     private final Map<DeleteBankAccountCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
     private final Scanner scanner;
@@ -84,7 +84,7 @@ public class DeleteBankAccountCommand implements Command {
         if (validateDeleteAction(localization.getMessage("ask_for_deletion_all_bank_accounts", mainBankAccount.getName()))) {
             return localization.getMessage("no_bank_accounts_deleted");
         }
-        List<String> deletedBankAccounts = new ArrayList<String>(List.of());
+        List<String> deletedBankAccounts = new ArrayList<>(List.of());
         bankAccounts.forEach(bankAccount -> {
             if (user.getMainBankAccountId() == bankAccount.getAccountId()) {
                 return;

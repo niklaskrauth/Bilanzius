@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class BilanziusCommand implements Command {
-
     private final Map<BilanziusCommandArguments, Supplier<String>> commandMap;
     private final Localization localization = Localization.getInstance();
 

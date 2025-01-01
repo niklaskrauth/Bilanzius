@@ -18,7 +18,7 @@ import java.util.function.Function;
 public class DeleteCategoryCommand implements Command {
 
     private User user;
-    CategoryService categoryService;
+    private final CategoryService categoryService;
     private final Map<DeleteCategoryCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
     private final Scanner scanner;

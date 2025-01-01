@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class GetCategoryCommand implements Command {
     private User user;
-    CategoryService categoryService;
+    private final CategoryService categoryService;
     private final Map<GetCategoryCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
 
