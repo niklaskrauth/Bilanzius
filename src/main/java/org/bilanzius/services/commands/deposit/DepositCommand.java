@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class DepositCommand implements Command, BankAccountAware {
-
     private User user;
     private final Map<DepositCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
@@ -45,7 +44,6 @@ public class DepositCommand implements Command, BankAccountAware {
 
     @Override
     public String execute(String[] arguments) {
-
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", DepositCommandArguments.getAllArguments());
         }
@@ -64,11 +62,9 @@ public class DepositCommand implements Command, BankAccountAware {
     }
 
     private String depositMoney(String argument) {
-
         double depositMoney;
 
         try {
-
             depositMoney = Double.parseDouble(argument);
             depositMoney = Math.abs(depositMoney);
             transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, depositMoney, "Deposit" + depositMoney));

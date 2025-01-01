@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandController {
-
     UserService userService;
     TransactionService transactionService;
     CategoryService categoryService;
@@ -89,8 +88,6 @@ public class CommandController {
         if (commandService != null) {
             return commandService.execute(arguments);
         }
-
-        System.out.println(this.selectedBankAccount);
 
         return localization.getMessage("unknown_command");
     }

@@ -56,9 +56,10 @@ public class SqliteTransactionService implements TransactionService {
     @Override
     public void saveTransaction(Transaction transaction) {
         try {
-            Category category = transaction.getCategoryId() == -1 ? null : categoryService.getCategory(transaction.getCategoryId()).orElseThrow();
+            Category category = transaction.getCategoryId() == -1 ? null : categoryService.getCategory(transaction.getCategoryId()).orElse(null);
             if (category != null) {
-                category.setAmountSpent(category.getAmountSpent() + transaction.getMoney());
+                category.setAmountSpent(category.getAmountSpent() - transaction.getMoney());
+                categoryService.updateCategory(category);
             }
 
             BankAccount bankAccount = bankAccountService.getBankAccount(transaction.getAccountId()).orElseThrow();

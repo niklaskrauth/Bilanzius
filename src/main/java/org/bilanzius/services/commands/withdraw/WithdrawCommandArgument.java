@@ -3,7 +3,8 @@ package org.bilanzius.services.commands.withdraw;
 import java.util.Arrays;
 
 public enum WithdrawCommandArgument {
-    WITHDRAW("amount", "-a");
+    WITHDRAW("amount", "-a"),
+    CATEGORY("category", "-c");
 
     private final String argument;
     private final String argumentShort;
