@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public class SqliteUserDatabaseService implements UserService {
 
+    private static SqliteUserDatabaseService instance;
     private final SqlBackend backend;
 
     public SqliteUserDatabaseService(SqlBackend backend) throws SQLException {
@@ -20,13 +21,20 @@ public class SqliteUserDatabaseService implements UserService {
         this.createSchema();
     }
 
+    public static synchronized SqliteUserDatabaseService getInstance(SqlBackend backend) throws SQLException {
+        if (instance == null) {
+            instance = new SqliteUserDatabaseService(backend);
+        }
+        return instance;
+    }
+
     private void createSchema() throws SQLException {
         this.backend.execute("""
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user TEXT,
                     password TEXT,
-                    balance REAL DEFAULT 0.0
+                    mainBankAccountId INTEGER DEFAULT 0
                 )
                 """);
     }
@@ -71,11 +79,8 @@ public class SqliteUserDatabaseService implements UserService {
     @Override
     public Optional<User> findUserWithName(String username) {
         try {
-            return backend.query(User.class, "SELECT * FROM users WHERE user = ?", stmt -> {
-                        stmt.setString(1, username);
-                    })
-                    .stream()
-                    .findFirst();
+            return backend.query(User.class, "SELECT * FROM users WHERE user = ?",
+                    stmt -> stmt.setString(1, username)).stream().findFirst();
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
@@ -98,14 +103,14 @@ public class SqliteUserDatabaseService implements UserService {
     }
 
     @Override
-    public void updateUserBalance(User user) {
+    public void updateUserMainAccountId(User user) {
         if (!user.canBeUpdated()) {
             throw new DatabaseException("User can't be updated.");
         }
 
         try {
-            backend.execute("UPDATE users SET balance = ? WHERE id = ?", stmt -> {
-                stmt.setDouble(1, user.getBalance());
+            backend.execute("UPDATE users SET mainBankAccountId = ? WHERE id = ?", stmt -> {
+                stmt.setInt(1, user.getMainBankAccountId());
                 stmt.setInt(2, user.getId());
             });
         } catch (SQLException ex) {

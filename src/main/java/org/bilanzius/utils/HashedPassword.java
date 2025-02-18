@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 public class HashedPassword {
-
     private static final String ALGORITHM = "SHA-512";
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 

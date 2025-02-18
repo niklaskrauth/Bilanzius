@@ -13,10 +13,10 @@ public class SqlUserAdapter implements SqlDataAdapter<User> {
         var id = resultSet.getInt("id");
         var userName = resultSet.getString("user");
         var password = resultSet.getString("password");
-        var balance = resultSet.getDouble("balance");
+        var mainBankAccountId = resultSet.getInt("mainBankAccountId");
 
         return new User(
-                id, userName, HashedPassword.fromHashedText(password), balance
+                id, userName, HashedPassword.fromHashedText(password), mainBankAccountId
         );
     }
 

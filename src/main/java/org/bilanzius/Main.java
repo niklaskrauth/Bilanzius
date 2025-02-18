@@ -1,13 +1,9 @@
 package org.bilanzius;
 
 import org.bilanzius.commandController.CommandController;
-import org.bilanzius.persistence.CategoryService;
-import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.UserService;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteCategoryService;
-import org.bilanzius.persistence.sql.SqliteTransactionService;
-import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
+import org.bilanzius.persistence.models.BankAccount;
+import org.bilanzius.persistence.sql.*;
 import org.bilanzius.utils.Localization;
 import org.bilanzius.persistence.models.User;
 
@@ -22,15 +18,10 @@ public class Main {
         // Connect to sqllite database
         var backend = new SqlBackend();
         UserService userService;
-        TransactionService transactionService;
-        CategoryService categoryService;
 
         try {
             backend.connect();
-            userService = new SqliteUserDatabaseService(backend);
-            transactionService = new SqliteTransactionService(backend);
-            categoryService = new SqliteCategoryService(backend);
-
+            userService = SqliteUserDatabaseService.getInstance(backend);
             Localization localization = Localization.getInstance();
 
             // Create a new user with name "TestUser" and password "passwort1234"
@@ -40,7 +31,7 @@ public class Main {
             userService.createUser(User.createUser("TestUser2",
                     fromPlainText("passwort5678")));
 
-            SingUp singUp = new SingUp(userService);
+            SignUp signUp = new SignUp(backend);
 
             System.out.println(localization.getMessage("greeting"));
 
@@ -48,7 +39,11 @@ public class Main {
 
             while (true) {
 
-               User user = singUp.waitUntilLoggedIn(input);
+               User user = signUp.waitUntilLoggedIn(input); //TODO: Implement Register @Niklas
+               BankAccount bankAccount = signUp.waitUntilBankAccountSelect(input, user);
+               user = userService.findUser(user.getId()).orElse(user);
+
+               CommandController commandController = new CommandController(user, backend, bankAccount);
 
                while (user != null) {
 
@@ -56,18 +51,12 @@ public class Main {
 
                    String stringInput = input.nextLine();
 
-                   CommandController commandController = new CommandController(user, userService, categoryService, transactionService);
-
                    String stringOutput = commandController.handleInput(stringInput);
                    System.out.println(stringOutput);
-
                }
-
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 }

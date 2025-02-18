@@ -5,6 +5,7 @@ import org.bilanzius.services.commands.convert.ConvertCommandArguments;
 import org.bilanzius.services.commands.createCategory.CreateCategoryCommandArguments;
 import org.bilanzius.services.commands.deleteCategory.DeleteCategoryCommandArguments;
 import org.bilanzius.services.commands.deposit.DepositCommandArguments;
+import org.bilanzius.services.commands.getBankAccount.GetBankAccountCommandArguments;
 import org.bilanzius.services.commands.getCategory.GetCategoryCommandArguments;
 import org.bilanzius.services.commands.withdraw.WithdrawCommandArgument;
 import org.bilanzius.utils.Localization;
@@ -29,7 +30,15 @@ public enum Commands {
     GETCATEGORIES("/getCategory", Localization.getInstance().getMessage("get_category_short_description"),
             GetCategoryCommandArguments.getAllArguments()),
     DELETECATEGORY("/deleteCategory", Localization.getInstance().getMessage("delete_category_short_description"),
-            DeleteCategoryCommandArguments.getAllArguments());
+            DeleteCategoryCommandArguments.getAllArguments()),
+    CREATEBANKACCOUNT("/createBankAccount",Localization.getInstance().getMessage("create_bank_account_short_description") , null ),
+    GETBANKACCOUNT("/getBankAccount", Localization.getInstance().getMessage("get_bank_account_short_description"),
+            GetBankAccountCommandArguments.getAllArguments()),
+    DELETEBANKACCOUNT("/deleteBankAccount", Localization.getInstance().getMessage("delete_bank_account_short_description"),
+            DeleteCategoryCommandArguments.getAllArguments()),
+    RENAMEBANKACCOUNT("/renameBankAccount", Localization.getInstance().getMessage("rename_bank_account_short_description"), null),
+    SWITCHBANKACCOUNT("/switchBankAccount", Localization.getInstance().getMessage("switch_bank_account_short_description"), null);
+
 
     // Hier werden die einzelnen Befehle hinzugefügt
 

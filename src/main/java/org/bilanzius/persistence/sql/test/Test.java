@@ -1,15 +1,14 @@
 package org.bilanzius.persistence.sql.test;
 
+import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.UserService;
+import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteCategoryService;
-import org.bilanzius.persistence.sql.SqliteTransactionService;
-import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
+import org.bilanzius.persistence.sql.*;
 import org.bilanzius.utils.HashedPassword;
 
 public class Test {
@@ -20,9 +19,10 @@ public class Test {
         backend.connect();
 
         // Setup
-        UserService userService = new SqliteUserDatabaseService(backend);
-        TransactionService transactionService = new SqliteTransactionService(backend);
-        CategoryService categoryService = new SqliteCategoryService(backend);
+        UserService userService = SqliteUserDatabaseService.getInstance(backend);
+        TransactionService transactionService = SqliteTransactionService.getInstance(backend);
+        CategoryService categoryService = SqliteCategoryService.getInstance(backend);
+        BankAccountService bankAccountService = SqliteBankAccountService.getInstance(backend);
 
         // Create a new user with name "test2" and password "passwort123"
         userService.createUser(User.createUser("test2", HashedPassword.fromPlainText("passwort123")));
@@ -32,12 +32,17 @@ public class Test {
                 .findUserWithCredentials("test2", HashedPassword.fromPlainText("passwort123"))
                 .orElseThrow();
 
-        // create transaction
-        transactionService.saveTransaction(Transaction.create(user, 5.00, "5€"));
 
-        // Update password
-        user.setHashedPassword(HashedPassword.fromPlainText("kuchen123"));
-        userService.updateUser(user);
+        // Create bank account
+        bankAccountService.createBankAccount(BankAccount.create(user, "testBankAccount"));
+        bankAccountService.getBankAccountsOfUser(user, 1).forEach(System.out::println);
+        BankAccount bankAccount = bankAccountService.getBankAccountsOfUserByName(user, "testBankAccount").orElseThrow();
+        // Update bank account balance
+        bankAccountService.updateBankAccountBalance(bankAccount, 5.00);
+        // change bank account name
+        bankAccount.setName("changedBankAccount");
+        bankAccountService.updateBankAccount(bankAccount);
+        System.out.println(bankAccountService.getBankAccountsOfUserByName(user, "changedBankAccount").orElseThrow());
 
         // Create category
         categoryService.createCategory(Category.create(user, "test", 5.00));
@@ -62,7 +67,13 @@ public class Test {
         var exceededCategories = categoryService.getExceededCategoriesOfUser(user, 1).getFirst();
         System.out.println(exceededCategories.toString());
 
-        // Delete category
-        categoryService.deleteCategory(categoryTest);
+        // create transaction
+        transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, -5.00, "-5€"));
+        transactionService.saveTransaction(Transaction.create(user, bankAccount, 10.00, "10€"));
+
+        // Update password
+        user.setHashedPassword(HashedPassword.fromPlainText("kuchen123"));
+        userService.updateUser(user);
+
     }
 }

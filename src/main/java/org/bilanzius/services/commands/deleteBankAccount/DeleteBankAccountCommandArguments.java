@@ -1,15 +1,15 @@
-package org.bilanzius.services.commands.withdraw;
+package org.bilanzius.services.commands.deleteBankAccount;
 
 import java.util.Arrays;
 
-public enum WithdrawCommandArgument {
-    WITHDRAW("amount", "-a"),
-    CATEGORY("category", "-c");
+public enum DeleteBankAccountCommandArguments {
+    NAME("name", "-n"),
+    ALL("all", "-a");
 
     private final String argument;
     private final String argumentShort;
 
-    WithdrawCommandArgument(String argument, String argumentShort) {
+    DeleteBankAccountCommandArguments(String argument, String argumentShort) {
         this.argument = argument;
         this.argumentShort = argumentShort;
     }
@@ -23,20 +23,19 @@ public enum WithdrawCommandArgument {
     }
 
     public static String getAllArguments() {
-        return Arrays.stream(WithdrawCommandArgument.values()).map(
+        return Arrays.stream(DeleteBankAccountCommandArguments.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
                 (a, b) -> a + ", " + b
         ).orElse("");
     }
 
-    public static WithdrawCommandArgument fromString(String argument) {
-        for (WithdrawCommandArgument c : WithdrawCommandArgument.values()) {
+    public static DeleteBankAccountCommandArguments fromString(String argument) {
+        for (DeleteBankAccountCommandArguments c : DeleteBankAccountCommandArguments.values()) {
             if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }
         return null;
     }
-
 }

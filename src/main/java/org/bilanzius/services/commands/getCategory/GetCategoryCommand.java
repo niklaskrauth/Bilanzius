@@ -3,9 +3,12 @@ package org.bilanzius.services.commands.getCategory;
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.persistence.sql.SqlBackend;
+import org.bilanzius.persistence.sql.SqliteCategoryService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +16,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GetCategoryCommand implements Command {
-
     private User user;
-    CategoryService categoryService;
+    private final CategoryService categoryService;
     private final Map<GetCategoryCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
 
-    public GetCategoryCommand(User user, CategoryService categoryService) {
+    public GetCategoryCommand(User user, SqlBackend backend) throws SQLException {
         this.user = user;
-        this.categoryService = categoryService;
+        this.categoryService = SqliteCategoryService.getInstance(backend);
 
         commandMap = new HashMap<>();
         commandMap.put(GetCategoryCommandArguments.ALL, s -> allCategories());
@@ -34,7 +36,6 @@ public class GetCategoryCommand implements Command {
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", GetCategoryCommandArguments.getAllArguments());
         }
-
         GetCategoryCommandArguments argument = GetCategoryCommandArguments.fromString(arguments[0]);
         if (argument == null) {
             return localization.getMessage("unknown_argument", GetCategoryCommandArguments.getAllArguments());

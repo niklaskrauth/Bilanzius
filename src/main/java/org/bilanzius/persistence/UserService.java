@@ -8,14 +8,9 @@ import java.util.Optional;
 public interface UserService {
 
     void createUser(User user);
-
     Optional<User> findUser(long id);
-
     Optional<User> findUserWithCredentials(String username, HashedPassword password);
-
     Optional<User> findUserWithName(String username);
-
     void updateUser(User user);
-
-    void updateUserBalance(User user);
+    void updateUserMainAccountId(User user);
 }
