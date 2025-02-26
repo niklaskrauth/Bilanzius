@@ -29,14 +29,36 @@ public class SignUp {
 
         while (true) {
             System.out.println("----------------------------------------------------------------------------------");
-            System.out.println("Username:");
+
+            System.out.println(localization.getMessage("login_or_register"));
+            String stringInput = input.nextLine();
+
+            if (stringInput.equals("1")) {
+                System.out.println(localization.getMessage("login"));
+                return login(input);
+            } else if (stringInput.equals("2")) {
+                System.out.println(localization.getMessage("register"));
+                return register(input);
+            } else {
+                System.out.println(localization.getMessage("invalid_input"));
+            }
+        }
+    }
+
+    public User login(Scanner input){
+
+        User loggedInUser = null;
+
+        while(loggedInUser == null) {
+
+            System.out.println(localization.getMessage("username"));
             String stringInput = input.nextLine();
 
             Optional<User> userOptional = userService.findUserWithName(stringInput);
             if (userOptional.isPresent()) {
 
                 User user = userOptional.get();
-                System.out.println("Password:");
+                System.out.println(localization.getMessage("password"));
                 stringInput = input.nextLine();
 
                 if (fromPlainText(stringInput).equals(user.getHashedPassword())) {
@@ -44,7 +66,7 @@ public class SignUp {
                     System.out.println("----------------------------------------------------------------------------------");
                     System.out.println(localization.getMessage("greeting_user", user.getUsername()));
 
-                    return user;
+                    loggedInUser = user;
 
                 } else {
                     System.out.println(localization.getMessage("wrongPassword"));
@@ -53,7 +75,50 @@ public class SignUp {
             } else {
                 System.out.println(localization.getMessage("wrongUsername"));
             }
+
         }
+
+        return loggedInUser;
+    }
+
+    public User register(Scanner input){
+
+        Boolean userExists = null; // null = not existing (wrong inputs), true = already exists in DB, false = does not exist in DB and inputs are correct
+        User newUser = null;
+
+        while(userExists == null || userExists) {
+
+            System.out.println(localization.getMessage("username"));
+            String stringInput = input.nextLine();
+
+            User foundUser = userService.findUserWithName(stringInput).orElse(null);
+
+            if (foundUser != null) {
+
+                System.out.println(localization.getMessage("user_exists", foundUser.getUsername()));
+                userExists = true;
+
+            } else {
+
+                System.out.println(localization.getMessage("password"));
+                String password = input.nextLine();
+
+                System.out.println(localization.getMessage("repeat_password"));
+                String repeatPassword = input.nextLine();
+
+                if (password.equals(repeatPassword)) {
+
+                    newUser = User.createUser(stringInput, fromPlainText(password));
+                    userService.createUser(newUser);
+                    System.out.println(localization.getMessage("user_created", newUser.getUsername()));
+                    userExists = false;
+
+                } else {
+                    System.out.println(localization.getMessage("passwords_do_not_match"));
+                }
+            }
+        }
+        return newUser;
     }
 
     public BankAccount waitUntilBankAccountSelect(Scanner input, User user) {

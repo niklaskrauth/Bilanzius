@@ -39,7 +39,8 @@ public class Main {
 
             while (true) {
 
-               User user = signUp.waitUntilLoggedIn(input); //TODO: Implement Register @Niklas
+               User user = signUp.waitUntilLoggedIn(input);
+               System.out.println("----------------------------------------------------------------------------------");
                BankAccount bankAccount = signUp.waitUntilBankAccountSelect(input, user);
                user = userService.findUser(user.getId()).orElse(user);
 
