@@ -15,6 +15,7 @@ import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.utils.Localization;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,19 +70,25 @@ public class WithdrawCommand implements Command, BankAccountAware {
 
     private String withdrawMoney(String[] arguments) {
         try {
-            double withdrawMoney = Math.abs(Double.parseDouble(arguments[1]));
+            BigDecimal withdrawMoney = BigDecimal.valueOf(Math.abs(Double.parseDouble(arguments[1])));
 
             if (arguments.length == 4 && (WithdrawCommandArgument.CATEGORY.getArgument().equals(arguments[2]) ||
                     WithdrawCommandArgument.CATEGORY.getArgumentShort().equals(arguments[2]))) {
+
                 String categoryName = arguments[3];
                 Category category = categoryService.getCategoryOfUserByName(user, categoryName).orElse(null);
+
                 if (category == null) {
                     return localization.getMessage("no_category_with_name", categoryName);
                 }
-                transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, category, -withdrawMoney, "Withdraw " + withdrawMoney));
+
+                transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(), "Withdraw " + withdrawMoney));
+
             } else if (arguments.length == 2 && (WithdrawCommandArgument.WITHDRAW.getArgument().equals(arguments[0]) ||
                     WithdrawCommandArgument.WITHDRAW.getArgumentShort().equals(arguments[0]))) {
-                transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, -withdrawMoney, "Withdraw " + withdrawMoney));
+
+                transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, withdrawMoney.negate(), "Withdraw " + withdrawMoney));
+
             } else {
                 return localization.getMessage("withdraw_command_usage");
             }
@@ -93,8 +100,8 @@ public class WithdrawCommand implements Command, BankAccountAware {
     }
 
     private String checkBalance() {
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        if (balance < 0) {
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        if (balance.compareTo(BigDecimal.ZERO) < 0) {
             return localization.getMessage("withdraw_successful_dept", balance);
         } else {
             return localization.getMessage("withdraw_successful", balance);

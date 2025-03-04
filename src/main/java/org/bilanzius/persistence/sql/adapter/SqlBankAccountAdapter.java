@@ -12,7 +12,7 @@ public class SqlBankAccountAdapter implements SqlDataAdapter<BankAccount>{
                 resultSet.getInt("id"),
                 resultSet.getInt("userId"),
                 resultSet.getString("name"),
-                resultSet.getDouble("balance")
+                resultSet.getBigDecimal("balance")
         );
     }
 }

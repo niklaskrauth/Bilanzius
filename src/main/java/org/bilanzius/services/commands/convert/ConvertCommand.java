@@ -10,6 +10,8 @@ import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.utils.Localization;
 import org.bilanzius.utils.Requests;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,9 +75,9 @@ public class ConvertCommand implements Command, BankAccountAware {
 
     private String convertToPorsche911Camera() {
 
-        int porsche911CameraPrice = 128700;
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        double part = balance / porsche911CameraPrice;
+        BigDecimal porsche911CameraPrice = new BigDecimal("128700");
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        BigDecimal part = balance.divide(porsche911CameraPrice, RoundingMode.HALF_EVEN);
         return localization.getMessage("convert_buy_part_of", part, "Porsche 911 Camera");
     }
 
@@ -83,18 +85,18 @@ public class ConvertCommand implements Command, BankAccountAware {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "btc");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", "Bitcoin", (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "btc"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", "Bitcoin", (balance.multiply(exchangeRate)));
     }
 
     private String convertToGermanDeutscheMark() {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "dem");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", "Deutsche Mark", (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "dem"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", "Deutsche Mark", (balance.multiply(exchangeRate)));
     }
 
     private String convertToSwissFranc() {
@@ -106,37 +108,36 @@ public class ConvertCommand implements Command, BankAccountAware {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "chf");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-
-        return localization.getMessage("convert_balance", currency, (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "chf"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", currency, (balance.multiply(exchangeRate)));
     }
 
     private String convertToDogecoin() {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "doge");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", "Dogecoin", (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "doge"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", "Dogecoin", (balance.multiply(exchangeRate)));
     }
 
     private String convertToEthereum() {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "eth");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", "Ethereum", (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "eth"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", "Ethereum", (balance.multiply(exchangeRate)));
     }
 
     private String convertToHongKongDollar() {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "hkd");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", "Hong Kong Dollar", (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "hkd"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", "Hong Kong Dollar", (balance.multiply(exchangeRate)));
     }
 
     private String convertToJamaicanDollar() {
@@ -148,9 +149,9 @@ public class ConvertCommand implements Command, BankAccountAware {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "jmd");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", currency, (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "jmd"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", currency, (balance.multiply(exchangeRate)));
     }
 
     private String convertToNorthKoreanWon() {
@@ -162,9 +163,9 @@ public class ConvertCommand implements Command, BankAccountAware {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "kpw");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", currency, (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "kpw"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", currency, (balance.multiply(exchangeRate)));
     }
 
     private String convertToRussianRuble() {
@@ -176,18 +177,18 @@ public class ConvertCommand implements Command, BankAccountAware {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "rub");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", currency, (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "rub"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", currency, (balance.multiply(exchangeRate)));
     }
 
     private String convertToUsDollar() {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
-        double exchangeRate = getCurrencyFromJson(jsonObject, "usd");
-        double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        return localization.getMessage("convert_balance", "US Dollar", (balance * exchangeRate));
+        BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "usd"));
+        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        return localization.getMessage("convert_balance", "US Dollar", (balance.multiply(exchangeRate)));
     }
 
     private double getCurrencyFromJson(JsonObject jsonObject, String currencyShort) {

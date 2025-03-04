@@ -11,6 +11,8 @@ import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.*;
 import org.bilanzius.utils.HashedPassword;
 
+import java.math.BigDecimal;
+
 public class Test {
 
     public static void main(String[] args) throws Exception {
@@ -45,15 +47,15 @@ public class Test {
         System.out.println(bankAccountService.getBankAccountsOfUserByName(user, "changedBankAccount").orElseThrow());
 
         // Create category
-        categoryService.createCategory(Category.create(user, "test", 5.00));
+        categoryService.createCategory(Category.create(user, "test", BigDecimal.valueOf(5.00)));
 
         // Get category
         var category = categoryService.getCategoriesOfUser(user, 1).getFirst();
 
         // Update category
         category.setName("Test");
-        category.setBudget(10.00);
-        category.setAmountSpent(5.00);
+        category.setBudget(BigDecimal.valueOf(10.00));
+        category.setAmountSpent(BigDecimal.valueOf(5.00));
         categoryService.updateCategory(category);
 
         // Get category by name
@@ -62,14 +64,14 @@ public class Test {
         System.out.println(categoryTest);
 
         // Get exceeded categories
-        categoryTest.setAmountSpent(15.00);
+        categoryTest.setAmountSpent(BigDecimal.valueOf(15.00));
         categoryService.updateCategory(categoryTest);
         var exceededCategories = categoryService.getExceededCategoriesOfUser(user, 1).getFirst();
         System.out.println(exceededCategories.toString());
 
         // create transaction
-        transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, -5.00, "-5€"));
-        transactionService.saveTransaction(Transaction.create(user, bankAccount, 10.00, "10€"));
+        transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, BigDecimal.valueOf(-5.00), "-5€"));
+        transactionService.saveTransaction(Transaction.create(user, bankAccount, BigDecimal.valueOf(10.00), "10€"));
 
         // Update password
         user.setHashedPassword(HashedPassword.fromPlainText("kuchen123"));
