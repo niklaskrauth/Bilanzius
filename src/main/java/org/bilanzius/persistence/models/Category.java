@@ -1,20 +1,22 @@
 package org.bilanzius.persistence.models;
 
+import java.math.BigDecimal;
+
 public class Category {
 
-    public static Category create(User user, String name, Double budget) {
+    public static Category create(User user, String name, BigDecimal budget) {
         return new Category(
-                0, user.getId(), name, budget, 0.00
+                0, user.getId(), name, budget, new BigDecimal("0.0")
         );
     }
 
     private final int categoryId;
     private final int userId;
     private String name;
-    private Double budget;
-    private Double amountSpent;
+    private BigDecimal budget;
+    private BigDecimal amountSpent;
 
-    public Category(int categoryId, int userId, String name, Double budget, Double amountSpent) {
+    public Category(int categoryId, int userId, String name, BigDecimal budget, BigDecimal amountSpent) {
         this.categoryId = categoryId;
         this.userId = userId;
         this.name = name;
@@ -38,19 +40,19 @@ public class Category {
         this.name = name;
     }
 
-    public Double getBudget() {
+    public BigDecimal getBudget() {
         return budget;
     }
 
-    public void setBudget(Double budget) {
+    public void setBudget(BigDecimal budget) {
         this.budget = budget;
     }
 
-    public Double getAmountSpent() {
+    public BigDecimal getAmountSpent() {
         return amountSpent;
     }
 
-    public void setAmountSpent(Double amountSpent) {
+    public void setAmountSpent(BigDecimal amountSpent) {
         this.amountSpent = amountSpent;
     }
 

@@ -115,7 +115,7 @@ public class SqliteBankAccountService implements BankAccountService {
             backend.execute("UPDATE bankAccounts SET name = ?, balance = ? WHERE id = ?",
                     stmt -> {
                         stmt.setString(1, bankAccount.getName());
-                        stmt.setDouble(2, bankAccount.getBalance());
+                        stmt.setDouble(2, bankAccount.getBalance().doubleValue());
                         stmt.setInt(3, bankAccount.getAccountId());
                     });
         } catch (SQLException ex) {

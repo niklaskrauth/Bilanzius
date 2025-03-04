@@ -10,6 +10,7 @@ import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
@@ -60,7 +61,7 @@ public class DeleteBankAccountCommand implements Command {
         if (user.getMainBankAccountId() == bankAccount.getAccountId()) {
             return localization.getMessage("cannot_delete_main_bank_account");
         }
-        if (bankAccount.getBalance() != 0) {
+        if (bankAccount.getBalance().compareTo(BigDecimal.ZERO) != 0) {
             return localization.getMessage("bank_account_not_empty", bankAccount.getName());
         }
         if (bankAccountService.getBankAccountsOfUser(user, 100).size() == 1) {
@@ -89,7 +90,7 @@ public class DeleteBankAccountCommand implements Command {
             if (user.getMainBankAccountId() == bankAccount.getAccountId()) {
                 return;
             }
-            if (bankAccount.getBalance() != 0) {
+            if (bankAccount.getBalance().compareTo(BigDecimal.ZERO) != 0) {
                 System.out.println(localization.getMessage("bank_account_not_empty", bankAccount.getName()));
                 return;
             }

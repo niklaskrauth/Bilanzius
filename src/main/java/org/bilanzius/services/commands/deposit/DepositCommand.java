@@ -12,6 +12,7 @@ import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.utils.Localization;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,14 +61,14 @@ public class DepositCommand implements Command, BankAccountAware {
     }
 
     private String depositMoney(String argument) {
-        double depositMoney;
+        BigDecimal depositMoney;
 
         try {
-            depositMoney = Double.parseDouble(argument);
-            depositMoney = Math.abs(depositMoney);
+            depositMoney = BigDecimal.valueOf(Double.parseDouble(argument));
+            depositMoney = depositMoney.abs();
             transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, depositMoney, "Deposit" + depositMoney));
 
-            double balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+            BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
 
             return localization.getMessage("deposit_successful", balance);
         } catch (NumberFormatException e) {

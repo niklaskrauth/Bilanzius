@@ -58,7 +58,7 @@ public class SqliteTransactionService implements TransactionService {
         try {
             Category category = transaction.getCategoryId() == -1 ? null : categoryService.getCategory(transaction.getCategoryId()).orElse(null);
             if (category != null) {
-                category.setAmountSpent(category.getAmountSpent() - transaction.getMoney());
+                category.setAmountSpent(category.getAmountSpent().subtract(transaction.getMoney()));
                 categoryService.updateCategory(category);
             }
 
@@ -66,7 +66,7 @@ public class SqliteTransactionService implements TransactionService {
             if (bankAccount.getUserId() != transaction.getUserId()) {
                 throw new DatabaseException("Bank account does not belong to user");
             }
-            bankAccount.setBalance(bankAccount.getBalance() + transaction.getMoney());
+            bankAccount.setBalance(bankAccount.getBalance().add(transaction.getMoney()));
             bankAccountService.updateBankAccount(bankAccount);
 
             this.backend.execute("INSERT INTO transactions (userId, accountId, categoryId, description, money) VALUES (?,?,?,?,?)",
@@ -75,7 +75,7 @@ public class SqliteTransactionService implements TransactionService {
                         stmt.setInt(2, transaction.getAccountId());
                         stmt.setObject(3, transaction.getCategoryId() == -1 ? null : transaction.getCategoryId(), java.sql.Types.INTEGER);
                         stmt.setString(4, transaction.getDescription());
-                        stmt.setDouble(5, transaction.getMoney());
+                        stmt.setDouble(5, transaction.getMoney().doubleValue());
                     });
         } catch (SQLException ex) {
             throw new DatabaseException(ex);

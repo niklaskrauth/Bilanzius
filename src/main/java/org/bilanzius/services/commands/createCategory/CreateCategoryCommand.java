@@ -8,6 +8,7 @@ import org.bilanzius.persistence.sql.SqliteCategoryService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public class CreateCategoryCommand implements Command  {
@@ -27,7 +28,7 @@ public class CreateCategoryCommand implements Command  {
         }
 
         String name = null;
-        Double budget = null;
+        BigDecimal budget = null;
 
         for (int i = 0; i < arguments.length; i += 2) {
             CreateCategoryCommandArguments argument = CreateCategoryCommandArguments.fromString(arguments[i]);
@@ -38,7 +39,7 @@ public class CreateCategoryCommand implements Command  {
                 name = arguments[i + 1];
             } else if (argument == CreateCategoryCommandArguments.BUDGET) {
                 try {
-                    budget = Double.parseDouble(arguments[i + 1]);
+                    budget = BigDecimal.valueOf(Double.parseDouble(arguments[i + 1]));
                 } catch (NumberFormatException e) {
                     return localization.getMessage("invalid_amount");
                 }
@@ -57,7 +58,7 @@ public class CreateCategoryCommand implements Command  {
         return category != null && category.getName().equals(name);
     }
 
-    private String createCategory(String name, Double budget) {
+    private String createCategory(String name, BigDecimal budget) {
         if (checkIfCategoryExists(name)) {
             return localization.getMessage("category_already_exists", name);
         }

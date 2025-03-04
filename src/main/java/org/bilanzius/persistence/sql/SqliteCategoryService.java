@@ -52,8 +52,8 @@ public class SqliteCategoryService implements CategoryService {
                     stmt -> {
                         stmt.setInt(1, category.getUserId());
                         stmt.setString(2, category.getName());
-                        stmt.setDouble(3, category.getBudget());
-                        stmt.setDouble(4, category.getAmountSpent());
+                        stmt.setDouble(3, category.getBudget().doubleValue());
+                        stmt.setDouble(4, category.getAmountSpent().doubleValue());
                     });
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
@@ -121,8 +121,8 @@ public class SqliteCategoryService implements CategoryService {
             backend.execute("UPDATE categories SET name = ?, budget = ?, amountSpent = ? WHERE id = ?",
                     stmt -> {
                         stmt.setString(1, category.getName());
-                        stmt.setDouble(2, category.getBudget());
-                        stmt.setDouble(3, category.getAmountSpent());
+                        stmt.setDouble(2, category.getBudget().doubleValue());
+                        stmt.setDouble(3, category.getAmountSpent().doubleValue());
                         stmt.setInt(4, category.getCategoryId());
                     });
         } catch (SQLException ex) {

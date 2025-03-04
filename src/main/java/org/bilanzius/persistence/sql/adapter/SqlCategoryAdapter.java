@@ -13,8 +13,8 @@ public class SqlCategoryAdapter implements SqlDataAdapter<Category> {
                 resultSet.getInt("id"),
                 resultSet.getInt("userId"),
                 resultSet.getString("name"),
-                resultSet.getDouble("budget"),
-                resultSet.getDouble("amountSpent")
+                resultSet.getBigDecimal("budget"),
+                resultSet.getBigDecimal("amountSpent")
         );
     }
 }
