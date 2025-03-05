@@ -17,6 +17,7 @@ import org.bilanzius.services.commands.getBankAccount.GetBankAccountCommand;
 import org.bilanzius.services.commands.getCategory.GetCategoryCommand;
 import org.bilanzius.services.commands.getLanguage.GetLanguagesCommand;
 import org.bilanzius.services.commands.help.HelpCommand;
+import org.bilanzius.services.commands.history.HistoryCommand;
 import org.bilanzius.services.commands.setLanguage.SetLanguageCommand;
 import org.bilanzius.services.commands.renameBankAccount.RenameBankAccountCommand;
 import org.bilanzius.services.commands.switchBankAccount.SwitchBankAccountCommand;
@@ -25,6 +26,7 @@ import org.bilanzius.utils.Localization;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CommandController {
@@ -32,7 +34,7 @@ public class CommandController {
     private final Localization localization = Localization.getInstance();
     private BankAccount selectedBankAccount;
 
-    public CommandController(User user, SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
+    public CommandController(User user, SqlBackend backend, BankAccount selectedBankAccount, List<String> historyInputs) throws SQLException {
         this.selectedBankAccount = selectedBankAccount;
 
         commandMap = new HashMap<>();
@@ -40,6 +42,8 @@ public class CommandController {
         commandMap.put(Commands.EXIT, new ExitCommand(user));
         commandMap.put(Commands.HELP, new HelpCommand());
         commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
+        commandMap.put(Commands.HISTORY, new HistoryCommand(historyInputs));
+
         commandMap.put(Commands.DEPOSIT, new DepositCommand(user, backend, this.selectedBankAccount));
         commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user, backend, this.selectedBankAccount));
         commandMap.put(Commands.CONVERT, new ConvertCommand(backend, this.selectedBankAccount));

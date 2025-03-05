@@ -1,13 +1,16 @@
 package org.bilanzius;
 
 import org.bilanzius.commandController.CommandController;
+import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.sql.*;
 import org.bilanzius.utils.Localization;
 import org.bilanzius.persistence.models.User;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
@@ -20,44 +23,60 @@ public class Main {
         UserService userService;
 
         try {
+
+            Localization localization;
+            Scanner scanner = new Scanner(System.in);
+            SignUp signUp;
+
             backend.connect();
             userService = SqliteUserDatabaseService.getInstance(backend);
-            Localization localization = Localization.getInstance();
+            localization = Localization.getInstance();
 
-            // Create a new user with name "TestUser" and password "passwort1234"
+            signUp = new SignUp(backend);
+
+            createTestUsers(userService);
+
+            System.out.println(localization.getMessage("greeting"));
+
+            while (true) {
+
+                List<String> historyInputs = new ArrayList<>();
+                User user = signUp.waitUntilLoggedIn(scanner);
+
+                System.out.println("----------------------------------------------------------------------------------");
+
+                Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
+                user = userService.findUser(user.getId()).orElse(user);
+
+                if (bankAccount.isPresent()) {
+                    CommandController commandController = new CommandController(user, backend, bankAccount.get(), historyInputs);
+
+                    while (user != null) {
+
+                        System.out.println("----------------------------------------------------------------------------------");
+                        String input = scanner.nextLine();
+                        historyInputs.add(input);
+
+                        String stringOutput = commandController.handleInput(input);
+                        System.out.println(stringOutput);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Create a new user with name "TestUser" and password "passwort1234"
+    private static void createTestUsers(UserService userService) {
+        try {
             userService.createUser(User.createUser("TestUser",
                     fromPlainText("passwort1234")));
 
             userService.createUser(User.createUser("TestUser2",
                     fromPlainText("passwort5678")));
-
-            SignUp signUp = new SignUp(backend);
-
-            System.out.println(localization.getMessage("greeting"));
-
-            Scanner input = new Scanner(System.in);
-
-            while (true) {
-
-               User user = signUp.waitUntilLoggedIn(input);
-               System.out.println("----------------------------------------------------------------------------------");
-               BankAccount bankAccount = signUp.waitUntilBankAccountSelect(input, user);
-               user = userService.findUser(user.getId()).orElse(user);
-
-               CommandController commandController = new CommandController(user, backend, bankAccount);
-
-               while (user != null) {
-
-                   System.out.println("----------------------------------------------------------------------------------");
-
-                   String stringInput = input.nextLine();
-
-                   String stringOutput = commandController.handleInput(stringInput);
-                   System.out.println(stringOutput);
-               }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (DatabaseException e) {
+            System.out.println("Error creating test users");
         }
     }
 }
