@@ -65,7 +65,7 @@ public class DeleteBankAccountCommand implements Command {
 
 
         try {
-            bankAccount = bankAccountService.getBankAccountsOfUserByName(user, name).stream().findFirst().orElse(null);
+            bankAccount = bankAccountService.getBankAccountOfUserByName(user, name).stream().findFirst().orElse(null);
         } catch (DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }

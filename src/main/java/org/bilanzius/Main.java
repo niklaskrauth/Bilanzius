@@ -21,12 +21,12 @@ public class Main {
         // Connect to sqllite database
         var backend = new SqlBackend();
         UserService userService;
+        Localization localization;
+        SignUp signUp;
 
         try {
 
-            Localization localization;
             Scanner scanner = new Scanner(System.in);
-            SignUp signUp;
 
             backend.connect();
             userService = SqliteUserDatabaseService.getInstance(backend);
@@ -38,15 +38,16 @@ public class Main {
 
             System.out.println(localization.getMessage("greeting"));
 
+            List<String> historyInputs = new ArrayList<>();
+            User user;
+
             while (true) {
 
-                List<String> historyInputs = new ArrayList<>();
-                User user = signUp.waitUntilLoggedIn(scanner);
+                user = signUp.waitUntilLoggedIn(scanner);
 
                 System.out.println("----------------------------------------------------------------------------------");
 
                 Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
-                user = userService.findUser(user.getId()).orElse(user);
 
                 if (bankAccount.isPresent()) {
                     CommandController commandController = new CommandController(user, backend, bankAccount.get(), historyInputs);
