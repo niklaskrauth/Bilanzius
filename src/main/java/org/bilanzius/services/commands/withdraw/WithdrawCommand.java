@@ -2,6 +2,7 @@ package org.bilanzius.services.commands.withdraw;
 
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.CategoryService;
+import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.Category;
@@ -22,8 +23,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class WithdrawCommand implements Command, BankAccountAware {
+
     private User user;
-    private final Map<WithdrawCommandArgument, Function<String[], String>> commandMap;
+    private final Map<WithdrawCommandArgument, Function<String[], String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
     private final TransactionService transactionService;
     private BankAccount selectedBankAccount;
@@ -37,7 +39,6 @@ public class WithdrawCommand implements Command, BankAccountAware {
         this.selectedBankAccount = selectedBankAccount;
         this.categoryService = SqliteCategoryService.getInstance(backend);
 
-        commandMap = new HashMap<>();
         commandMap.put(WithdrawCommandArgument.WITHDRAW, this::withdrawMoney);
     }
 
@@ -48,19 +49,24 @@ public class WithdrawCommand implements Command, BankAccountAware {
 
     @Override
     public String execute(String[] arguments) {
+
+        WithdrawCommandArgument argument;
+        Function<String[], String> command;
+
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", WithdrawCommandArgument.getAllArguments());
         }
+
         if (arguments.length != 2 && arguments.length != 4) {
             return localization.getMessage("withdraw_command_usage");
         }
 
-        WithdrawCommandArgument argument = WithdrawCommandArgument.fromString(arguments[0]);
+        argument = WithdrawCommandArgument.fromString(arguments[0]);
         if (argument == null) {
             return localization.getMessage("unknown_argument", WithdrawCommandArgument.getAllArguments());
         }
 
-        Function<String[], String> command = commandMap.get(argument);
+        command = commandMap.get(argument);
         if (command != null) {
             return command.apply(arguments);
         }
@@ -69,14 +75,19 @@ public class WithdrawCommand implements Command, BankAccountAware {
     }
 
     private String withdrawMoney(String[] arguments) {
+
+        BigDecimal withdrawMoney;
+        String categoryName;
+        Category category;
+
         try {
-            BigDecimal withdrawMoney = BigDecimal.valueOf(Math.abs(Double.parseDouble(arguments[1])));
+             withdrawMoney = BigDecimal.valueOf(Math.abs(Double.parseDouble(arguments[1])));
 
             if (arguments.length == 4 && (WithdrawCommandArgument.CATEGORY.getArgument().equals(arguments[2]) ||
                     WithdrawCommandArgument.CATEGORY.getArgumentShort().equals(arguments[2]))) {
 
-                String categoryName = arguments[3];
-                Category category = categoryService.getCategoryOfUserByName(user, categoryName).orElse(null);
+                categoryName = arguments[3];
+                category = categoryService.getCategoryOfUserByName(user, categoryName).orElse(null);
 
                 if (category == null) {
                     return localization.getMessage("no_category_with_name", categoryName);
@@ -96,11 +107,21 @@ public class WithdrawCommand implements Command, BankAccountAware {
             return checkBalance();
         } catch (NumberFormatException e) {
             return localization.getMessage("invalid_amount");
+        } catch (DatabaseException e) {
+            return localization.getMessage("database_error", e.toString());
         }
     }
 
     private String checkBalance() {
-        BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+
+        BigDecimal balance;
+
+        try {
+            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (DatabaseException e) {
+            return localization.getMessage("database_error", e.toString());
+        }
+
         if (balance.compareTo(BigDecimal.ZERO) < 0) {
             return localization.getMessage("withdraw_successful_dept", balance);
         } else {

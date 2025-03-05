@@ -1,6 +1,7 @@
 package org.bilanzius.services.commands.deleteCategory;
 
 import org.bilanzius.persistence.CategoryService;
+import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.SqlBackend;
@@ -12,8 +13,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.function.Function;
+
+import static org.bilanzius.utils.ValidateDelete.validateDeleteAction;
 
 public class DeleteCategoryCommand implements Command {
 
@@ -21,12 +23,10 @@ public class DeleteCategoryCommand implements Command {
     private final CategoryService categoryService;
     private final Map<DeleteCategoryCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
-    private final Scanner scanner;
 
     public DeleteCategoryCommand(User user, SqlBackend backend) throws SQLException {
         this.user = user;
         this.categoryService = SqliteCategoryService.getInstance(backend);
-        this.scanner = new Scanner(System.in);
 
         commandMap = new HashMap<>();
         commandMap.put(DeleteCategoryCommandArguments.ALL, s -> deleteAllCategories());
@@ -35,16 +35,20 @@ public class DeleteCategoryCommand implements Command {
 
     @Override
     public String execute(String[] arguments) {
+
+        DeleteCategoryCommandArguments argument;
+        Function<String, String> command;
+
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", DeleteCategoryCommandArguments.getAllArguments());
         }
 
-        DeleteCategoryCommandArguments argument = DeleteCategoryCommandArguments.fromString(arguments[0]);
+        argument = DeleteCategoryCommandArguments.fromString(arguments[0]);
         if (argument == null) {
             return localization.getMessage("unknown_argument", DeleteCategoryCommandArguments.getAllArguments());
         }
 
-        Function<String, String> command = commandMap.get(argument);
+        command = commandMap.get(argument);
         if (command != null) {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
@@ -53,34 +57,62 @@ public class DeleteCategoryCommand implements Command {
     }
 
     private String deleteCategoryByName(String name) {
-        Category category = categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
+
+        Category category;
+
+        try {
+            category = categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
+        } catch (DatabaseException e) {
+            return localization.getMessage("database_error", e.toString());
+        }
+
         if (category == null) {
             return localization.getMessage("no_category_with_name", name);
         }
+
         if (validateDeleteAction(localization.getMessage("ask_for_deletion_category", category.getName()))) {
             return localization.getMessage("no_categories_deleted");
         }
-        categoryService.deleteCategory(category);
+
+        try {
+            categoryService.deleteCategory(category);
+        } catch (DatabaseException e) {
+            return localization.getMessage("database_error", e.toString());
+        }
+
         return localization.getMessage("category_deleted", category.getName());
     }
 
     private String deleteAllCategories() {
-        List<Category> categories = categoryService.getCategoriesOfUser(user, 100).stream().toList();
+
+        List<Category> categories;
+
+        try {
+            categories = categoryService.getCategoriesOfUser(user, 100).stream().toList();
+        } catch (DatabaseException e) {
+            return localization.getMessage("database_error", e.toString());
+        }
+
         if (categories.isEmpty()) {
             return localization.getMessage("no_categories_created");
         }
+
         if (validateDeleteAction(localization.getMessage("ask_for_deletion_of_all_categories"))) {
             return localization.getMessage("no_categories_deleted");
         }
+
         for (Category category : categories) {
-            categoryService.deleteCategory(category);
+
+            try {
+                categoryService.deleteCategory(category);
+            } catch (DatabaseException e) {
+                return localization.getMessage("database_error", e.toString());
+            }
+
         }
+
         return localization.getMessage("all_categories_deleted");
     }
 
-    private boolean validateDeleteAction(String message){
-        System.out.println(message + " (yes/no): ");
-        String response = this.scanner.nextLine().trim().toLowerCase();
-        return !response.equals("yes") && !response.equals("y");
-    }
+
 }

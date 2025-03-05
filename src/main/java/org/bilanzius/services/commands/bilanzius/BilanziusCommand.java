@@ -8,12 +8,10 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class BilanziusCommand implements Command {
-    private final Map<BilanziusCommandArguments, Supplier<String>> commandMap;
+    private final Map<BilanziusCommandArguments, Supplier<String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
 
     public BilanziusCommand() {
-        commandMap = new HashMap<>();
-
         commandMap.put(BilanziusCommandArguments.VERSION, this::getVersion);
         commandMap.put(BilanziusCommandArguments.AUTHORS, this::getAuthors);
         commandMap.put(BilanziusCommandArguments.DESCRIPTION, this::getDescription);
@@ -22,16 +20,19 @@ public class BilanziusCommand implements Command {
     @Override
     public String execute(String[] arguments) {
 
+        BilanziusCommandArguments argument;
+        Supplier<String> command;
+
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", BilanziusCommandArguments.getAllArguments());
         }
 
-        BilanziusCommandArguments argument = BilanziusCommandArguments.fromString(arguments[0]);
+        argument = BilanziusCommandArguments.fromString(arguments[0]);
         if (argument == null) {
             return localization.getMessage("unknown_argument", BilanziusCommandArguments.getAllArguments());
         }
 
-        Supplier<String> command = commandMap.get(argument);
+        command = commandMap.get(argument);
         if (command != null) {
             return command.get();
         }

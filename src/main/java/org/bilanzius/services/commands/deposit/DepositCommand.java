@@ -1,6 +1,7 @@
 package org.bilanzius.services.commands.deposit;
 
 import org.bilanzius.persistence.BankAccountService;
+import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.Transaction;
@@ -20,7 +21,7 @@ import java.util.function.Function;
 
 public class DepositCommand implements Command, BankAccountAware {
     private User user;
-    private final Map<DepositCommandArguments, Function<String, String>> commandMap;
+    private final Map<DepositCommandArguments, Function<String, String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
     private final TransactionService transactionService;
     private BankAccount selectedBankAccount;
@@ -32,7 +33,6 @@ public class DepositCommand implements Command, BankAccountAware {
         this.transactionService = SqliteTransactionService.getInstance(backend);
         this.bankAccountService = SqliteBankAccountService.getInstance(backend);
 
-        commandMap = new HashMap<>();
         commandMap.put(DepositCommandArguments.DEPOSIT, this::depositMoney);
     }
 
@@ -43,16 +43,20 @@ public class DepositCommand implements Command, BankAccountAware {
 
     @Override
     public String execute(String[] arguments) {
+
+        DepositCommandArguments argument;
+        Function<String, String> command;
+
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", DepositCommandArguments.getAllArguments());
         }
 
-        DepositCommandArguments argument = DepositCommandArguments.fromString(arguments[0]);
+        argument = DepositCommandArguments.fromString(arguments[0]);
         if (argument == null) {
             return localization.getMessage("unknown_argument", DepositCommandArguments.getAllArguments());
         }
 
-        Function<String, String> command = commandMap.get(argument);
+        command = commandMap.get(argument);
         if (command != null) {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
@@ -61,18 +65,23 @@ public class DepositCommand implements Command, BankAccountAware {
     }
 
     private String depositMoney(String argument) {
+
         BigDecimal depositMoney;
+        BigDecimal balance;
 
         try {
+
             depositMoney = BigDecimal.valueOf(Double.parseDouble(argument));
             depositMoney = depositMoney.abs();
             transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, depositMoney, "Deposit" + depositMoney));
 
-            BigDecimal balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
 
             return localization.getMessage("deposit_successful", balance);
         } catch (NumberFormatException e) {
             return localization.getMessage("invalid_amount");
+        } catch (DatabaseException e) {
+            return localization.getMessage("database_error", e.toString());
         }
     }
 }

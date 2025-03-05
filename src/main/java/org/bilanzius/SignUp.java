@@ -1,6 +1,7 @@
 package org.bilanzius;
 
 import org.bilanzius.persistence.BankAccountService;
+import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
@@ -10,6 +11,7 @@ import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
 import org.bilanzius.utils.Localization;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -25,48 +27,71 @@ public class SignUp {
         this.bankAccountService = SqliteBankAccountService.getInstance(backend);
     }
 
-    public User waitUntilLoggedIn (Scanner input) {
+    public User waitUntilLoggedIn (Scanner scanner) {
 
         while (true) {
             System.out.println("----------------------------------------------------------------------------------");
 
             System.out.println(localization.getMessage("login_or_register"));
-            String stringInput = input.nextLine();
+            String loginOrRegister = scanner.nextLine();
 
-            if (stringInput.equals("1")) {
+            if (loginOrRegister.equals("1")) {
                 System.out.println(localization.getMessage("login"));
-                return login(input);
-            } else if (stringInput.equals("2")) {
+
+                Optional<User> optionalUser = login(scanner);
+
+                if(optionalUser.isPresent()) {
+                    return optionalUser.get();
+                } else {
+                    System.out.println(localization.getMessage("database_error"));
+                }
+
+            } else if (loginOrRegister.equals("2")) {
                 System.out.println(localization.getMessage("register"));
-                return register(input);
+
+                Optional<User> optionalUser = register(scanner);
+
+                if(optionalUser.isPresent()) {
+                    return optionalUser.get();
+                } else {
+                    System.out.println(localization.getMessage("database_error"));
+                }
+
             } else {
                 System.out.println(localization.getMessage("invalid_input"));
             }
         }
     }
 
-    public User login(Scanner input){
+    public Optional<User> login(Scanner scanner){
 
-        User loggedInUser = null;
+        Optional<User> loggedInUser = Optional.empty();
 
-        while(loggedInUser == null) {
+        while(loggedInUser.isEmpty()) {
 
             System.out.println(localization.getMessage("username"));
-            String stringInput = input.nextLine();
+            String username = scanner.nextLine();
+            Optional<User> userOptional;
 
-            Optional<User> userOptional = userService.findUserWithName(stringInput);
+            try {
+                userOptional = userService.findUserWithName(username);
+            } catch (DatabaseException e) {
+                System.out.println(localization.getMessage("database_error"));
+                return Optional.empty();
+            }
+
             if (userOptional.isPresent()) {
 
                 User user = userOptional.get();
                 System.out.println(localization.getMessage("password"));
-                stringInput = input.nextLine();
+                String password = scanner.nextLine();
 
-                if (fromPlainText(stringInput).equals(user.getHashedPassword())) {
+                if (fromPlainText(password).equals(user.getHashedPassword())) {
 
                     System.out.println("----------------------------------------------------------------------------------");
                     System.out.println(localization.getMessage("greeting_user", user.getUsername()));
 
-                    loggedInUser = user;
+                    loggedInUser = Optional.of(user);
 
                 } else {
                     System.out.println(localization.getMessage("wrongPassword"));
@@ -77,11 +102,10 @@ public class SignUp {
             }
 
         }
-
         return loggedInUser;
     }
 
-    public User register(Scanner input){
+    public Optional<User> register(Scanner scanner){
 
         Boolean userExists = null; // null = not existing (wrong inputs), true = already exists in DB, false = does not exist in DB and inputs are correct
         User newUser = null;
@@ -89,9 +113,9 @@ public class SignUp {
         while(userExists == null || userExists) {
 
             System.out.println(localization.getMessage("username"));
-            String stringInput = input.nextLine();
+            String username = scanner.nextLine();
 
-            User foundUser = userService.findUserWithName(stringInput).orElse(null);
+            User foundUser = userService.findUserWithName(username).orElse(null);
 
             if (foundUser != null) {
 
@@ -101,15 +125,21 @@ public class SignUp {
             } else {
 
                 System.out.println(localization.getMessage("password"));
-                String password = input.nextLine();
+                String password = scanner.nextLine();
 
                 System.out.println(localization.getMessage("repeat_password"));
-                String repeatPassword = input.nextLine();
+                String repeatPassword = scanner.nextLine();
 
                 if (password.equals(repeatPassword)) {
 
-                    newUser = User.createUser(stringInput, fromPlainText(password));
-                    userService.createUser(newUser);
+                    newUser = User.createUser(username, fromPlainText(password));
+
+                    try {
+                        userService.createUser(newUser);
+                    } catch (DatabaseException e) {
+                        return Optional.empty();
+                    }
+
                     System.out.println(localization.getMessage("user_created", newUser.getUsername()));
                     userExists = false;
 
@@ -118,35 +148,114 @@ public class SignUp {
                 }
             }
         }
-        return newUser;
+        return Optional.of(newUser);
     }
 
-    public BankAccount waitUntilBankAccountSelect(Scanner input, User user) {
-        if ((long) bankAccountService.getBankAccountsOfUser(user, 5).size() == 1){
-            BankAccount account = bankAccountService.getBankAccountsOfUser(user, 1).getFirst();
-            System.out.println(localization.getMessage("only_one_bank_account", account.getName()));
-            return account;
+    public Optional<BankAccount> waitUntilBankAccountSelect(Scanner scanner, User user) {
+        
+        List<BankAccount> bankAccounts;
+        Optional<BankAccount> bankAccount;
+        BankAccount createdBankAccount;
+        
+        try {
+            bankAccounts = bankAccountService.getBankAccountsOfUser(user, 5);
+        } catch (DatabaseException e) {
+            System.out.println(localization.getMessage("database_error", e.toString()));
+            return Optional.empty();
         }
-        if (!bankAccountService.getBankAccountsOfUser(user, 1).isEmpty()) {
+        
+        if (bankAccounts.size() == 1){
+            BankAccount account;
+            
+            try {
+                account = bankAccountService.getBankAccountsOfUser(user, 1).getFirst();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            
+            System.out.println(localization.getMessage("only_one_bank_account", account.getName()));
+            return Optional.of(account);
+        }
+        
+        try {
+            bankAccounts = bankAccountService.getBankAccountsOfUser(user, 1);
+        } catch (DatabaseException e) {
+            System.out.println(localization.getMessage("database_error", e.toString()));
+            return Optional.empty();
+        }
+
+        if (!bankAccounts.isEmpty()) {
             System.out.println(localization.getMessage("select_bank_account"));
-            bankAccountService.getBankAccountsOfUser(user, 10).forEach(account -> System.out.println(account.getName()));
+            
+            try {
+                bankAccountService.getBankAccountsOfUser(user, 10).forEach(account -> System.out.println(account.getName()));
+            } catch (DatabaseException e) {
+                System.out.println(localization.getMessage("database_error", e.toString()));
+                return Optional.empty();
+            }
+
             System.out.println("----------------------------------------------------------------------------------");
             System.out.println(localization.getMessage("bank_account_name"));
+            
             while (true) {
-                String stringInput = input.nextLine();
-                BankAccount account = bankAccountService.getBankAccountsOfUserByName(user, stringInput).orElse(null);
-                if (account != null) {
-                    return account;
+                
+                String bankAccountName = scanner.nextLine();
+                BankAccount account;
+                
+                try {
+                    account = bankAccountService.getBankAccountsOfUserByName(user, bankAccountName).orElse(null);
+                } catch (DatabaseException e) {
+                    System.out.println(localization.getMessage("database_error", e.toString()));
+                    return Optional.empty();
                 }
+                
+                if (account != null) {
+                    return Optional.of(account);
+                }
+                
                 System.out.println(localization.getMessage("wrong_bank_account_name"));
             }
         }
+
         System.out.println(localization.getMessage("no_bank_accounts_yet"));
         System.out.println("----------------------------------------------------------------------------------");
+
         System.out.println(localization.getMessage("bank_account_name"));
-        String stringInput = input.nextLine();
-        bankAccountService.createBankAccount(BankAccount.create(user, stringInput));
-        System.out.println(localization.getMessage("bank_account_created", stringInput));
-        return bankAccountService.getBankAccountsOfUser(user, 1).getFirst();
+        String bankAccountName = scanner.nextLine();
+
+        createdBankAccount = BankAccount.create(user, bankAccountName);
+        
+        try {
+            bankAccountService.createBankAccount(createdBankAccount);
+            bankAccount = bankAccountService.getBankAccountsOfUserByName(user, createdBankAccount.getName()).stream().findFirst();
+            if (bankAccount.isEmpty()) {
+                return Optional.empty();
+            }
+        } catch (DatabaseException e) {
+            System.out.println(localization.getMessage("database_error", e.toString()));
+            return Optional.empty();
+        }
+
+        if (user.getMainBankAccountId() == 0) {
+            user.setMainAccountId(bankAccount.get().getAccountId());
+            
+            try {
+                userService.updateUserMainAccountId(user);
+            } catch (DatabaseException e) {
+                System.out.println(localization.getMessage("database_error", e.toString()));
+                return Optional.empty();
+            }
+        }
+
+        System.out.println(localization.getMessage("bank_account_created", bankAccountName));
+        
+        try {
+            bankAccounts = bankAccountService.getBankAccountsOfUser(user, 1);
+        } catch (DatabaseException e) {
+            System.out.println(localization.getMessage("database_error", e.toString()));
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(bankAccounts.getFirst());
     }
 }
