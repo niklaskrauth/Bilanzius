@@ -48,13 +48,15 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
             }
 
             List<BankAccount> bankAccountsOfUser;
+            BankAccount newSelectedBankAccount;
+
             try {
                 bankAccountsOfUser = bankAccountService.getBankAccountsOfUser(user, 100);
             } catch (DatabaseException e) {
                 return localization.getMessage("database_error", e.toString());
             }
 
-            BankAccount newSelectedBankAccount = bankAccountsOfUser.stream()
+            newSelectedBankAccount = bankAccountsOfUser.stream()
                     .filter(bankAccount -> bankAccount.getName().equals(arguments[0]))
                     .findFirst()
                     .orElse(null);

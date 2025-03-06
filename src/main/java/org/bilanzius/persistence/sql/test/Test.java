@@ -38,13 +38,13 @@ public class Test {
         // Create bank account
         bankAccountService.createBankAccount(BankAccount.create(user, "testBankAccount"));
         bankAccountService.getBankAccountsOfUser(user, 1).forEach(System.out::println);
-        BankAccount bankAccount = bankAccountService.getBankAccountsOfUserByName(user, "testBankAccount").orElseThrow();
+        BankAccount bankAccount = bankAccountService.getBankAccountOfUserByName(user, "testBankAccount").orElseThrow();
         // Update bank account balance
         bankAccountService.updateBankAccountBalance(bankAccount, 5.00);
         // change bank account name
         bankAccount.setName("changedBankAccount");
         bankAccountService.updateBankAccount(bankAccount);
-        System.out.println(bankAccountService.getBankAccountsOfUserByName(user, "changedBankAccount").orElseThrow());
+        System.out.println(bankAccountService.getBankAccountOfUserByName(user, "changedBankAccount").orElseThrow());
 
         // Create category
         categoryService.createCategory(Category.create(user, "test", BigDecimal.valueOf(5.00)));

@@ -79,9 +79,10 @@ public class WithdrawCommand implements Command, BankAccountAware {
         BigDecimal withdrawMoney;
         String categoryName;
         Category category;
+        Transaction transaction;
 
         try {
-             withdrawMoney = BigDecimal.valueOf(Math.abs(Double.parseDouble(arguments[1])));
+            withdrawMoney = BigDecimal.valueOf(Math.abs(Double.parseDouble(arguments[1])));
 
             if (arguments.length == 4 && (WithdrawCommandArgument.CATEGORY.getArgument().equals(arguments[2]) ||
                     WithdrawCommandArgument.CATEGORY.getArgumentShort().equals(arguments[2]))) {
@@ -93,12 +94,25 @@ public class WithdrawCommand implements Command, BankAccountAware {
                     return localization.getMessage("no_category_with_name", categoryName);
                 }
 
-                transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(), "Withdraw " + withdrawMoney));
+                transaction = Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(),
+                        "Withdraw " + withdrawMoney);
+
+                category.setAmountSpent(category.getAmountSpent().subtract(transaction.getMoney()));
+                categoryService.updateCategory(category);
+
+                transactionService.saveTransaction(transaction);
+
+                this.selectedBankAccount.setBalance(this.selectedBankAccount.getBalance().add(transaction.getMoney()));
+                bankAccountService.updateBankAccount(this.selectedBankAccount);
+                setSelectedBankAccount(bankAccountService.getBankAccount(
+                        this.selectedBankAccount.getAccountId()).orElseThrow());
 
             } else if (arguments.length == 2 && (WithdrawCommandArgument.WITHDRAW.getArgument().equals(arguments[0]) ||
                     WithdrawCommandArgument.WITHDRAW.getArgumentShort().equals(arguments[0]))) {
 
-                transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, withdrawMoney.negate(), "Withdraw " + withdrawMoney));
+                transaction = Transaction.create(user, selectedBankAccount, withdrawMoney.negate(), "Withdraw " + withdrawMoney);
+
+                transactionService.saveTransaction(transaction);
 
             } else {
                 return localization.getMessage("withdraw_command_usage");

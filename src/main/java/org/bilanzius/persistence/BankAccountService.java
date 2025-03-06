@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface BankAccountService {
     void createBankAccount(BankAccount bankAccount);
     Optional<BankAccount> getBankAccount(long id);
-    Optional<BankAccount> getBankAccountsOfUserByName(User user, String name);
+    Optional<BankAccount> getBankAccountOfUserByName(User user, String name);
     List<BankAccount> getBankAccountsOfUser(User user, int limit);
     void updateBankAccount(BankAccount bankAccount);
     void deleteBankAccount(BankAccount bankAccount);

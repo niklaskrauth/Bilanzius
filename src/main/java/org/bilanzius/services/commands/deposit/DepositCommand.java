@@ -73,7 +73,8 @@ public class DepositCommand implements Command, BankAccountAware {
 
             depositMoney = BigDecimal.valueOf(Double.parseDouble(argument));
             depositMoney = depositMoney.abs();
-            transactionService.saveTransaction(Transaction.create(user, selectedBankAccount, depositMoney, "Deposit" + depositMoney));
+            transactionService.saveTransaction(Transaction.create(
+                    user, selectedBankAccount, depositMoney, "Deposit" + depositMoney));
 
             balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
 
