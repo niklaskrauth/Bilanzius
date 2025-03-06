@@ -5,8 +5,8 @@ import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.sql.*;
-import org.bilanzius.utils.Localization;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.utils.Localization;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class Main {
 
             createTestUsers(userService);
 
-            System.out.println(localization.getMessage("greeting"));
+            WelcomeUser.welcomeMessage();
 
             List<String> historyInputs = new ArrayList<>();
             User user;
@@ -45,7 +45,7 @@ public class Main {
 
                 user = signUp.waitUntilLoggedIn(scanner);
 
-                System.out.println("----------------------------------------------------------------------------------");
+                System.out.println(localization.getMessage("line_splitter"));
 
                 Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
 
@@ -54,7 +54,7 @@ public class Main {
 
                     while (user != null) {
 
-                        System.out.println("----------------------------------------------------------------------------------");
+                        System.out.println(localization.getMessage("line_splitter"));
                         String input = scanner.nextLine();
                         historyInputs.add(input);
 

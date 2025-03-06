@@ -31,7 +31,7 @@ public class SignUp {
     public User waitUntilLoggedIn(Scanner scanner) {
 
         while (true) {
-            System.out.println("----------------------------------------------------------------------------------");
+            System.out.println(localization.getMessage("line_splitter"));
 
             System.out.println(localization.getMessage("login_or_register"));
             String loginOrRegister = scanner.nextLine();
@@ -89,7 +89,7 @@ public class SignUp {
 
                 if (fromPlainText(password).equals(user.getHashedPassword())) {
 
-                    System.out.println("----------------------------------------------------------------------------------");
+                    System.out.println(localization.getMessage("line_splitter"));
                     System.out.println(localization.getMessage("greeting_user", user.getUsername()));
 
                     loggedInUser = Optional.of(user);
@@ -179,7 +179,7 @@ public class SignUp {
 
             bankAccounts.forEach(account -> System.out.println(account.getName()));
 
-            System.out.println("----------------------------------------------------------------------------------");
+            System.out.println(localization.getMessage("line_splitter"));
             System.out.println(localization.getMessage("bank_account_name"));
 
             while (true) {
@@ -203,7 +203,7 @@ public class SignUp {
         }
 
         System.out.println(localization.getMessage("no_bank_accounts_yet"));
-        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println(localization.getMessage("line_splitter"));
 
         System.out.println(localization.getMessage("bank_account_name"));
         String bankAccountName = scanner.nextLine();
