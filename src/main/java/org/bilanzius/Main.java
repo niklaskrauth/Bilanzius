@@ -6,6 +6,7 @@ import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.sql.*;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.rest.RestController;
 import org.bilanzius.utils.Localization;
 
 import java.util.ArrayList;
@@ -24,7 +25,11 @@ public class Main {
         Localization localization;
         SignUp signUp;
 
+        RestController restController = new RestController();
+
         try {
+
+            restController.mainRestController();
 
             Scanner scanner = new Scanner(System.in);
 
