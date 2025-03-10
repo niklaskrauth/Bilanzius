@@ -5,8 +5,8 @@ import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.sql.*;
-import org.bilanzius.utils.Localization;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.utils.Localization;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +21,12 @@ public class Main {
         // Connect to sqllite database
         var backend = new SqlBackend();
         UserService userService;
+        Localization localization;
+        SignUp signUp;
 
         try {
 
-            Localization localization;
             Scanner scanner = new Scanner(System.in);
-            SignUp signUp;
 
             backend.connect();
             userService = SqliteUserDatabaseService.getInstance(backend);
@@ -36,24 +36,25 @@ public class Main {
 
             createTestUsers(userService);
 
-            System.out.println(localization.getMessage("greeting"));
+            WelcomeUser.welcomeMessage();
+
+            List<String> historyInputs = new ArrayList<>();
+            User user;
 
             while (true) {
 
-                List<String> historyInputs = new ArrayList<>();
-                User user = signUp.waitUntilLoggedIn(scanner);
+                user = signUp.waitUntilLoggedIn(scanner);
 
-                System.out.println("----------------------------------------------------------------------------------");
+                System.out.println(localization.getMessage("line_splitter"));
 
                 Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
-                user = userService.findUser(user.getId()).orElse(user);
 
                 if (bankAccount.isPresent()) {
                     CommandController commandController = new CommandController(user, backend, bankAccount.get(), historyInputs);
 
                     while (user != null) {
 
-                        System.out.println("----------------------------------------------------------------------------------");
+                        System.out.println(localization.getMessage("line_splitter"));
                         String input = scanner.nextLine();
                         historyInputs.add(input);
 

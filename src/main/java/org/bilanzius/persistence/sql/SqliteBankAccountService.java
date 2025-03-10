@@ -67,7 +67,7 @@ public class SqliteBankAccountService implements BankAccountService {
     }
 
     @Override
-    public Optional<BankAccount> getBankAccountsOfUserByName(User user, String name) {
+    public Optional<BankAccount> getBankAccountOfUserByName(User user, String name) {
         try {
             return backend.query(BankAccount.class, "SELECT * FROM bankAccounts WHERE userId = ? AND name = ?",
                             stmt -> {
