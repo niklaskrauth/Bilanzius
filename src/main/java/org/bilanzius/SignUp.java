@@ -29,6 +29,7 @@ public class SignUp {
     }
 
     public User waitUntilLoggedIn(Scanner scanner) {
+        Optional<User> optionalUser;
 
         while (true) {
             System.out.println(localization.getMessage("line_splitter"));
@@ -39,7 +40,7 @@ public class SignUp {
             if (loginOrRegister.equals("1")) {
                 System.out.println(localization.getMessage("login"));
 
-                Optional<User> optionalUser = login(scanner);
+                optionalUser = login(scanner);
 
                 if (optionalUser.isPresent()) {
                     return optionalUser.get();
@@ -50,7 +51,7 @@ public class SignUp {
             } else if (loginOrRegister.equals("2")) {
                 System.out.println(localization.getMessage("register"));
 
-                Optional<User> optionalUser = register(scanner);
+                optionalUser = register(scanner);
 
                 if (optionalUser.isPresent()) {
                     return optionalUser.get();
@@ -73,6 +74,7 @@ public class SignUp {
             System.out.println(localization.getMessage("username"));
             String username = scanner.nextLine();
             Optional<User> userOptional;
+            User user;
 
             try {
                 userOptional = userService.findUserWithName(username);
@@ -83,7 +85,7 @@ public class SignUp {
 
             if (userOptional.isPresent()) {
 
-                User user = userOptional.get();
+                user = userOptional.get();
                 System.out.println(localization.getMessage("password"));
                 String password = scanner.nextLine();
 
@@ -110,13 +112,15 @@ public class SignUp {
 
         Boolean userExists = null; // null = not existing (wrong inputs), true = already exists in DB, false = does not exist in DB and inputs are correct
         Optional<User> user = Optional.empty();
+        Optional<User> foundUser;
+        User newUser;
 
         while (userExists == null || userExists) {
 
             System.out.println(localization.getMessage("username"));
             String username = scanner.nextLine();
 
-            Optional<User> foundUser = userService.findUserWithName(username);
+            foundUser = userService.findUserWithName(username);
 
             if (foundUser.isPresent()) {
 
@@ -132,7 +136,7 @@ public class SignUp {
                 String repeatPassword = scanner.nextLine();
 
                 if (password.equals(repeatPassword)) {
-                    User newUser = User.createUser(username, fromPlainText(password));
+                    newUser = User.createUser(username, fromPlainText(password));
 
                     try {
                         userService.createUser(newUser);
