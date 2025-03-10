@@ -1,5 +1,6 @@
 package org.bilanzius;
 
+import org.bilanzius.cli.CLIContext;
 import org.bilanzius.commandController.CommandController;
 import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.UserService;
@@ -42,8 +43,7 @@ public class Main {
             User user;
 
             while (true) {
-
-                user = signUp.waitUntilLoggedIn(scanner);
+                user = signUp.waitUntilLoggedIn(new CLIContext(scanner, localization));
 
                 System.out.println(localization.getMessage("line_splitter"));
 
