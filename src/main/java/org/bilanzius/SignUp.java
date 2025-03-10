@@ -69,44 +69,49 @@ public class SignUp {
     }
 
     public Optional<User> login(IOContext context) {
-        Optional<User> loggedInUser = Optional.empty();
+        Optional<User> loggedInUser;
 
-        while (loggedInUser.isEmpty()) {
-            var username = context.askUser(Question.create()
-                    .question(localization.getMessage("username"))
-                    .build());
+        do {
+            loggedInUser = tryLogin(context);
+        } while (loggedInUser.isEmpty());
 
-            Optional<User> userOptional;
-            User user;
-
-            try {
-                userOptional = userService.findUserWithName(username);
-            } catch (DatabaseException e) {
-                System.out.println(localization.getMessage("database_error"));
-                return Optional.empty();
-            }
-
-            if (userOptional.isPresent()) {
-                user = userOptional.get();
-                var password = context.askUser(Question.create()
-                        .question(localization.getMessage("password"))
-                        .build());
-
-                if (fromPlainText(password).equals(user.getHashedPassword())) {
-                    context.lineSeperator();
-                    context.printLocalized("greeting_user", user.getUsername());
-
-                    loggedInUser = Optional.of(user);
-                } else {
-                    System.out.println(localization.getMessage("wrongPassword"));
-                }
-
-            } else {
-                System.out.println(localization.getMessage("wrongUsername"));
-            }
-
-        }
         return loggedInUser;
+    }
+
+    public Optional<User> tryLogin(IOContext context) {
+        var username = context.askUser(Question.create()
+                .question(localization.getMessage("username"))
+                .build());
+
+        Optional<User> userOptional;
+        User user;
+
+        try {
+            userOptional = userService.findUserWithName(username);
+        } catch (DatabaseException e) {
+            context.printLocalized("database_error");
+            return Optional.empty();
+        }
+
+        if (userOptional.isEmpty()) {
+            context.printLocalized("wrongUsername");
+            return Optional.empty();
+        }
+
+        user = userOptional.get();
+        var password = context.askUser(Question.create()
+                .question(localization.getMessage("password"))
+                .build());
+
+        if (!fromPlainText(password).equals(user.getHashedPassword())) {
+            context.printLocalized("wrongPassword");
+            return Optional.empty();
+        }
+
+        context.lineSeperator();
+        context.printLocalized("greeting_user", user.getUsername());
+
+        return Optional.of(user);
     }
 
     public Optional<User> register(IOContext context) {
