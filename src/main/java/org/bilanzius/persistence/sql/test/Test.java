@@ -70,8 +70,8 @@ public class Test {
         System.out.println(exceededCategories.toString());
 
         // create transaction
-        transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, BigDecimal.valueOf(-5.00), "-5€"));
-        transactionService.saveTransaction(Transaction.create(user, bankAccount, BigDecimal.valueOf(10.00), "10€"));
+        //transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, BigDecimal.valueOf(-5.00), "-5€"));
+        //transactionService.saveTransaction(Transaction.create(user, bankAccount, BigDecimal.valueOf(10.00), "10€"));
 
         // Update password
         user.setHashedPassword(HashedPassword.fromPlainText("kuchen123"));

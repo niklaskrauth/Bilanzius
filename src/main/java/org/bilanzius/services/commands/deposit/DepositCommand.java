@@ -15,6 +15,7 @@ import org.bilanzius.utils.Localization;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -74,7 +75,7 @@ public class DepositCommand implements Command, BankAccountAware {
             depositMoney = BigDecimal.valueOf(Double.parseDouble(argument));
             depositMoney = depositMoney.abs();
             transactionService.saveTransaction(Transaction.create(
-                    user, selectedBankAccount, depositMoney, "Deposit" + depositMoney));
+                    user, selectedBankAccount, depositMoney, Instant.now(), "Deposit" + depositMoney));
 
             balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
 

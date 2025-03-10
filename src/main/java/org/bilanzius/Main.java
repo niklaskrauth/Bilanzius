@@ -1,12 +1,14 @@
 package org.bilanzius;
 
 import org.bilanzius.cli.CLIContext;
+import org.bilanzius.cli.IOContext;
 import org.bilanzius.commandController.CommandController;
 import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
-import org.bilanzius.persistence.sql.*;
 import org.bilanzius.persistence.models.User;
+import org.bilanzius.persistence.sql.SqlBackend;
+import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
 import org.bilanzius.utils.Localization;
 
 import java.util.ArrayList;
@@ -18,54 +20,51 @@ import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         // Connect to sqllite database
         var backend = new SqlBackend();
         UserService userService;
-        Localization localization;
         SignUp signUp;
 
-        try {
 
-            Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        IOContext context = new CLIContext(scanner, Localization.getInstance());
 
-            backend.connect();
-            userService = SqliteUserDatabaseService.getInstance(backend);
-            localization = Localization.getInstance();
+        backend.connect();
+        userService = SqliteUserDatabaseService.getInstance(backend);
 
-            signUp = new SignUp(backend);
+        signUp = new SignUp(backend);
 
-            createTestUsers(userService);
+        createTestUsers(userService);
 
-            WelcomeUser.welcomeMessage();
+        WelcomeUser.welcomeMessage();
 
-            List<String> historyInputs = new ArrayList<>();
-            User user;
+        List<String> historyInputs = new ArrayList<>();
+        User user;
 
-            while (true) {
-                user = signUp.waitUntilLoggedIn(new CLIContext(scanner, localization));
+        while (true) {
+            user = signUp.waitUntilLoggedIn(context);
+            context.lineSeperator();
 
-                System.out.println(localization.getMessage("line_splitter"));
+            Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
 
-                Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
+            if (bankAccount.isPresent()) {
+                CommandController commandController = new CommandController(user, backend, bankAccount.get(), historyInputs);
 
-                if (bankAccount.isPresent()) {
-                    CommandController commandController = new CommandController(user, backend, bankAccount.get(), historyInputs);
+                while (user != null) {
+                    context.lineSeperator();
+                    String input = scanner.nextLine();
+                    historyInputs.add(input);
 
-                    while (user != null) {
-
-                        System.out.println(localization.getMessage("line_splitter"));
-                        String input = scanner.nextLine();
-                        historyInputs.add(input);
-
-                        String stringOutput = commandController.handleInput(input);
-                        System.out.println(stringOutput);
-                    }
+                    String stringOutput = commandController.handleInput(input);
+                    System.out.println(stringOutput);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+    }
+
+    private static void executeCommandLoop() {
+
     }
 
     // Create a new user with name "TestUser" and password "passwort1234"

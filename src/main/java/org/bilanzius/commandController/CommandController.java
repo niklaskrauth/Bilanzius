@@ -18,6 +18,7 @@ import org.bilanzius.services.commands.getCategory.GetCategoryCommand;
 import org.bilanzius.services.commands.getLanguage.GetLanguagesCommand;
 import org.bilanzius.services.commands.help.HelpCommand;
 import org.bilanzius.services.commands.history.HistoryCommand;
+import org.bilanzius.services.commands.log.LogCommand;
 import org.bilanzius.services.commands.setLanguage.SetLanguageCommand;
 import org.bilanzius.services.commands.renameBankAccount.RenameBankAccountCommand;
 import org.bilanzius.services.commands.switchBankAccount.SwitchBankAccountCommand;
@@ -34,7 +35,10 @@ public class CommandController {
     private final Localization localization = Localization.getInstance();
     private BankAccount selectedBankAccount;
 
+    private final User user;
+
     public CommandController(User user, SqlBackend backend, BankAccount selectedBankAccount, List<String> historyInputs) throws SQLException {
+        this.user = user;
         this.selectedBankAccount = selectedBankAccount;
 
         commandMap = new HashMap<>();
@@ -63,6 +67,7 @@ public class CommandController {
         commandMap.put(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user, backend));
         commandMap.put(Commands.RENAMEBANKACCOUNT, new RenameBankAccountCommand(user, backend));
         commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, backend, this));
+        commandMap.put(Commands.LOG, new LogCommand(SqliteTransactionService.getInstance(backend), this));
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }
@@ -85,6 +90,10 @@ public class CommandController {
 
     public BankAccount getSelectedBankAccount() {
         return selectedBankAccount;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setSelectedBankAccount(BankAccount bankAccount) {

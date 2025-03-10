@@ -18,6 +18,7 @@ import org.bilanzius.utils.Localization;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -94,7 +95,7 @@ public class WithdrawCommand implements Command, BankAccountAware {
                     return localization.getMessage("no_category_with_name", categoryName);
                 }
 
-                transaction = Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(),
+                transaction = Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(), Instant.now(),
                         "Withdraw " + withdrawMoney);
 
                 category.setAmountSpent(category.getAmountSpent().subtract(transaction.getMoney()));
