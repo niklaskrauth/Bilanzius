@@ -1,9 +1,6 @@
 package org.bilanzius.persistence.sql.test;
 
-import org.bilanzius.persistence.BankAccountService;
-import org.bilanzius.persistence.CategoryService;
-import org.bilanzius.persistence.TransactionService;
-import org.bilanzius.persistence.UserService;
+import org.bilanzius.persistence.*;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.Transaction;
@@ -21,10 +18,10 @@ public class Test {
         backend.connect();
 
         // Setup
-        UserService userService = SqliteUserDatabaseService.getInstance(backend);
-        TransactionService transactionService = SqliteTransactionService.getInstance(backend);
-        CategoryService categoryService = SqliteCategoryService.getInstance(backend);
-        BankAccountService bankAccountService = SqliteBankAccountService.getInstance(backend);
+        UserService userService = DatabaseProvider.getUserService();
+        TransactionService transactionService = DatabaseProvider.getTransactionService();
+        CategoryService categoryService = DatabaseProvider.getCategoryService();
+        BankAccountService bankAccountService = DatabaseProvider.getBankAccountService();
 
         // Create a new user with name "test2" and password "passwort123"
         userService.createUser(User.createUser("test2", HashedPassword.fromPlainText("passwort123")));
@@ -70,8 +67,8 @@ public class Test {
         System.out.println(exceededCategories.toString());
 
         // create transaction
-        transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, BigDecimal.valueOf(-5.00), "-5€"));
-        transactionService.saveTransaction(Transaction.create(user, bankAccount, BigDecimal.valueOf(10.00), "10€"));
+        //transactionService.saveTransaction(Transaction.create(user, bankAccount, categoryTest, BigDecimal.valueOf(-5.00), "-5€"));
+        //transactionService.saveTransaction(Transaction.create(user, bankAccount, BigDecimal.valueOf(10.00), "10€"));
 
         // Update password
         user.setHashedPassword(HashedPassword.fromPlainText("kuchen123"));

@@ -21,6 +21,7 @@ public enum Commands {
             DepositCommandArguments.getAllArguments()),
     WITHDRAW("/withdraw", Localization.getInstance().getMessage("withdraw_short_description"),
             WithdrawCommandArgument.getAllArguments()),
+    LOG("/log", Localization.getInstance().getMessage("logs_short_description"), null),
     CONVERT("/convert", Localization.getInstance().getMessage("convert_short_description"),
             ConvertCommandArguments.getAllArguments()),
     GETLANGUAGES("/getLanguages", Localization.getInstance().getMessage("get_languages_description"), null),
@@ -31,7 +32,7 @@ public enum Commands {
             GetCategoryCommandArguments.getAllArguments()),
     DELETECATEGORY("/deleteCategory", Localization.getInstance().getMessage("delete_category_short_description"),
             DeleteCategoryCommandArguments.getAllArguments()),
-    CREATEBANKACCOUNT("/createBankAccount",Localization.getInstance().getMessage("create_bank_account_short_description") , null ),
+    CREATEBANKACCOUNT("/createBankAccount", Localization.getInstance().getMessage("create_bank_account_short_description"), null),
     GETBANKACCOUNT("/getBankAccount", Localization.getInstance().getMessage("get_bank_account_short_description"),
             GetBankAccountCommandArguments.getAllArguments()),
     DELETEBANKACCOUNT("/deleteBankAccount", Localization.getInstance().getMessage("delete_bank_account_short_description"),
@@ -78,9 +79,9 @@ public enum Commands {
                                         " | " + (c.getArguments())
                                         : ""
                         )
-                ).reduce(
-                        (a, b) -> a + "\n" + b
-                ).orElse("");
+        ).reduce(
+                (a, b) -> a + "\n" + b
+        ).orElse("");
     }
 
     public static Commands fromString(String command) {

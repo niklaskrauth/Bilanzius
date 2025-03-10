@@ -15,19 +15,11 @@ import java.util.Optional;
 public class SqliteBankAccountService implements BankAccountService {
 
     private final SqlBackend backend;
-    private static SqliteBankAccountService instance;
 
-    private SqliteBankAccountService(SqlBackend backend) throws SQLException {
+    SqliteBankAccountService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(BankAccount.class, new SqlBankAccountAdapter());
         this.createSchema();
-    }
-
-    public static synchronized SqliteBankAccountService getInstance(SqlBackend backend) throws SQLException {
-        if (instance == null) {
-            instance = new SqliteBankAccountService(backend);
-        }
-        return instance;
     }
 
     private void createSchema() throws SQLException {
@@ -60,7 +52,7 @@ public class SqliteBankAccountService implements BankAccountService {
     public Optional<BankAccount> getBankAccount(long id) {
         try {
             return backend.query(BankAccount.class, "SELECT * FROM bankAccounts WHERE id = ?",
-                            stmt -> stmt.setLong(1, id)).stream().findFirst();
+                    stmt -> stmt.setLong(1, id)).stream().findFirst();
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
@@ -70,10 +62,10 @@ public class SqliteBankAccountService implements BankAccountService {
     public Optional<BankAccount> getBankAccountOfUserByName(User user, String name) {
         try {
             return backend.query(BankAccount.class, "SELECT * FROM bankAccounts WHERE userId = ? AND name = ?",
-                            stmt -> {
-                                stmt.setInt(1, user.getId());
-                                stmt.setString(2, name);
-                            }).stream().findFirst();
+                    stmt -> {
+                        stmt.setInt(1, user.getId());
+                        stmt.setString(2, name);
+                    }).stream().findFirst();
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }

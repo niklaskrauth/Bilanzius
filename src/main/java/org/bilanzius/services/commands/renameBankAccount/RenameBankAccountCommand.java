@@ -2,6 +2,7 @@ package org.bilanzius.services.commands.renameBankAccount;
 
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.SqlBackend;
@@ -17,9 +18,9 @@ public class RenameBankAccountCommand implements Command {
     private final BankAccountService bankAccountService;
     private final Localization localization = Localization.getInstance();
 
-    public RenameBankAccountCommand(User user, SqlBackend backend) throws SQLException {
+    public RenameBankAccountCommand(User user) {
         this.user = user;
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.bankAccountService = DatabaseProvider.getBankAccountService();
     }
 
     @Override

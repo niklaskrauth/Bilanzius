@@ -2,17 +2,15 @@ package org.bilanzius.services.commands.deleteBankAccount;
 
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteBankAccountService;
-import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
 
@@ -26,10 +24,10 @@ public class DeleteBankAccountCommand implements Command {
     private final Map<DeleteBankAccountCommandArguments, Function<String, String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
 
-    public DeleteBankAccountCommand(User user, SqlBackend backend) throws SQLException {
+    public DeleteBankAccountCommand(User user) {
         this.user = user;
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
-        this.userService = SqliteUserDatabaseService.getInstance(backend);
+        this.bankAccountService = DatabaseProvider.getBankAccountService();
+        this.userService = DatabaseProvider.getUserService();
 
         commandMap.put(DeleteBankAccountCommandArguments.ALL, s -> deleteAllBankAccounts());
         commandMap.put(DeleteBankAccountCommandArguments.NAME, this::deleteBankAccountByName);
