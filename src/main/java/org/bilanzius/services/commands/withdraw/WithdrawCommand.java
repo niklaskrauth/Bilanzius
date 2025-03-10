@@ -1,23 +1,15 @@
 package org.bilanzius.services.commands.withdraw;
 
-import org.bilanzius.persistence.BankAccountService;
-import org.bilanzius.persistence.CategoryService;
-import org.bilanzius.persistence.DatabaseException;
-import org.bilanzius.persistence.TransactionService;
+import org.bilanzius.persistence.*;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteBankAccountService;
-import org.bilanzius.persistence.sql.SqliteCategoryService;
-import org.bilanzius.persistence.sql.SqliteTransactionService;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.utils.Localization;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,12 +25,12 @@ public class WithdrawCommand implements Command, BankAccountAware {
     private final BankAccountService bankAccountService;
     private final CategoryService categoryService;
 
-    public WithdrawCommand(User user, SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
+    public WithdrawCommand(User user, BankAccount selectedBankAccount) {
         this.user = user;
-        this.transactionService = SqliteTransactionService.getInstance(backend);
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.transactionService = DatabaseProvider.getTransactionService();
+        this.categoryService = DatabaseProvider.getCategoryService();
+        this.bankAccountService = DatabaseProvider.getBankAccountService();
         this.selectedBankAccount = selectedBankAccount;
-        this.categoryService = SqliteCategoryService.getInstance(backend);
 
         commandMap.put(WithdrawCommandArgument.WITHDRAW, this::withdrawMoney);
     }

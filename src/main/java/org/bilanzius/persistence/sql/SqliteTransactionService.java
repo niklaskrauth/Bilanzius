@@ -8,31 +8,20 @@ import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.adapter.SqlTransactionAdapter;
 
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 public class SqliteTransactionService implements TransactionService {
 
-    private static SqliteTransactionService instance;
     private final SqlBackend backend;
     private final BankAccountService bankAccountService;
 
-
-    private SqliteTransactionService(SqlBackend backend) throws SQLException {
+    SqliteTransactionService(SqlBackend backend, BankAccountService bankAccountService) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(Transaction.class, new SqlTransactionAdapter());
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.bankAccountService = bankAccountService;
 
         this.createSchema();
-    }
-
-    public static synchronized SqliteTransactionService getInstance(SqlBackend backend) throws SQLException {
-        if (instance == null) {
-            instance = new SqliteTransactionService(backend);
-        }
-        return instance;
     }
 
     private void createSchema() throws SQLException {

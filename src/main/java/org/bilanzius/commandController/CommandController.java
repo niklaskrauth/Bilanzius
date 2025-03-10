@@ -2,7 +2,6 @@ package org.bilanzius.commandController;
 
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.*;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.services.commands.bilanzius.BilanziusCommand;
@@ -19,13 +18,12 @@ import org.bilanzius.services.commands.getLanguage.GetLanguagesCommand;
 import org.bilanzius.services.commands.help.HelpCommand;
 import org.bilanzius.services.commands.history.HistoryCommand;
 import org.bilanzius.services.commands.log.LogCommand;
-import org.bilanzius.services.commands.setLanguage.SetLanguageCommand;
 import org.bilanzius.services.commands.renameBankAccount.RenameBankAccountCommand;
+import org.bilanzius.services.commands.setLanguage.SetLanguageCommand;
 import org.bilanzius.services.commands.switchBankAccount.SwitchBankAccountCommand;
 import org.bilanzius.services.commands.withdraw.WithdrawCommand;
 import org.bilanzius.utils.Localization;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +35,7 @@ public class CommandController {
 
     private final User user;
 
-    public CommandController(User user, SqlBackend backend, BankAccount selectedBankAccount, List<String> historyInputs) throws SQLException {
+    public CommandController(User user, BankAccount selectedBankAccount, List<String> historyInputs) {
         this.user = user;
         this.selectedBankAccount = selectedBankAccount;
 
@@ -48,26 +46,26 @@ public class CommandController {
         commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
         commandMap.put(Commands.HISTORY, new HistoryCommand(historyInputs));
 
-        commandMap.put(Commands.DEPOSIT, new DepositCommand(user, backend, this.selectedBankAccount));
-        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user, backend, this.selectedBankAccount));
-        commandMap.put(Commands.CONVERT, new ConvertCommand(backend, this.selectedBankAccount));
+        commandMap.put(Commands.DEPOSIT, new DepositCommand(user, this.selectedBankAccount));
+        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user, this.selectedBankAccount));
+        commandMap.put(Commands.CONVERT, new ConvertCommand(this.selectedBankAccount));
 
         // Sprachbefehle
         commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
         commandMap.put(Commands.SETLANGUAGE, new SetLanguageCommand());
 
         // Kategoriebefehle
-        commandMap.put(Commands.CREATECATEGORY, new CreateCategoryCommand(user, backend));
-        commandMap.put(Commands.GETCATEGORIES, new GetCategoryCommand(user, backend));
-        commandMap.put(Commands.DELETECATEGORY, new DeleteCategoryCommand(user, backend));
+        commandMap.put(Commands.CREATECATEGORY, new CreateCategoryCommand(user));
+        commandMap.put(Commands.GETCATEGORIES, new GetCategoryCommand(user));
+        commandMap.put(Commands.DELETECATEGORY, new DeleteCategoryCommand(user));
 
         //Bankkonto Befehle
-        commandMap.put(Commands.CREATEBANKACCOUNT, new CreateBankAccountCommand(user, backend));
-        commandMap.put(Commands.GETBANKACCOUNT, new GetBankAccountCommand(user, backend));
-        commandMap.put(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user, backend));
-        commandMap.put(Commands.RENAMEBANKACCOUNT, new RenameBankAccountCommand(user, backend));
-        commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, backend, this));
-        commandMap.put(Commands.LOG, new LogCommand(SqliteTransactionService.getInstance(backend), this));
+        commandMap.put(Commands.CREATEBANKACCOUNT, new CreateBankAccountCommand(user));
+        commandMap.put(Commands.GETBANKACCOUNT, new GetBankAccountCommand(user));
+        commandMap.put(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user));
+        commandMap.put(Commands.RENAMEBANKACCOUNT, new RenameBankAccountCommand(user));
+        commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, this));
+        commandMap.put(Commands.LOG, new LogCommand(this));
 
         //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
     }

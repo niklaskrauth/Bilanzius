@@ -4,13 +4,15 @@ import org.bilanzius.cli.CLIContext;
 import org.bilanzius.cli.IOContext;
 import org.bilanzius.commandController.CommandController;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
+import org.bilanzius.persistence.sql.SqlDatabaseServiceRepository;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,20 +24,16 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         // Connect to sqllite database
-        var backend = new SqlBackend();
-        UserService userService;
-        SignUp signUp;
+        setupDatabase();
 
+        SignUp signUp;
 
         Scanner scanner = new Scanner(System.in);
         IOContext context = new CLIContext(scanner, Localization.getInstance());
 
-        backend.connect();
-        userService = SqliteUserDatabaseService.getInstance(backend);
+        signUp = new SignUp();
 
-        signUp = new SignUp(backend);
-
-        createTestUsers(userService);
+        createTestUsers(DatabaseProvider.getUserService());
 
         WelcomeUser.welcomeMessage();
 
@@ -49,7 +47,7 @@ public class Main {
             Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
 
             if (bankAccount.isPresent()) {
-                CommandController commandController = new CommandController(user, backend, bankAccount.get(), historyInputs);
+                CommandController commandController = new CommandController(user, bankAccount.get(), historyInputs);
 
                 while (user != null) {
                     context.lineSeperator();
@@ -63,8 +61,11 @@ public class Main {
         }
     }
 
-    private static void executeCommandLoop() {
-
+    private static void setupDatabase() throws SQLException {
+        var backend = new SqlBackend();
+        backend.connect();
+        DatabaseProvider.init(new SqlDatabaseServiceRepository(backend));
+        createTestUsers(DatabaseProvider.getUserService());
     }
 
     // Create a new user with name "TestUser" and password "passwort1234"

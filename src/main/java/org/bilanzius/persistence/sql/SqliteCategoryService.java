@@ -14,21 +14,13 @@ import java.util.Optional;
 
 public class SqliteCategoryService implements CategoryService {
 
-    private static SqliteCategoryService instance;
     private final SqlBackend backend;
 
-    private SqliteCategoryService(SqlBackend backend) throws SQLException {
+    SqliteCategoryService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(Category.class, new SqlCategoryAdapter());
 
         this.createSchema();
-    }
-
-    public static synchronized SqliteCategoryService getInstance(SqlBackend backend) throws SQLException {
-        if (instance == null) {
-            instance = new SqliteCategoryService(backend);
-        }
-        return instance;
     }
 
     private void createSchema() throws SQLException {
@@ -46,7 +38,7 @@ public class SqliteCategoryService implements CategoryService {
     }
 
     @Override
-    public void createCategory(Category category){
+    public void createCategory(Category category) {
         try {
             backend.execute("INSERT INTO categories (userId, name, budget, amountSpent) VALUES (?,?,?,?)",
                     stmt -> {
@@ -90,10 +82,10 @@ public class SqliteCategoryService implements CategoryService {
     public Optional<Category> getCategoryOfUserByName(User user, String name) {
         try {
             return backend.query(Category.class, "SELECT * FROM categories WHERE userId = ? AND name = ?",
-                    stmt -> {
-                        stmt.setInt(1, user.getId());
-                        stmt.setString(2, name);
-                    }).stream()
+                            stmt -> {
+                                stmt.setInt(1, user.getId());
+                                stmt.setString(2, name);
+                            }).stream()
                     .findFirst();
         } catch (SQLException ex) {
             throw new DatabaseException(ex);

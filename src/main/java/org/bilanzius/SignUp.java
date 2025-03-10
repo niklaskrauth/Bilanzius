@@ -5,15 +5,12 @@ import org.bilanzius.cli.Question;
 import org.bilanzius.cli.QuestionException;
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteBankAccountService;
-import org.bilanzius.persistence.sql.SqliteUserDatabaseService;
 import org.bilanzius.utils.Localization;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -21,14 +18,16 @@ import java.util.Scanner;
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
 public class SignUp {
+
+    private static final int MAX_BANK_ACCOUNTS = 3;
+
     private final UserService userService;
     private final BankAccountService bankAccountService;
     private final Localization localization = Localization.getInstance();
-    private final int MAX_BANK_ACCOUNTS = 3;
 
-    public SignUp(SqlBackend backend) throws SQLException {
-        this.userService = SqliteUserDatabaseService.getInstance(backend);
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+    public SignUp() {
+        this.userService = DatabaseProvider.getUserService();
+        this.bankAccountService = DatabaseProvider.getBankAccountService();
     }
 
     public User waitUntilLoggedIn(IOContext context) {

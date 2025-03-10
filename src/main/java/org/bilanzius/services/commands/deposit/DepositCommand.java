@@ -2,13 +2,11 @@ package org.bilanzius.services.commands.deposit;
 
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteBankAccountService;
-import org.bilanzius.persistence.sql.SqliteTransactionService;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.utils.Localization;
@@ -28,11 +26,11 @@ public class DepositCommand implements Command, BankAccountAware {
     private BankAccount selectedBankAccount;
     private final BankAccountService bankAccountService;
 
-    public DepositCommand(User user, SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
+    public DepositCommand(User user, BankAccount selectedBankAccount) {
         this.user = user;
         this.selectedBankAccount = selectedBankAccount;
-        this.transactionService = SqliteTransactionService.getInstance(backend);
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.transactionService = DatabaseProvider.getTransactionService();
+        this.bankAccountService = DatabaseProvider.getBankAccountService();
 
         commandMap.put(DepositCommandArguments.DEPOSIT, this::depositMoney);
     }

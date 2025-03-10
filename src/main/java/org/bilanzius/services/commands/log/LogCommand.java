@@ -1,6 +1,7 @@
 package org.bilanzius.services.commands.log;
 
 import org.bilanzius.commandController.CommandController;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.services.Command;
 
@@ -16,8 +17,8 @@ public class LogCommand implements Command {
     private final TransactionService transactionService;
     private final CommandController commandController;
 
-    public LogCommand(TransactionService transactionService, CommandController commandController) {
-        this.transactionService = transactionService;
+    public LogCommand( CommandController commandController) {
+        this.transactionService = DatabaseProvider.getTransactionService();
         this.commandController = commandController;
     }
 
