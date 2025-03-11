@@ -1,14 +1,19 @@
 package org.bilanzius.persistence.sql;
 
+import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.testharness.persistence.SqlTest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-
-public class SqlBackendTest {
+public class SqlBackendTest extends SqlTest {
 
     @Test
-    public void testBackend() throws SQLException {
-        var setupDb = new SqlBackend();
-        setupDb.connect(SqlBackendUtils.CONNECTION_STRING);
+    void testMissingAdapter() {
+        var backend = new SqlBackend();
+        Assertions.assertThrows(DatabaseException.class, () -> backend.query(InvalidMode.class, "", c -> {
+        }));
+    }
+
+    public record InvalidMode(int id) {
     }
 }

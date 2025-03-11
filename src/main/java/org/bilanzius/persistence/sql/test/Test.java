@@ -3,9 +3,8 @@ package org.bilanzius.persistence.sql.test;
 import org.bilanzius.persistence.*;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.Category;
-import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.*;
+import org.bilanzius.persistence.sql.SqlBackend;
 import org.bilanzius.utils.HashedPassword;
 
 import java.math.BigDecimal;
@@ -72,7 +71,7 @@ public class Test {
 
         // Update password
         user.setHashedPassword(HashedPassword.fromPlainText("kuchen123"));
-        userService.updateUser(user);
+        userService.updateUserPassword(user);
 
     }
 }

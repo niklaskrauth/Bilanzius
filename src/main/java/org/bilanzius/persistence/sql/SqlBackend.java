@@ -25,6 +25,10 @@ public class SqlBackend {
         this.connection = DriverManager.getConnection(connectionString);
     }
 
+    public void close() throws SQLException {
+        this.connection.close();
+    }
+
     public <T> void registerAdapter(Class<T> modelClass, SqlDataAdapter<T> adapter) {
         adapters.put(modelClass, adapter);
     }
