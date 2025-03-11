@@ -3,6 +3,7 @@ package org.bilanzius.services.commands.switchBankAccount;
 import org.bilanzius.commandController.CommandController;
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.SqlBackend;
@@ -22,9 +23,9 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
     private final Localization localization = Localization.getInstance();
     private BankAccount selectedBankAccount;
 
-    public SwitchBankAccountCommand(User user, SqlBackend backend, CommandController commandController) throws SQLException {
+    public SwitchBankAccountCommand(User user,  CommandController commandController)   {
         this.user = user;
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.bankAccountService = DatabaseProvider.getBankAccountService();
         this.commandController = commandController;
         this.selectedBankAccount = commandController.getSelectedBankAccount();
     }

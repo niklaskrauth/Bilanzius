@@ -13,34 +13,27 @@ import java.util.List;
 
 public class SqliteTransactionService implements TransactionService {
 
-    private static SqliteTransactionService instance;
     private final SqlBackend backend;
     private final BankAccountService bankAccountService;
 
-
-    private SqliteTransactionService(SqlBackend backend) throws SQLException {
+    SqliteTransactionService(SqlBackend backend, BankAccountService bankAccountService) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(Transaction.class, new SqlTransactionAdapter());
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.bankAccountService = bankAccountService;
 
         this.createSchema();
     }
 
-    public static synchronized SqliteTransactionService getInstance(SqlBackend backend) throws SQLException {
-        if (instance == null) {
-            instance = new SqliteTransactionService(backend);
-        }
-        return instance;
-    }
-
     private void createSchema() throws SQLException {
+        // SQLLite does not have a time data type, so we need text instead.
+        // https://www.sqlite.org/datatype3.html#date_and_time_datatype
         this.backend.execute("""
                 CREATE TABLE IF NOT EXISTS transactions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     userId INTEGER,
                     accountId INTEGER,
                     categoryId INTEGER,
-                    created DATETIME DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+                    created TEXT,
                     description TEXT,
                     money REAL(2),
                     FOREIGN KEY(userId) REFERENCES users(id)
@@ -52,7 +45,6 @@ public class SqliteTransactionService implements TransactionService {
     @Override
     public void saveTransaction(Transaction transaction) {
         try {
-
             BankAccount bankAccount = bankAccountService.getBankAccount(transaction.getAccountId()).orElseThrow();
             if (bankAccount.getUserId() != transaction.getUserId()) {
                 throw new DatabaseException("Bank account does not belong to user");
@@ -60,13 +52,14 @@ public class SqliteTransactionService implements TransactionService {
             bankAccount.setBalance(bankAccount.getBalance().add(transaction.getMoney()));
             bankAccountService.updateBankAccount(bankAccount);
 
-            this.backend.execute("INSERT INTO transactions (userId, accountId, categoryId, description, money) VALUES (?,?,?,?,?)",
+            this.backend.execute("INSERT INTO transactions (userId, accountId, categoryId,created, description, money) VALUES (?,?,?,?,?,?)",
                     stmt -> {
                         stmt.setInt(1, transaction.getUserId());
                         stmt.setInt(2, transaction.getAccountId());
                         stmt.setObject(3, transaction.getCategoryId() == -1 ? null : transaction.getCategoryId(), java.sql.Types.INTEGER);
-                        stmt.setString(4, transaction.getDescription());
-                        stmt.setDouble(5, transaction.getMoney().doubleValue());
+                        stmt.setString(4, transaction.getCreated().toString());
+                        stmt.setString(5, transaction.getDescription());
+                        stmt.setDouble(6, transaction.getMoney().doubleValue());
                     });
         } catch (SQLException ex) {
             throw new DatabaseException(ex);
@@ -74,8 +67,17 @@ public class SqliteTransactionService implements TransactionService {
     }
 
     @Override
-    public List<Transaction> getTransactions(User user, int limit, int skip) {
-        //TODO Implement
-        return List.of();
+    public List<Transaction> getTransactions(User user, BankAccount account, int limit, int skip) {
+        try {
+            return this.backend.query(Transaction.class, "SELECT * FROM transactions WHERE userId=? AND accountId=? LIMIT ? OFFSET ?",
+                    stmt -> {
+                        stmt.setInt(1, user.getId());
+                        stmt.setInt(2, account.getAccountId());
+                        stmt.setInt(3, limit);
+                        stmt.setInt(4, skip);
+                    }).stream().toList();
+        } catch (SQLException ex) {
+            throw new DatabaseException(ex);
+        }
     }
 }
