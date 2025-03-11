@@ -11,6 +11,6 @@ public interface UserService {
     Optional<User> findUser(long id);
     Optional<User> findUserWithCredentials(String username, HashedPassword password);
     Optional<User> findUserWithName(String username);
-    void updateUser(User user);
+    void updateUserPassword(User user);
     void updateUserMainAccountId(User user);
 }

@@ -79,7 +79,7 @@ public class SqliteUserDatabaseService implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUserPassword(User user) {
         if (!user.canBeUpdated()) {
             throw new DatabaseException("User can't be updated.");
         }
