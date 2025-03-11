@@ -22,7 +22,15 @@ import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+        try {
+            bootstrap();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void bootstrap() throws SQLException {
         // Connect to sqllite database
         setupDatabase();
 
