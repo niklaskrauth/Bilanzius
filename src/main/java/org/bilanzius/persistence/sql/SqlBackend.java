@@ -18,7 +18,11 @@ public class SqlBackend {
     private Connection connection;
 
     public void connect() throws SQLException {
-        this.connection = DriverManager.getConnection(SQLLITE_CONNECTION_STRING);
+        connect(SQLLITE_CONNECTION_STRING);
+    }
+
+    public void connect(String connectionString) throws SQLException {
+        this.connection = DriverManager.getConnection(connectionString);
     }
 
     public <T> void registerAdapter(Class<T> modelClass, SqlDataAdapter<T> adapter) {
