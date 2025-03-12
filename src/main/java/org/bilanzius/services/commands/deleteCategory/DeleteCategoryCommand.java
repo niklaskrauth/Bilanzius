@@ -2,14 +2,12 @@ package org.bilanzius.services.commands.deleteCategory;
 
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteCategoryService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +22,9 @@ public class DeleteCategoryCommand implements Command {
     private final Map<DeleteCategoryCommandArguments, Function<String, String>> commandMap;
     private final Localization localization = Localization.getInstance();
 
-    public DeleteCategoryCommand(User user, SqlBackend backend) throws SQLException {
+    public DeleteCategoryCommand(User user) {
         this.user = user;
-        this.categoryService = SqliteCategoryService.getInstance(backend);
+        this.categoryService = DatabaseProvider.getCategoryService();
 
         commandMap = new HashMap<>();
         commandMap.put(DeleteCategoryCommandArguments.ALL, s -> deleteAllCategories());
@@ -35,7 +33,6 @@ public class DeleteCategoryCommand implements Command {
 
     @Override
     public String execute(String[] arguments) {
-
         DeleteCategoryCommandArguments argument;
         Function<String, String> command;
 

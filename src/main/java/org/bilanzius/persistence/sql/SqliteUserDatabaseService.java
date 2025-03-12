@@ -11,21 +11,13 @@ import java.util.Optional;
 
 public class SqliteUserDatabaseService implements UserService {
 
-    private static SqliteUserDatabaseService instance;
     private final SqlBackend backend;
 
-    public SqliteUserDatabaseService(SqlBackend backend) throws SQLException {
+    SqliteUserDatabaseService(SqlBackend backend) throws SQLException {
         this.backend = backend;
         this.backend.registerAdapter(User.class, new SqlUserAdapter());
 
         this.createSchema();
-    }
-
-    public static synchronized SqliteUserDatabaseService getInstance(SqlBackend backend) throws SQLException {
-        if (instance == null) {
-            instance = new SqliteUserDatabaseService(backend);
-        }
-        return instance;
     }
 
     private void createSchema() throws SQLException {
@@ -87,7 +79,7 @@ public class SqliteUserDatabaseService implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUserPassword(User user) {
         if (!user.canBeUpdated()) {
             throw new DatabaseException("User can't be updated.");
         }

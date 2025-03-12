@@ -3,9 +3,8 @@ package org.bilanzius.services.commands.convert;
 import com.google.gson.JsonObject;
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.models.BankAccount;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteBankAccountService;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.BankAccountAware;
 import org.bilanzius.utils.Localization;
@@ -28,8 +27,8 @@ public class ConvertCommand implements Command, BankAccountAware {
     // TODO: Move this into the .env file
     private final String currencyUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json";
 
-    public ConvertCommand(SqlBackend backend, BankAccount selectedBankAccount) throws SQLException {
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+    public ConvertCommand(BankAccount selectedBankAccount) {
+        this.bankAccountService = DatabaseProvider.getBankAccountService();
         this.selectedBankAccount = selectedBankAccount;
 
         commandMap.put(ConvertCommandArguments.BITCOIN, this::convertToBitcoin);

@@ -2,6 +2,7 @@ package org.bilanzius.services.commands.getBankAccount;
 
 import org.bilanzius.persistence.BankAccountService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.SqlBackend;
@@ -24,9 +25,9 @@ public class GetBankAccountCommand implements Command {
     private final Map<GetBankAccountCommandArguments, Function<String, String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
 
-    public GetBankAccountCommand(User user, SqlBackend backend) throws SQLException {
+    public GetBankAccountCommand(User user)  {
         this.user = user;
-        this.bankAccountService = SqliteBankAccountService.getInstance(backend);
+        this.bankAccountService = DatabaseProvider.getBankAccountService();
 
         commandMap.put(GetBankAccountCommandArguments.ALL, s -> allBankAccounts());
         commandMap.put(GetBankAccountCommandArguments.NAME, this::bankAccountByName);

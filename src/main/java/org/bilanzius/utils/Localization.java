@@ -1,10 +1,7 @@
 package org.bilanzius.utils;
 
 import java.text.MessageFormat;
-import java.util.Locale;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class Localization {
     private static Localization instance;
@@ -38,10 +35,14 @@ public class Localization {
     }
 
     public String getMessage(String key, Object... params) {
-        String message = messages.getString(key);
-        if (params != null && params.length > 0) {
-            message = MessageFormat.format(message, params);
+        try {
+            String message = messages.getString(key);
+            if (params != null && params.length > 0) {
+                message = MessageFormat.format(message, params);
+            }
+            return message;
+        } catch (MissingResourceException ex) {
+            return "MISSING KEY: " + key;
         }
-        return message;
     }
 }

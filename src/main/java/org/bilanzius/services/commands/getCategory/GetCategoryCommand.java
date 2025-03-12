@@ -2,6 +2,7 @@ package org.bilanzius.services.commands.getCategory;
 
 import org.bilanzius.persistence.CategoryService;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.SqlBackend;
@@ -23,9 +24,9 @@ public class GetCategoryCommand implements Command {
     private final Map<GetCategoryCommandArguments, Function<String, String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
 
-    public GetCategoryCommand(User user, SqlBackend backend) throws SQLException {
+    public GetCategoryCommand(User user) {
         this.user = user;
-        this.categoryService = SqliteCategoryService.getInstance(backend);
+        this.categoryService = DatabaseProvider.getCategoryService();
 
         commandMap.put(GetCategoryCommandArguments.ALL, s -> allCategories());
         commandMap.put(GetCategoryCommandArguments.NAME, this::categoryByName);

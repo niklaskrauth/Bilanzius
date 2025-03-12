@@ -1,24 +1,23 @@
 package org.bilanzius.services.commands.createCategory;
 
 import org.bilanzius.persistence.CategoryService;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.persistence.sql.SqlBackend;
-import org.bilanzius.persistence.sql.SqliteCategoryService;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-public class CreateCategoryCommand implements Command  {
+public class CreateCategoryCommand implements Command {
     private User user;
     private final CategoryService categoryService;
     private final Localization localization = Localization.getInstance();
 
-    public CreateCategoryCommand(User user, SqlBackend backend) throws SQLException {
+    public CreateCategoryCommand(User user) {
         this.user = user;
-        this.categoryService = SqliteCategoryService.getInstance(backend);
+        this.categoryService = DatabaseProvider.getCategoryService();
     }
 
     @Override

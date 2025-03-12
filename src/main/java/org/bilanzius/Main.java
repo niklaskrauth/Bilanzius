@@ -1,14 +1,18 @@
 package org.bilanzius;
 
+import org.bilanzius.cli.CLIContext;
+import org.bilanzius.cli.IOContext;
 import org.bilanzius.commandController.CommandController;
 import org.bilanzius.persistence.DatabaseException;
+import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.UserService;
 import org.bilanzius.persistence.models.BankAccount;
-import org.bilanzius.persistence.sql.*;
 import org.bilanzius.persistence.models.User;
-import org.bilanzius.rest.RestController;
+import org.bilanzius.persistence.sql.SqlBackend;
+import org.bilanzius.persistence.sql.SqlDatabaseServiceRepository;
 import org.bilanzius.utils.Localization;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,58 +23,57 @@ import static org.bilanzius.utils.HashedPassword.fromPlainText;
 public class Main {
 
     public static void main(String[] args) {
+        try {
+            bootstrap();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void bootstrap() throws SQLException {
         // Connect to sqllite database
-        var backend = new SqlBackend();
-        UserService userService;
-        Localization localization;
+        setupDatabase();
+
         SignUp signUp;
 
-        RestController restController = new RestController();
+        Scanner scanner = new Scanner(System.in);
+        IOContext context = new CLIContext(scanner, Localization.getInstance());
 
-        try {
+        signUp = new SignUp();
 
-            restController.mainRestController();
+        createTestUsers(DatabaseProvider.getUserService());
 
-            Scanner scanner = new Scanner(System.in);
+        WelcomeUser.welcomeMessage();
 
-            backend.connect();
-            userService = SqliteUserDatabaseService.getInstance(backend);
-            localization = Localization.getInstance();
+        List<String> historyInputs = new ArrayList<>();
+        User user;
 
-            signUp = new SignUp(backend);
+        while (true) {
+            user = signUp.waitUntilLoggedIn(context);
+            context.lineSeperator();
 
-            createTestUsers(userService);
+            Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
 
-            WelcomeUser.welcomeMessage();
+            if (bankAccount.isPresent()) {
+                CommandController commandController = new CommandController(user, bankAccount.get(), historyInputs);
 
-            List<String> historyInputs = new ArrayList<>();
-            User user;
+                while (user != null) {
+                    context.lineSeperator();
+                    String input = scanner.nextLine();
+                    historyInputs.add(input);
 
-            while (true) {
-
-                user = signUp.waitUntilLoggedIn(scanner);
-
-                System.out.println(localization.getMessage("line_splitter"));
-
-                Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
-
-                if (bankAccount.isPresent()) {
-                    CommandController commandController = new CommandController(user, backend, bankAccount.get(), historyInputs);
-
-                    while (user != null) {
-
-                        System.out.println(localization.getMessage("line_splitter"));
-                        String input = scanner.nextLine();
-                        historyInputs.add(input);
-
-                        String stringOutput = commandController.handleInput(input);
-                        System.out.println(stringOutput);
-                    }
+                    String stringOutput = commandController.handleInput(input);
+                    System.out.println(stringOutput);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+    }
+
+    private static void setupDatabase() throws SQLException {
+        var backend = new SqlBackend();
+        backend.connect();
+        DatabaseProvider.init(new SqlDatabaseServiceRepository(backend));
+        createTestUsers(DatabaseProvider.getUserService());
     }
 
     // Create a new user with name "TestUser" and password "passwort1234"
