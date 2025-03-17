@@ -4,7 +4,7 @@ import java.util.List;
 
 public class HtmlCompound implements HtmlTag {
 
-    public static HtmlCompound create(List<HtmlTag> tags) {
+    public static HtmlCompound compound(List<HtmlTag> tags) {
         return new HtmlCompound(tags);
     }
 
