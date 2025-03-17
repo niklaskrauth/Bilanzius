@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-public class SqliteUserDatabaseServiceTest extends SqlTest {
+class SqliteUserDatabaseServiceTest extends SqlTest {
 
     private static final String USERNAME = "test";
     private static final HashedPassword DEFAULT_PASSWORD = HashedPassword.fromPlainText("123");
@@ -90,6 +90,17 @@ public class SqliteUserDatabaseServiceTest extends SqlTest {
         // Find user again
         var sameUser = service.findUser(1).orElseThrow();
         Assertions.assertEquals(OTHER_PASSWORD, sameUser.getHashedPassword());
+    }
+
+
+    @Test
+    void testUpdateNewUser() {
+        // Setup test
+        var service = userService();
+        var user = User.createUser(USERNAME, DEFAULT_PASSWORD);
+
+        Assertions.assertThrows(DatabaseException.class, () -> service.updateUserPassword(user));
+        Assertions.assertThrows(DatabaseException.class, () -> service.updateUserMainAccountId(user));
     }
 
     @Test

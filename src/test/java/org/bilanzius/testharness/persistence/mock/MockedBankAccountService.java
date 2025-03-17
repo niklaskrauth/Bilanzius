@@ -12,6 +12,7 @@ public class MockedBankAccountService implements BankAccountService {
 
     @Override
     public void createBankAccount(BankAccount bankAccount) {
+        // ignored
     }
 
     @Override
@@ -31,13 +32,11 @@ public class MockedBankAccountService implements BankAccountService {
 
     @Override
     public void updateBankAccount(BankAccount bankAccount) {
+        // ignored
     }
 
     @Override
     public void deleteBankAccount(BankAccount bankAccount) {
-    }
-
-    @Override
-    public void updateBankAccountBalance(BankAccount bankAccount, double amount) {
+        // ignored
     }
 }

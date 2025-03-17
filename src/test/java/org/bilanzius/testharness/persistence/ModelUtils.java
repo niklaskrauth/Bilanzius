@@ -1,6 +1,7 @@
 package org.bilanzius.testharness.persistence;
 
 import org.bilanzius.persistence.models.BankAccount;
+import org.bilanzius.persistence.models.Category;
 import org.bilanzius.persistence.models.Transaction;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.utils.HashedPassword;
@@ -23,6 +24,10 @@ public class ModelUtils {
 
     public static Transaction transaction() {
         return new Transaction(1, 1, 1, 1, BigDecimal.ZERO, Instant.now(), "");
+    }
+
+    public static Category category() {
+        return new Category(1, 1, "category", BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     private ModelUtils() {
