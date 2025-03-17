@@ -40,7 +40,7 @@ public enum Commands {
     RENAMEBANKACCOUNT("/renameBankAccount", Localization.getInstance().getMessage("rename_bank_account_short_description"), null),
     SWITCHBANKACCOUNT("/switchBankAccount", Localization.getInstance().getMessage("switch_bank_account_short_description"), null),
     HISTORY("/history", Localization.getInstance().getMessage("history_short_description"), null),
-    REPORT("/report", Localization.getInstance().getMessage("report"), null);
+    REPORT("/report", Localization.getInstance().getMessage("report_short_description"), null);
 
 
     // Hier werden die einzelnen Befehle hinzugefügt
