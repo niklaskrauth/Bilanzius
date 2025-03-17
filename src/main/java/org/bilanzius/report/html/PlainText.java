@@ -2,7 +2,7 @@ package org.bilanzius.report.html;
 
 public class PlainText implements HtmlTag {
 
-    public static PlainText create(String text) {
+    public static PlainText text(String text) {
         return new PlainText(text);
     }
 

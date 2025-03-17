@@ -28,7 +28,7 @@ public class HtmlReport implements Report {
     public void create(User user) {
         var report = HtmlGenerator.create()
                 .htmlFromResources("report.html")
-                .replace("user", PlainText.create(user.getUsername()));
+                .replace("user", PlainText.text(user.getUsername()));
 
         var bankAccounts = DatabaseProvider.getBankAccountService().getBankAccountsOfUser(user, 100);
         var bankAccountTable = bankAccounts.stream()
@@ -38,7 +38,7 @@ public class HtmlReport implements Report {
                 ))
                 .toList();
 
-        report.replace("account", HtmlCompound.create(bankAccountTable));
+        report.replace("account", HtmlCompound.compound(bankAccountTable));
         report.replace("transactions", transactions(user, bankAccounts));
 
         try {
@@ -68,9 +68,9 @@ public class HtmlReport implements Report {
                             HtmlDataCell.cell(Localization.getInstance().formatCurrency(x.getMoney()))
                     ))
                     .toList();
-            tags.add(HtmlCompound.create(list));
+            tags.add(HtmlCompound.compound(list));
         }
 
-        return HtmlCompound.create(tags);
+        return HtmlCompound.compound(tags);
     }
 }
