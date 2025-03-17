@@ -15,11 +15,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import static org.bilanzius.Main.MAX_BANK_ACCOUNTS;
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
 public class SignUp {
-
-    private static final int MAX_BANK_ACCOUNTS = 3;
 
     private final UserService userService;
     private final BankAccountService bankAccountService;

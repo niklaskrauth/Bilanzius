@@ -2,30 +2,16 @@ package org.bilanzius.rest;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import org.bilanzius.persistence.sql.SqlBackend;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
-public class MainRestController {
+public class MainRestController extends RequestHandler {
 
     private int port = 8080;
     private String mainEndpoint = "/api";
-    private SqlBackend backend;
 
-    /*
-    - Klasse User oder so wo man zuerst den User und das passwort eingeben muss als body über post und dann darüber dann mit der url daten abfangen
-    z.B. /api/user/withdrawMoney/amount
-    oder so, muss man schauen wegen Sicherheit weil jedes mal den User anzugeben nervt also maybe Token oder so übern header,
-    aber dann könnte man eh gleich UserDaten im header übergeben
-
-    Ansonsten maybe noch random endpoint was das kann und was es gibt etc.
-     */
-
-    public MainRestController(SqlBackend backend) {
-        this.backend = backend;
-    }
+    public MainRestController() {}
 
     public MainRestController(int port, String mainEndpoint) {
         this.port = port;
@@ -45,39 +31,30 @@ public class MainRestController {
         server.createContext(mainEndpoint + "/health", this::getHealth);
         server.createContext(mainEndpoint + "/help", this::getHelp);
 
+        server.createContext(mainEndpoint + "/bankAccount/getAll", new BankAccountRestController()::getAllBankaccounts);
+        server.createContext(mainEndpoint + "/bankAccount/create", new BankAccountRestController()::createBankAccount);
+        server.createContext(mainEndpoint + "/bankAccount/update", new BankAccountRestController()::updateBankAccount);
+        server.createContext(mainEndpoint + "/bankAccount/delete", new BankAccountRestController()::deleteBankAccount);
+
+        server.createContext(mainEndpoint + "/category/getAll", new CategoryRestController()::getAllCategories);
+        server.createContext(mainEndpoint + "/category/create", new CategoryRestController()::createCategory);
+        server.createContext(mainEndpoint + "/category/update", new CategoryRestController()::updateCategory);
+        server.createContext(mainEndpoint + "/category/delete", new CategoryRestController()::deleteCategory);
+
         server.setExecutor(null);
         server.start();
     }
 
     private void getHealth(HttpExchange exchange) throws IOException {
-        if ("GET".equals(exchange.getRequestMethod())) {
-
-            String response =  "Backend is alive!";
-
-            exchange.sendResponseHeaders(200, response.length());
-            try (OutputStream os = exchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        } else {
-            exchange.sendResponseHeaders(405, -1);
-        }
+        handleRequest(exchange, "The app is alive", "GET");
     }
 
     private void getHelp(HttpExchange exchange) throws IOException {
-        if ("GET".equals(exchange.getRequestMethod())) {
-
-            String response =
-                    """
-                    /health - Check if backend is alive
-                    /help - Get help
-                    """;
-
-            exchange.sendResponseHeaders(200, response.length());
-            try (OutputStream os = exchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        } else {
-            exchange.sendResponseHeaders(405, -1);
-        }
+        String response =
+                """
+                /health - Check if backend is alive
+                /help - Get help
+                """;
+        handleRequest(exchange, response, "GET");
     }
 }

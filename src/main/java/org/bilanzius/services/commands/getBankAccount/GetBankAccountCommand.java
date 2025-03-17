@@ -34,55 +34,73 @@ public class GetBankAccountCommand implements Command {
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         GetBankAccountCommandArguments argument;
         Function<String, String> command;
 
         if (arguments == null || arguments.length == 0) {
-            return localization.getMessage("no_arguments_provided", GetBankAccountCommandArguments.getAllArguments());
+            return localization.getMessage("no_arguments_provided",
+                    GetBankAccountCommandArguments.getAllArguments());
         }
 
         argument = GetBankAccountCommandArguments.fromString(arguments[0]);
-        if (argument == null) {
-            return localization.getMessage("unknown_argument", GetBankAccountCommandArguments.getAllArguments());
+        if (argument == null)
+        {
+            return localization.getMessage("unknown_argument",
+                    GetBankAccountCommandArguments.getAllArguments());
         }
 
-        command = commandMap.get(argument);
-        if (command != null) {
+        command =
+                commandMap.get(argument);
+        if (command != null)
+        {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
-        return localization.getMessage("unknown_argument", GetCategoryCommandArguments.getAllArguments());
+        return localization.getMessage("unknown_argument",
+                GetCategoryCommandArguments.getAllArguments());
     }
 
-    private String bankAccountByName(String name) {
+    private String bankAccountByName(String name)
+    {
 
         BankAccount bankAccount;
 
-        try {
-            bankAccount = bankAccountService.getBankAccountOfUserByName(user, name).stream().findFirst().orElse(null);
-        } catch (DatabaseException e) {
+        try
+        {
+            bankAccount =
+                    bankAccountService.getBankAccountOfUserByName(user, name).stream().findFirst().orElse(null);
+        }
+        catch (DatabaseException e)
+        {
             return localization.getMessage("database_error");
         }
 
-        if (bankAccount == null) {
+        if (bankAccount == null)
+        {
             return localization.getMessage("no_bank_account_with_name", name);
         }
 
         return localization.getMessage("get_bank_account_information", bankAccount.getName(), bankAccount.getBalance());
     }
 
-    private String allBankAccounts() {
+    private String allBankAccounts()
+    {
 
         List<BankAccount> bankAccounts;
         try {
-            bankAccounts = bankAccountService.getBankAccountsOfUser(user, 10).stream().toList();
-        } catch (DatabaseException e) {
+            bankAccounts =
+                    bankAccountService.getBankAccountsOfUser(user, 10).stream().toList();
+        }
+        catch (DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (bankAccounts.isEmpty()) {
+        if (bankAccounts.isEmpty())
+        {
             return localization.getMessage("no_bank_accounts_yet");
         }
 

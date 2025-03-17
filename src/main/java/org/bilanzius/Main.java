@@ -10,6 +10,7 @@ import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.persistence.sql.SqlBackend;
 import org.bilanzius.persistence.sql.SqlDatabaseServiceRepository;
+import org.bilanzius.rest.MainRestController;
 import org.bilanzius.utils.Localization;
 
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ import java.util.Scanner;
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
 public class Main {
+
+    public static final int MAX_BANK_ACCOUNTS = 3;
 
     public static void main(String[] args) {
         try {
@@ -47,6 +50,9 @@ public class Main {
 
         List<String> historyInputs = new ArrayList<>();
         User user;
+
+        MainRestController mainRestController = new MainRestController();
+        mainRestController.start();
 
         while (true) {
             user = signUp.waitUntilLoggedIn(context);
