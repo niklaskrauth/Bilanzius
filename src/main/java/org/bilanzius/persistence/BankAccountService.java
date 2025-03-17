@@ -13,5 +13,4 @@ public interface BankAccountService {
     List<BankAccount> getBankAccountsOfUser(User user, int limit);
     void updateBankAccount(BankAccount bankAccount);
     void deleteBankAccount(BankAccount bankAccount);
-    void updateBankAccountBalance(BankAccount bankAccount, double amount);
 }
