@@ -40,6 +40,7 @@ public class RequestHandler implements HttpHandler {
             try {
                 user = userService.findUserWithCredentials(parts[0], hashedPassword);
             } catch (DatabaseException e){
+                exchange.sendResponseHeaders(401, -1);
                 return;
             }
 
