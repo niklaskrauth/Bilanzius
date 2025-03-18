@@ -17,6 +17,7 @@ import java.util.Scanner;
 
 import static org.bilanzius.Main.MAX_BANK_ACCOUNTS;
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
+import static org.bilanzius.utils.PasswordValidator.validatePassword;
 
 public class SignUp {
 
@@ -134,6 +135,12 @@ public class SignUp {
             String password = context.askUser(Question.create()
                     .question(localization.getMessage("password"))
                     .build());
+
+            if (!validatePassword(password)) {
+                context.printLocalized("validate_password");
+                continue;
+            }
+
             String repeatPassword = context.askUser(Question.create()
                     .question(localization.getMessage("repeat_password"))
                     .build());
