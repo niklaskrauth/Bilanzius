@@ -33,6 +33,7 @@ public class Main {
         }
     }
 
+    // TODO: prob refactor
     private static void bootstrap() throws SQLException {
         // Connect to sqllite database
         setupDatabase();

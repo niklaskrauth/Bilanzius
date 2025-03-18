@@ -3,7 +3,6 @@ package org.bilanzius.rest;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import jdk.jfr.Name;
 import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.UserService;
