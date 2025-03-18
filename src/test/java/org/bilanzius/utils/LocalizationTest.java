@@ -3,7 +3,7 @@ package org.bilanzius.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LocalizationTest {
+class LocalizationTest {
 
     private static final String NON_EXISTING_KEY = "unit_non_existing_key";
     private static final String EXISTING_KEY = "login";
@@ -27,6 +27,15 @@ public class LocalizationTest {
         Assertions.assertEquals("en", language.getCurrentLanguageCode());
         Assertions.assertEquals(EXISTING_KEY_VALUE, language.getMessage(EXISTING_KEY));
         Assertions.assertEquals("MISSING KEY: " + NON_EXISTING_KEY, language.getMessage(NON_EXISTING_KEY));
+    }
+
+    @Test
+    void testGetMessageWithEmptyArray() {
+        var language = Localization.getInstance();
+        language.setLocale("en");
+
+        Assertions.assertEquals("en", language.getCurrentLanguageCode());
+        Assertions.assertEquals(EXISTING_KEY_VALUE, language.getMessage(EXISTING_KEY, (Object[]) null));
     }
 
     @Test
