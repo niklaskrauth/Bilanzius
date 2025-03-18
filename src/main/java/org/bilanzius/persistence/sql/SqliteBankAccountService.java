@@ -109,16 +109,4 @@ public class SqliteBankAccountService implements BankAccountService {
             throw new DatabaseException(ex);
         }
     }
-
-    @Override
-    public void updateBankAccountBalance(BankAccount bankAccount, double balance) {
-        try {
-            backend.execute("UPDATE bankAccounts SET balance = ? WHERE id = ?", stmt -> {
-                stmt.setDouble(1, balance);
-                stmt.setInt(2, bankAccount.getAccountId());
-            });
-        } catch (SQLException ex) {
-            throw new DatabaseException(ex);
-        }
-    }
 }

@@ -4,6 +4,7 @@ import org.bilanzius.commandController.CommandController;
 import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.TransactionService;
 import org.bilanzius.services.Command;
+import org.bilanzius.utils.Localization;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -17,7 +18,7 @@ public class LogCommand implements Command {
     private final TransactionService transactionService;
     private final CommandController commandController;
 
-    public LogCommand( CommandController commandController) {
+    public LogCommand(CommandController commandController) {
         this.transactionService = DatabaseProvider.getTransactionService();
         this.commandController = commandController;
     }
@@ -34,7 +35,7 @@ public class LogCommand implements Command {
                 .withZone(ZoneId.systemDefault());
 
         logs.stream()
-                .map(x -> x.getMoney() + " - " + x.getDescription() + " (" + dateFormat.format(LocalDateTime.ofInstant(x.getCreated(), ZoneId.systemDefault())) + ")")
+                .map(x -> x.getMoney() + " - " + x.getDescription() + " (" + Localization.getInstance().formatInstant(x.getCreated()) + ")")
                 .forEach(x -> stringBuilder.append(x).append(System.lineSeparator()));
 
         return stringBuilder.toString();

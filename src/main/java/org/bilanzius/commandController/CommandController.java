@@ -4,6 +4,7 @@ import org.bilanzius.persistence.models.BankAccount;
 import org.bilanzius.persistence.models.User;
 import org.bilanzius.services.Command;
 import org.bilanzius.services.commands.BankAccountAware;
+import org.bilanzius.services.commands.ReportCommand;
 import org.bilanzius.services.commands.bilanzius.BilanziusCommand;
 import org.bilanzius.services.commands.convert.ConvertCommand;
 import org.bilanzius.services.commands.createBankAccount.CreateBankAccountCommand;
@@ -52,6 +53,7 @@ public class CommandController {
         commandMap.put(Commands.DEPOSIT, new DepositCommand(user, this.selectedBankAccount));
         commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user, this.selectedBankAccount));
         commandMap.put(Commands.CONVERT, new ConvertCommand(this.selectedBankAccount));
+        commandMap.put(Commands.REPORT, new ReportCommand(user));
 
         // Sprachbefehle
         commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
