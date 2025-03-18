@@ -34,7 +34,9 @@ public class CreateBankAccountCommand implements Command {
 
         if (bankAccountName.length() > 20) {
             return localization.getMessage("bank_account_name_too_long");
-        } else if (bankAccountName.isEmpty()) {
+        }
+
+        if (bankAccountName.isEmpty()) {
             return localization.getMessage("bank_account_name_too_short");
         }
 
