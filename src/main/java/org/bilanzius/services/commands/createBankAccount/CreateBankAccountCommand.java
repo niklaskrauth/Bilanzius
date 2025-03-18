@@ -11,7 +11,7 @@ import org.bilanzius.utils.Localization;
 import java.util.List;
 
 public class CreateBankAccountCommand implements Command {
-    private final User user;
+    private User user;
     private final BankAccountService bankAccountService;
     private final Localization localization = Localization.getInstance();
 
