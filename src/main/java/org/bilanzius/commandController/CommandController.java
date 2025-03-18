@@ -36,7 +36,10 @@ public class CommandController {
 
     private final User user;
 
-    public CommandController(User user, BankAccount selectedBankAccount, List<String> historyInputs) {
+    public CommandController(User user,
+                             BankAccount selectedBankAccount,
+                             List<String> historyInputs)
+    {
         this.user = user;
         this.selectedBankAccount = selectedBankAccount;
 
