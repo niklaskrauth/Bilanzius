@@ -48,6 +48,10 @@ public class HtmlReport implements Report {
         }
     }
 
+    public File getFile() {
+        return file;
+    }
+
     private HtmlCompound transactions(User user, List<BankAccount> accounts) {
         List<HtmlTag> tags = new ArrayList<>();
 
