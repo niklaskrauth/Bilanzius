@@ -18,14 +18,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class GetBankAccountCommand implements Command {
+public class GetBankAccountCommand implements Command
+{
 
     private User user;
     private final BankAccountService bankAccountService;
     private final Map<GetBankAccountCommandArguments, Function<String, String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
 
-    public GetBankAccountCommand(User user)  {
+    public GetBankAccountCommand(User user)
+    {
         this.user = user;
         this.bankAccountService = DatabaseProvider.getBankAccountService();
 
@@ -38,14 +40,17 @@ public class GetBankAccountCommand implements Command {
     {
 
         GetBankAccountCommandArguments argument;
-        Function<String, String> command;
+        Function<String,
+                String> command;
 
-        if (arguments == null || arguments.length == 0) {
+        if (arguments == null || arguments.length == 0)
+        {
             return localization.getMessage("no_arguments_provided",
                     GetBankAccountCommandArguments.getAllArguments());
         }
 
-        argument = GetBankAccountCommandArguments.fromString(arguments[0]);
+        argument =
+                GetBankAccountCommandArguments.fromString(arguments[0]);
         if (argument == null)
         {
             return localization.getMessage("unknown_argument",
@@ -72,8 +77,8 @@ public class GetBankAccountCommand implements Command {
         {
             bankAccount =
                     bankAccountService.getBankAccountOfUserByName(user, name).stream().findFirst().orElse(null);
-        }
-        catch (DatabaseException e)
+        } catch (
+                DatabaseException e)
         {
             return localization.getMessage("database_error");
         }
@@ -90,11 +95,12 @@ public class GetBankAccountCommand implements Command {
     {
 
         List<BankAccount> bankAccounts;
-        try {
+        try
+        {
             bankAccounts =
                     bankAccountService.getBankAccountsOfUser(user, 10).stream().toList();
-        }
-        catch (DatabaseException e)
+        } catch (
+                DatabaseException e)
         {
             return localization.getMessage("database_error", e.toString());
         }
@@ -105,8 +111,8 @@ public class GetBankAccountCommand implements Command {
         }
 
         return bankAccounts.stream()
-                 .map(bankAccount -> localization.getMessage("get_bank_account_information",
-                         bankAccount.getName(), bankAccount.getBalance()))
+                .map(bankAccount -> localization.getMessage("get_bank_account_information",
+                        bankAccount.getName(), bankAccount.getBalance()))
                 .collect(Collectors.joining("\n"));
     }
 }

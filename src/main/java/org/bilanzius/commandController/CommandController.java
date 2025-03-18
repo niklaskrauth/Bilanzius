@@ -29,7 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandController {
+public class CommandController
+{
     private final Map<Commands, Command> commandMap;
     private final Localization localization = Localization.getInstance();
     private BankAccount selectedBankAccount;
@@ -43,7 +44,8 @@ public class CommandController {
         this.user = user;
         this.selectedBankAccount = selectedBankAccount;
 
-        commandMap = new HashMap<>();
+        commandMap =
+                new HashMap<>();
 
         commandMap.put(Commands.EXIT, new ExitCommand(user));
         commandMap.put(Commands.HELP, new HelpCommand());
@@ -72,37 +74,53 @@ public class CommandController {
         commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, this));
         commandMap.put(Commands.LOG, new LogCommand(this));
 
-        //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
+        //Hier werden die
+        // einzelnen
+        // Befehle über das
+        // Enum auf die
+        // Klassen gemappt
     }
 
-    public String handleInput(String input) {
+    public String handleInput(String input)
+    {
 
-        String[] parts = input.split(" ", 2);
-        String commandStr = parts[0];
-        String[] arguments = parts.length > 1 ? parts[1].split(" ") : new String[0];
+        String[] parts =
+                input.split(" ", 2);
+        String commandStr =
+                parts[0];
+        String[] arguments
+                =
+                parts.length > 1 ? parts[1].split(" ") : new String[0];
 
-        Commands command = Commands.fromString(commandStr);
+        Commands command =
+                Commands.fromString(commandStr);
         Command commandService = commandMap.get(command);
 
-        if (commandService != null) {
+        if (commandService != null)
+        {
             return commandService.execute(arguments);
         }
 
         return localization.getMessage("unknown_command");
     }
 
-    public BankAccount getSelectedBankAccount() {
+    public BankAccount getSelectedBankAccount()
+    {
         return selectedBankAccount;
     }
 
-    public User getUser() {
+    public User getUser()
+    {
         return user;
     }
 
-    public void setSelectedBankAccount(BankAccount bankAccount) {
+    public void setSelectedBankAccount(BankAccount bankAccount)
+    {
         this.selectedBankAccount = bankAccount;
-        for (Command command : commandMap.values()) {
-            if (command instanceof BankAccountAware) {
+        for (Command command : commandMap.values())
+        {
+            if (command instanceof BankAccountAware)
+            {
                 ((BankAccountAware) command).setSelectedBankAccount(bankAccount);
             }
         }

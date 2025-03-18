@@ -13,36 +13,45 @@ import org.bilanzius.utils.Localization;
 import java.sql.SQLException;
 import java.util.List;
 
-public class RenameBankAccountCommand implements Command {
+public class RenameBankAccountCommand implements Command
+{
     private User user;
     private final BankAccountService bankAccountService;
     private final Localization localization = Localization.getInstance();
 
-    public RenameBankAccountCommand(User user) {
+    public RenameBankAccountCommand(User user)
+    {
         this.user = user;
         this.bankAccountService = DatabaseProvider.getBankAccountService();
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         List<BankAccount> bankAccountsOfUser;
 
-        if (arguments.length != 2) {
+        if (arguments.length != 2)
+        {
             return localization.getMessage("rename_bank_account_usage");
         }
 
-        try {
+        try
+        {
             bankAccountsOfUser = bankAccountService.getBankAccountsOfUser(user, 100);
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (bankAccountsOfUser.stream().noneMatch(bankAccount -> bankAccount.getName().equals(arguments[0]))) {
+        if (bankAccountsOfUser.stream().noneMatch(bankAccount -> bankAccount.getName().equals(arguments[0])))
+        {
             return localization.getMessage("no_bank_account_with_name", arguments[0]);
         }
 
-        if (bankAccountsOfUser.stream().anyMatch(bankAccount -> bankAccount.getName().equals(arguments[1]))) {
+        if (bankAccountsOfUser.stream().anyMatch(bankAccount -> bankAccount.getName().equals(arguments[1])))
+        {
             return localization.getMessage("bank_account_with_name_already_exists", arguments[1]);
         }
 
@@ -51,9 +60,12 @@ public class RenameBankAccountCommand implements Command {
         assert renamedBankAccount != null;
         renamedBankAccount.setName(arguments[1]);
 
-        try {
+        try
+        {
             bankAccountService.updateBankAccount(renamedBankAccount);
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 

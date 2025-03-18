@@ -21,27 +21,36 @@ import java.util.Scanner;
 
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
-public class Main {
+public class Main
+{
 
     public static final int MAX_BANK_ACCOUNTS = 3;
 
-    public static void main(String[] args) {
-        try {
+    public static void main(String[] args)
+    {
+        try
+        {
             bootstrap();
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex)
+        {
             ex.printStackTrace();
         }
     }
 
     // TODO: prob refactor
-    private static void bootstrap() throws SQLException {
-        // Connect to sqllite database
+    private static void bootstrap() throws SQLException
+    {
+        // Connect to
+        // sqllite database
         setupDatabase();
 
         SignUp signUp;
 
-        Scanner scanner = new Scanner(System.in);
-        IOContext context = new CLIContext(scanner, Localization.getInstance());
+        Scanner scanner =
+                new Scanner(System.in);
+        IOContext context =
+                new CLIContext(scanner, Localization.getInstance());
 
         signUp = new SignUp();
 
@@ -55,16 +64,19 @@ public class Main {
         MainRestController mainRestController = new MainRestController();
         mainRestController.start();
 
-        while (true) {
+        while (true)
+        {
             user = signUp.waitUntilLoggedIn(context);
             context.lineSeperator();
 
             Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
 
-            if (bankAccount.isPresent()) {
+            if (bankAccount.isPresent())
+            {
                 CommandController commandController = new CommandController(user, bankAccount.get(), historyInputs);
 
-                while (user != null) {
+                while (user != null)
+                {
                     context.lineSeperator();
                     String input = scanner.nextLine();
                     historyInputs.add(input);
@@ -76,22 +88,31 @@ public class Main {
         }
     }
 
-    private static void setupDatabase() throws SQLException {
-        var backend = new SqlBackend();
+    private static void setupDatabase() throws SQLException
+    {
+        var backend =
+                new SqlBackend();
         backend.connect();
         DatabaseProvider.init(new SqlDatabaseServiceRepository(backend));
         createTestUsers(DatabaseProvider.getUserService());
     }
 
-    // Create a new user with name "TestUser" and password "passwort1234"
-    private static void createTestUsers(UserService userService) {
-        try {
+    // Create a new user
+    // with name "TestUser"
+    // and password
+    // "passwort1234"
+    private static void createTestUsers(UserService userService)
+    {
+        try
+        {
             userService.createUser(User.createUser("TestUser",
                     fromPlainText("passwort1234")));
 
             userService.createUser(User.createUser("TestUser2",
                     fromPlainText("passwort5678")));
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e)
+        {
             System.out.println("Error creating test users");
         }
     }

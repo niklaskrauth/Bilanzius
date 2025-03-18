@@ -1,6 +1,7 @@
 package org.bilanzius.cli;
 
-public interface IOContext {
+public interface IOContext
+{
 
     String askUser(Question question);
 

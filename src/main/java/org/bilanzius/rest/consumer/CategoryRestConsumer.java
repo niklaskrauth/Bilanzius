@@ -7,8 +7,10 @@ import org.bilanzius.rest.dto.CategoryDTO;
 import java.io.IOException;
 
 @FunctionalInterface
-public interface CategoryRestConsumer {
+public interface CategoryRestConsumer
+{
 
-    void accept(User user, Category category, CategoryDTO categoryDTO) throws IOException;
+    void accept(User user,
+                Category category, CategoryDTO categoryDTO) throws IOException;
 
 }

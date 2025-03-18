@@ -12,18 +12,22 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class SqliteCategoryService implements CategoryService {
+public class SqliteCategoryService implements CategoryService
+{
 
     private final SqlBackend backend;
 
-    SqliteCategoryService(SqlBackend backend) throws SQLException {
-        this.backend = backend;
+    SqliteCategoryService(SqlBackend backend) throws SQLException
+    {
+        this.backend =
+                backend;
         this.backend.registerAdapter(Category.class, new SqlCategoryAdapter());
 
         this.createSchema();
     }
 
-    private void createSchema() throws SQLException {
+    private void createSchema() throws SQLException
+    {
         this.backend.execute("""
                 CREATE TABLE IF NOT EXISTS categories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,96 +42,129 @@ public class SqliteCategoryService implements CategoryService {
     }
 
     @Override
-    public void createCategory(Category category) {
-        try {
+    public void createCategory(Category category)
+    {
+        try
+        {
             backend.execute("INSERT INTO categories (userId, name, budget, amountSpent) VALUES (?,?,?,?)",
-                    stmt -> {
+                    stmt ->
+                    {
                         stmt.setInt(1, category.getUserId());
                         stmt.setString(2, category.getName());
                         stmt.setDouble(3, category.getBudget().doubleValue());
                         stmt.setDouble(4, category.getAmountSpent().doubleValue());
                     });
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex)
+        {
             throw new DatabaseException(ex);
         }
     }
 
     @Override
-    public Optional<Category> getCategory(long id) {
-        try {
+    public Optional<Category> getCategory(long id)
+    {
+        try
+        {
             return backend.query(Category.class, "SELECT * FROM categories WHERE id = ?", stmt -> stmt.setLong(1, id))
                     .stream()
                     .findFirst();
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex)
+        {
             throw new DatabaseException(ex);
         }
     }
 
     @Override
-    public List<Category> getCategoriesOfUser(User user, int limit) {
-        try {
+    public List<Category> getCategoriesOfUser(User user, int limit)
+    {
+        try
+        {
             Collection<Category> categories = backend.query(Category.class,
                     "SELECT * FROM categories WHERE userId = ? LIMIT ?",
-                    stmt -> {
+                    stmt ->
+                    {
                         stmt.setInt(1, user.getId());
                         stmt.setInt(2, limit);
                     });
             return new ArrayList<>(categories);
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex)
+        {
             throw new DatabaseException(ex);
         }
     }
 
     @Override
-    public Optional<Category> getCategoryOfUserByName(User user, String name) {
-        try {
+    public Optional<Category> getCategoryOfUserByName(User user, String name)
+    {
+        try
+        {
             return backend.query(Category.class, "SELECT * FROM categories WHERE userId = ? AND name = ?",
-                            stmt -> {
+                            stmt ->
+                            {
                                 stmt.setInt(1, user.getId());
                                 stmt.setString(2, name);
                             }).stream()
                     .findFirst();
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex)
+        {
             throw new DatabaseException(ex);
         }
     }
 
     @Override
-    public List<Category> getExceededCategoriesOfUser(User user, int limit) {
-        try {
+    public List<Category> getExceededCategoriesOfUser(User user, int limit)
+    {
+        try
+        {
             Collection<Category> categories = backend.query(Category.class,
                     "SELECT * FROM categories WHERE userId = ? AND amountSpent > budget LIMIT ?",
-                    stmt -> {
+                    stmt ->
+                    {
                         stmt.setInt(1, user.getId());
                         stmt.setInt(2, limit);
                     });
             return new ArrayList<>(categories);
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex)
+        {
             throw new DatabaseException(ex);
         }
     }
 
     @Override
-    public void updateCategory(Category category) {
-        try {
+    public void updateCategory(Category category)
+    {
+        try
+        {
             backend.execute("UPDATE categories SET name = ?, budget = ?, amountSpent = ? WHERE id = ?",
-                    stmt -> {
+                    stmt ->
+                    {
                         stmt.setString(1, category.getName());
                         stmt.setDouble(2, category.getBudget().doubleValue());
                         stmt.setDouble(3, category.getAmountSpent().doubleValue());
                         stmt.setInt(4, category.getCategoryId());
                     });
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex)
+        {
             throw new DatabaseException(ex);
         }
     }
 
     @Override
-    public void deleteCategory(Category category) {
-        try {
+    public void deleteCategory(Category category)
+    {
+        try
+        {
             backend.execute("DELETE FROM categories WHERE id = ?",
                     stmt -> stmt.setInt(1, category.getCategoryId()));
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex)
+        {
             throw new DatabaseException(ex);
         }
     }

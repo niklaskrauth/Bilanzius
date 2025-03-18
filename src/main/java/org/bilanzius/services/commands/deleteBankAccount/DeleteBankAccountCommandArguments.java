@@ -2,27 +2,35 @@ package org.bilanzius.services.commands.deleteBankAccount;
 
 import java.util.Arrays;
 
-public enum DeleteBankAccountCommandArguments {
+public enum DeleteBankAccountCommandArguments
+{
     NAME("name", "-n"),
     ALL("all", "-a");
 
     private final String argument;
     private final String argumentShort;
 
-    DeleteBankAccountCommandArguments(String argument, String argumentShort) {
-        this.argument = argument;
-        this.argumentShort = argumentShort;
+    DeleteBankAccountCommandArguments(String argument, String argumentShort)
+    {
+        this.argument =
+                argument;
+        this.argumentShort
+                =
+                argumentShort;
     }
 
-    public String getArgument() {
+    public String getArgument()
+    {
         return argument;
     }
 
-    public String getArgumentShort() {
+    public String getArgumentShort()
+    {
         return argumentShort;
     }
 
-    public static String getAllArguments() {
+    public static String getAllArguments()
+    {
         return Arrays.stream(DeleteBankAccountCommandArguments.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
@@ -30,9 +38,12 @@ public enum DeleteBankAccountCommandArguments {
         ).orElse("");
     }
 
-    public static DeleteBankAccountCommandArguments fromString(String argument) {
-        for (DeleteBankAccountCommandArguments c : DeleteBankAccountCommandArguments.values()) {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
+    public static DeleteBankAccountCommandArguments fromString(String argument)
+    {
+        for (DeleteBankAccountCommandArguments c : DeleteBankAccountCommandArguments.values())
+        {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
+            {
                 return c;
             }
         }

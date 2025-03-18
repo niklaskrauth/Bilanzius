@@ -7,8 +7,10 @@ import org.bilanzius.rest.dto.BankAccountDTO;
 import java.io.IOException;
 
 @FunctionalInterface
-public interface BankAccountRestConsumer {
+public interface BankAccountRestConsumer
+{
 
-    void accept(User user, BankAccount bankAccount, BankAccountDTO bankAccountDTO) throws IOException;
+    void accept(User user,
+                BankAccount bankAccount, BankAccountDTO bankAccountDTO) throws IOException;
 
 }

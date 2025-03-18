@@ -12,25 +12,32 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HtmlReport implements Report {
+public class HtmlReport implements Report
+{
 
-    public static HtmlReport reporter() {
+    public static HtmlReport reporter()
+    {
         return new HtmlReport(new File("report.html"));
     }
 
     private final File file;
 
-    private HtmlReport(File file) {
+    private HtmlReport(File file)
+    {
         this.file = file;
     }
 
     @Override
-    public void create(User user) {
-        var report = HtmlGenerator.create()
+    public void create(User user)
+    {
+        var report =
+                HtmlGenerator.create()
                 .htmlFromResources("report.html")
-                .replace("user", PlainText.text(user.getUsername()));
+                .replace(
+                        "user", PlainText.text(user.getUsername()));
 
-        var bankAccounts = DatabaseProvider.getBankAccountService().getBankAccountsOfUser(user, 100);
+        var bankAccounts =
+                DatabaseProvider.getBankAccountService().getBankAccountsOfUser(user, 100);
         var bankAccountTable = bankAccounts.stream()
                 .map(account -> (HtmlTag) HtmlTableRow.row(
                         HtmlDataCell.cell(account.getName()),
@@ -38,25 +45,36 @@ public class HtmlReport implements Report {
                 ))
                 .toList();
 
-        report.replace("account", HtmlCompound.compound(bankAccountTable));
-        report.replace("transactions", transactions(user, bankAccounts));
+        report.replace(
+                "account",
+                HtmlCompound.compound(bankAccountTable));
+        report.replace(
+                "transactions", transactions(user, bankAccounts));
 
-        try {
+        try
+        {
             Files.writeString(this.file.toPath(), report.build());
-        } catch (IOException ex) {
+        } catch (
+                IOException ex)
+        {
             throw new RuntimeException(ex);
         }
     }
 
-    public File getFile() {
+    public File getFile()
+    {
         return file;
     }
 
-    private HtmlCompound transactions(User user, List<BankAccount> accounts) {
-        List<HtmlTag> tags = new ArrayList<>();
+    private HtmlCompound transactions(User user, List<BankAccount> accounts)
+    {
+        List<HtmlTag> tags
+                =
+                new ArrayList<>();
 
 
-        for (BankAccount account : accounts) {
+        for (BankAccount account : accounts)
+        {
             tags.add(HtmlTableRow.row(
                     HtmlDataCell.head(account.getName()),
                     HtmlDataCell.head(Localization.getInstance().getMessage("report_date")),
@@ -64,7 +82,8 @@ public class HtmlReport implements Report {
                     HtmlDataCell.head(Localization.getInstance().getMessage("report_money"))
             ));
 
-            var list = DatabaseProvider.getTransactionService().getTransactions(user, account, 100, 0).stream()
+            var list =
+                    DatabaseProvider.getTransactionService().getTransactions(user, account, 100, 0).stream()
                     .map(x -> (HtmlTag) HtmlTableRow.row(
                             HtmlDataCell.cell(""),
                             HtmlDataCell.cell(Localization.getInstance().formatInstant(x.getCreated())),

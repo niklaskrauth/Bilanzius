@@ -6,7 +6,8 @@ import org.bilanzius.persistence.models.User;
 
 import java.util.List;
 
-public interface TransactionService {
+public interface TransactionService
+{
 
     void saveTransaction(Transaction transaction);
 

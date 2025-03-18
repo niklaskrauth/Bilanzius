@@ -2,27 +2,35 @@ package org.bilanzius.services.commands.createCategory;
 
 import java.util.Arrays;
 
-public enum CreateCategoryCommandArguments {
+public enum CreateCategoryCommandArguments
+{
     NAME("name", "-n"),
     BUDGET("budget", "-b");
 
     private final String argument;
     private final String argumentShort;
 
-    CreateCategoryCommandArguments(String argument, String argumentShort) {
-        this.argument = argument;
-        this.argumentShort = argumentShort;
+    CreateCategoryCommandArguments(String argument, String argumentShort)
+    {
+        this.argument =
+                argument;
+        this.argumentShort
+                =
+                argumentShort;
     }
 
-    public String getArgument() {
+    public String getArgument()
+    {
         return argument;
     }
 
-    public String getArgumentShort() {
+    public String getArgumentShort()
+    {
         return argumentShort;
     }
 
-    public static String getAllArguments() {
+    public static String getAllArguments()
+    {
         return Arrays.stream(CreateCategoryCommandArguments.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
         ).reduce(
@@ -30,9 +38,12 @@ public enum CreateCategoryCommandArguments {
         ).orElse("");
     }
 
-    public static CreateCategoryCommandArguments fromString(String argument) {
-        for (CreateCategoryCommandArguments c : CreateCategoryCommandArguments.values()) {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
+    public static CreateCategoryCommandArguments fromString(String argument)
+    {
+        for (CreateCategoryCommandArguments c : CreateCategoryCommandArguments.values())
+        {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
+            {
                 return c;
             }
         }

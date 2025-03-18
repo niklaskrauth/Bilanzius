@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class DepositCommand implements Command, BankAccountAware {
+public class DepositCommand implements Command, BankAccountAware
+{
     private User user;
     private final Map<DepositCommandArguments, Function<String, String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
@@ -26,7 +27,8 @@ public class DepositCommand implements Command, BankAccountAware {
     private BankAccount selectedBankAccount;
     private final BankAccountService bankAccountService;
 
-    public DepositCommand(User user, BankAccount selectedBankAccount) {
+    public DepositCommand(User user, BankAccount selectedBankAccount)
+    {
         this.user = user;
         this.selectedBankAccount = selectedBankAccount;
         this.transactionService = DatabaseProvider.getTransactionService();
@@ -36,51 +38,69 @@ public class DepositCommand implements Command, BankAccountAware {
     }
 
     @Override
-    public void setSelectedBankAccount(BankAccount bankAccount) {
+    public void setSelectedBankAccount(BankAccount bankAccount)
+    {
         this.selectedBankAccount = bankAccount;
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         DepositCommandArguments argument;
-        Function<String, String> command;
+        Function<String,
+                String> command;
 
-        if (arguments == null || arguments.length == 0) {
+        if (arguments == null || arguments.length == 0)
+        {
             return localization.getMessage("no_arguments_provided", DepositCommandArguments.getAllArguments());
         }
 
-        argument = DepositCommandArguments.fromString(arguments[0]);
-        if (argument == null) {
+        argument =
+                DepositCommandArguments.fromString(arguments[0]);
+        if (argument == null)
+        {
             return localization.getMessage("unknown_argument", DepositCommandArguments.getAllArguments());
         }
 
-        command = commandMap.get(argument);
-        if (command != null) {
+        command =
+                commandMap.get(argument);
+        if (command != null)
+        {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
         return localization.getMessage("unknown_argument", DepositCommandArguments.getAllArguments());
     }
 
-    private String depositMoney(String argument) {
+    private String depositMoney(String argument)
+    {
 
         BigDecimal depositMoney;
         BigDecimal balance;
 
-        try {
+        try
+        {
 
-            depositMoney = BigDecimal.valueOf(Double.parseDouble(argument));
-            depositMoney = depositMoney.abs();
+            depositMoney =
+                    BigDecimal.valueOf(Double.parseDouble(argument));
+            depositMoney =
+                    depositMoney.abs();
             transactionService.saveTransaction(Transaction.create(
-                    user, selectedBankAccount, depositMoney, Instant.now(), "Deposit" + depositMoney));
+                    user,
+                    selectedBankAccount, depositMoney, Instant.now(), "Deposit" + depositMoney));
 
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
 
             return localization.getMessage("deposit_successful", balance);
-        } catch (NumberFormatException e) {
+        } catch (
+                NumberFormatException e)
+        {
             return localization.getMessage("invalid_amount");
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
     }

@@ -4,37 +4,44 @@ import org.bilanzius.persistence.*;
 
 import java.sql.SQLException;
 
-public class SqlDatabaseServiceRepository implements DatabaseServiceRepository {
+public class SqlDatabaseServiceRepository implements DatabaseServiceRepository
+{
 
     private final UserService userService;
     private final TransactionService transactionService;
     private final BankAccountService bankAccountService;
     private final CategoryService categoryService;
 
-    public SqlDatabaseServiceRepository(SqlBackend sqlBackend) throws SQLException {
-        this.userService = new SqliteUserDatabaseService(sqlBackend);
+    public SqlDatabaseServiceRepository(SqlBackend sqlBackend) throws SQLException
+    {
+        this.userService =
+                new SqliteUserDatabaseService(sqlBackend);
         this.bankAccountService = new SqliteBankAccountService(sqlBackend);
         this.transactionService = new SqliteTransactionService(sqlBackend, this.bankAccountService);
         this.categoryService = new SqliteCategoryService(sqlBackend);
     }
 
     @Override
-    public UserService getUserService() {
+    public UserService getUserService()
+    {
         return this.userService;
     }
 
     @Override
-    public TransactionService getTransactionService() {
+    public TransactionService getTransactionService()
+    {
         return this.transactionService;
     }
 
     @Override
-    public BankAccountService getBankAccountService() {
+    public BankAccountService getBankAccountService()
+    {
         return this.bankAccountService;
     }
 
     @Override
-    public CategoryService getCategoryService() {
+    public CategoryService getCategoryService()
+    {
         return this.categoryService;
     }
 

@@ -15,7 +15,8 @@ import org.bilanzius.utils.Localization;
 import java.sql.SQLException;
 import java.util.List;
 
-public class SwitchBankAccountCommand implements Command, BankAccountAware {
+public class SwitchBankAccountCommand implements Command, BankAccountAware
+{
 
     private final User user;
     private final BankAccountService bankAccountService;
@@ -23,7 +24,8 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
     private final Localization localization = Localization.getInstance();
     private BankAccount selectedBankAccount;
 
-    public SwitchBankAccountCommand(User user,  CommandController commandController)   {
+    public SwitchBankAccountCommand(User user, CommandController commandController)
+    {
         this.user = user;
         this.bankAccountService = DatabaseProvider.getBankAccountService();
         this.commandController = commandController;
@@ -31,29 +33,37 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
     }
 
     @Override
-    public void setSelectedBankAccount(BankAccount bankAccount) {
+    public void setSelectedBankAccount(BankAccount bankAccount)
+    {
         this.selectedBankAccount = bankAccount;
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
-        try {
+        try
+        {
 
-            if (arguments.length != 1) {
+            if (arguments.length != 1)
+            {
                 return localization.getMessage("switch_bank_account_usage");
             }
 
-            if (arguments[0].equals(selectedBankAccount.getName())) {
+            if (arguments[0].equals(selectedBankAccount.getName()))
+            {
                 return localization.getMessage("bank_account_already_selected", arguments[0]);
             }
 
             List<BankAccount> bankAccountsOfUser;
             BankAccount newSelectedBankAccount;
 
-            try {
+            try
+            {
                 bankAccountsOfUser = bankAccountService.getBankAccountsOfUser(user, 100);
-            } catch (DatabaseException e) {
+            } catch (
+                    DatabaseException e)
+            {
                 return localization.getMessage("database_error", e.toString());
             }
 
@@ -62,7 +72,8 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
                     .findFirst()
                     .orElse(null);
 
-            if (newSelectedBankAccount == null) {
+            if (newSelectedBankAccount == null)
+            {
                 return localization.getMessage("no_bank_account_with_name", arguments[0]);
             }
 
@@ -70,7 +81,8 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
 
             return localization.getMessage("bank_account_switched", arguments[0]);
 
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             return localization.getMessage("error_switching_bank_account", e.getMessage());
         }
     }

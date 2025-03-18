@@ -17,17 +17,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ConvertCommand implements Command, BankAccountAware {
+public class ConvertCommand implements Command, BankAccountAware
+{
 
     private final Map<ConvertCommandArguments, Supplier<String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
     private final BankAccountService bankAccountService;
     private BankAccount selectedBankAccount;
 
-    // TODO: Move this into the .env file
+    // TODO: Move this into
+    //  the .env file
     private final String currencyUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json";
 
-    public ConvertCommand(BankAccount selectedBankAccount) {
+    public ConvertCommand(BankAccount selectedBankAccount)
+    {
         this.bankAccountService = DatabaseProvider.getBankAccountService();
         this.selectedBankAccount = selectedBankAccount;
 
@@ -45,29 +48,36 @@ public class ConvertCommand implements Command, BankAccountAware {
     }
 
     @Override
-    public void setSelectedBankAccount(BankAccount bankAccount) {
+    public void setSelectedBankAccount(BankAccount bankAccount)
+    {
         this.selectedBankAccount = bankAccount;
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         ConvertCommandArguments argument;
         Supplier<String> command;
 
-        if (arguments == null || arguments.length == 0) {
+        if (arguments == null || arguments.length == 0)
+        {
             return localization.getMessage("no_arguments_provided",
                     ConvertCommandArguments.getAllArguments());
         }
 
-        argument = ConvertCommandArguments.fromString(arguments[0]);
-        if (argument == null) {
+        argument =
+                ConvertCommandArguments.fromString(arguments[0]);
+        if (argument == null)
+        {
             return localization.getMessage("unknown_argument",
                     ConvertCommandArguments.getAllArguments());
         }
 
-        command = commandMap.get(argument);
-        if (command != null) {
+        command =
+                commandMap.get(argument);
+        if (command != null)
+        {
             return command.get();
         }
 
@@ -75,58 +85,78 @@ public class ConvertCommand implements Command, BankAccountAware {
     }
 
     // TODO: Prob refactor
-    private String convertToPorsche911Camera() {
+    private String convertToPorsche911Camera()
+    {
 
         BigDecimal porsche911CameraPrice = new BigDecimal("128700");
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
-        BigDecimal part = balance.divide(porsche911CameraPrice, RoundingMode.HALF_EVEN);
+        BigDecimal part =
+                balance.divide(porsche911CameraPrice, RoundingMode.HALF_EVEN);
         return localization.getMessage("convert_buy_part_of", part, "Porsche 911 Camera");
     }
 
-    private String convertToBitcoin() {
+    private String convertToBitcoin()
+    {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "btc"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", "Bitcoin", (balance.multiply(exchangeRate)));
     }
 
-    private String convertToGermanDeutscheMark() {
+    private String convertToGermanDeutscheMark()
+    {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "dem"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", "Deutsche Mark", (balance.multiply(exchangeRate)));
     }
 
-    private String convertToSwissFranc() {
+    private String convertToSwissFranc()
+    {
 
-        String currency = "Swiss Franc";
-        if (localization.getCurrentLanguageCode().equals("de")) {
-            currency = "Schweizer Franken";
+        String currency =
+                "Swiss Franc";
+        if (localization.getCurrentLanguageCode().equals("de"))
+        {
+            currency =
+                    "Schweizer Franken";
         }
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
@@ -134,68 +164,91 @@ public class ConvertCommand implements Command, BankAccountAware {
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "chf"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", currency, (balance.multiply(exchangeRate)));
     }
 
-    private String convertToDogecoin() {
+    private String convertToDogecoin()
+    {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "doge"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", "Dogecoin", (balance.multiply(exchangeRate)));
     }
 
-    private String convertToEthereum() {
+    private String convertToEthereum()
+    {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "eth"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", "Ethereum", (balance.multiply(exchangeRate)));
     }
 
-    private String convertToHongKongDollar() {
+    private String convertToHongKongDollar()
+    {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "hkd"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", "Hong Kong Dollar", (balance.multiply(exchangeRate)));
     }
 
-    private String convertToJamaicanDollar() {
+    private String convertToJamaicanDollar()
+    {
 
-        String currency = "Jamaican Dollar";
-        if (localization.getCurrentLanguageCode().equals("de")) {
-            currency = "Jamaikanische Dollar";
+        String currency =
+                "Jamaican Dollar";
+        if (localization.getCurrentLanguageCode().equals("de"))
+        {
+            currency =
+                    "Jamaikanische Dollar";
         }
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
@@ -203,20 +256,28 @@ public class ConvertCommand implements Command, BankAccountAware {
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "jmd"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", currency, (balance.multiply(exchangeRate)));
     }
 
-    private String convertToNorthKoreanWon() {
+    private String convertToNorthKoreanWon()
+    {
 
-        String currency = "North Korean Won";
-        if (localization.getCurrentLanguageCode().equals("de")) {
-            currency = "Nordkoreanische Won";
+        String currency =
+                "North Korean Won";
+        if (localization.getCurrentLanguageCode().equals("de"))
+        {
+            currency =
+                    "Nordkoreanische Won";
         }
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
@@ -224,20 +285,28 @@ public class ConvertCommand implements Command, BankAccountAware {
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "kpw"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", currency, (balance.multiply(exchangeRate)));
     }
 
-    private String convertToRussianRuble() {
+    private String convertToRussianRuble()
+    {
 
-        String currency = "Russian Ruble";
-        if (localization.getCurrentLanguageCode().equals("de")) {
-            currency = "Russischer Rubel";
+        String currency =
+                "Russian Ruble";
+        if (localization.getCurrentLanguageCode().equals("de"))
+        {
+            currency =
+                    "Russischer Rubel";
         }
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
@@ -245,32 +314,42 @@ public class ConvertCommand implements Command, BankAccountAware {
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "rub"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", currency, (balance.multiply(exchangeRate)));
     }
 
-    private String convertToUsDollar() {
+    private String convertToUsDollar()
+    {
 
         JsonObject jsonObject = Requests.getRequest(currencyUrl);
         assert jsonObject != null;
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "usd"));
         BigDecimal balance;
 
-        try {
-            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        try
+        {
+            balance =
+                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+        } catch (
+                DatabaseException e)
+        {
             return localization.getMessage("database_error", e.toString());
         }
 
         return localization.getMessage("convert_balance", "US Dollar", (balance.multiply(exchangeRate)));
     }
 
-    private double getCurrencyFromJson(JsonObject jsonObject, String currencyShort) {
+    private double getCurrencyFromJson(JsonObject jsonObject, String currencyShort)
+    {
         return jsonObject.get("eur").getAsJsonObject().get(currencyShort).getAsDouble();
     }
 }
