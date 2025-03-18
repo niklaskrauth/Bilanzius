@@ -48,8 +48,7 @@ public class WithdrawCommand implements Command, BankAccountAware
     {
 
         WithdrawCommandArgument argument;
-        Function<String[],
-                String> command;
+        Function<String[], String> command;
 
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", WithdrawCommandArgument.getAllArguments());
@@ -83,25 +82,22 @@ public class WithdrawCommand implements Command, BankAccountAware
         Transaction transaction;
 
         try {
-            withdrawMoney =
-                    BigDecimal.valueOf(Math.abs(Double.parseDouble(arguments[1])));
+            withdrawMoney = BigDecimal.valueOf(Math.abs(Double.parseDouble(arguments[1])));
 
             if (arguments.length == 4 && (WithdrawCommandArgument.CATEGORY.getArgument().equals(arguments[2]) ||
                     WithdrawCommandArgument.CATEGORY.getArgumentShort().equals(arguments[2]))) {
 
                 categoryName = arguments[3];
-                category =
-                        categoryService.getCategoryOfUserByName(user, categoryName).orElse(null);
+                category = categoryService.getCategoryOfUserByName(user, categoryName).orElse(null);
 
                 if (category == null) {
                     return localization.getMessage("no_category_with_name", categoryName);
                 }
 
                 transaction = Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(),
-                        Instant.now(),
-                        "Withdraw " + withdrawMoney);
+                        Instant.now(), "Withdraw " + withdrawMoney);
 
-                category.setAmountSpent(category.getAmountSpent().subtract(transaction.getMoney()));
+                category.setAmountSpent(category.getAmountSpent().add(transaction.getMoney()));
                 this.checkCategoryBudget(category);
                 categoryService.updateCategory(category);
 
@@ -134,11 +130,11 @@ public class WithdrawCommand implements Command, BankAccountAware
         }
     }
 
-    private String checkCategoryBudget(Category category)
+    private void checkCategoryBudget(Category category)
     {
-
-
-        return "";
+        if (category.getAmountSpent().compareTo(category.getBudget()) > 0) {
+            System.out.println(localization.getMessage("category_exceeded_budget", category));
+        }
     }
 
     private String checkBalance()
@@ -147,8 +143,7 @@ public class WithdrawCommand implements Command, BankAccountAware
         BigDecimal balance;
 
         try {
-            balance =
-                    bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
+            balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
                 DatabaseException e) {
             return localization.getMessage("database_error", e.toString());

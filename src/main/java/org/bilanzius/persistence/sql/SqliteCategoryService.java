@@ -19,8 +19,7 @@ public class SqliteCategoryService implements CategoryService
 
     SqliteCategoryService(SqlBackend backend) throws SQLException
     {
-        this.backend =
-                backend;
+        this.backend = backend;
         this.backend.registerAdapter(Category.class, new SqlCategoryAdapter());
 
         this.createSchema();
