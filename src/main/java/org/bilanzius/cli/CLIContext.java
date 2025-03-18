@@ -21,24 +21,20 @@ public class CLIContext implements IOContext
     @Override
     public String askUser(Question question)
     {
-        do
-        {
+        do {
             System.out.print(question.question() + (question.defaultValue() == null || question.defaultValue().isBlank() ? " " : " [" + question.defaultValue() + "] "));
             String input =
                     scanner.nextLine();
 
-            if (input.isBlank())
-            {
+            if (input.isBlank()) {
                 input = question.defaultValue();
             }
 
-            try
-            {
+            try {
                 question.validator().validate(input);
                 return input;
             } catch (
-                    QuestionException ex)
-            {
+                    QuestionException ex) {
                 System.out.println(ex.getMessage());
             }
         } while (question.repeatUntilValid());

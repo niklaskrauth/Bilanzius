@@ -32,9 +32,9 @@ public class HtmlReport implements Report
     {
         var report =
                 HtmlGenerator.create()
-                .htmlFromResources("report.html")
-                .replace(
-                        "user", PlainText.text(user.getUsername()));
+                        .htmlFromResources("report.html")
+                        .replace(
+                                "user", PlainText.text(user.getUsername()));
 
         var bankAccounts =
                 DatabaseProvider.getBankAccountService().getBankAccountsOfUser(user, 100);
@@ -51,12 +51,10 @@ public class HtmlReport implements Report
         report.replace(
                 "transactions", transactions(user, bankAccounts));
 
-        try
-        {
+        try {
             Files.writeString(this.file.toPath(), report.build());
         } catch (
-                IOException ex)
-        {
+                IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -73,8 +71,7 @@ public class HtmlReport implements Report
                 new ArrayList<>();
 
 
-        for (BankAccount account : accounts)
-        {
+        for (BankAccount account : accounts) {
             tags.add(HtmlTableRow.row(
                     HtmlDataCell.head(account.getName()),
                     HtmlDataCell.head(Localization.getInstance().getMessage("report_date")),
@@ -84,13 +81,13 @@ public class HtmlReport implements Report
 
             var list =
                     DatabaseProvider.getTransactionService().getTransactions(user, account, 100, 0).stream()
-                    .map(x -> (HtmlTag) HtmlTableRow.row(
-                            HtmlDataCell.cell(""),
-                            HtmlDataCell.cell(Localization.getInstance().formatInstant(x.getCreated())),
-                            HtmlDataCell.cell(x.getDescription()),
-                            HtmlDataCell.cell(Localization.getInstance().formatCurrency(x.getMoney()))
-                    ))
-                    .toList();
+                            .map(x -> (HtmlTag) HtmlTableRow.row(
+                                    HtmlDataCell.cell(""),
+                                    HtmlDataCell.cell(Localization.getInstance().formatInstant(x.getCreated())),
+                                    HtmlDataCell.cell(x.getDescription()),
+                                    HtmlDataCell.cell(Localization.getInstance().formatCurrency(x.getMoney()))
+                            ))
+                            .toList();
             tags.add(HtmlCompound.compound(list));
         }
 

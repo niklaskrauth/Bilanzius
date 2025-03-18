@@ -43,24 +43,21 @@ public class GetBankAccountCommand implements Command
         Function<String,
                 String> command;
 
-        if (arguments == null || arguments.length == 0)
-        {
+        if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided",
                     GetBankAccountCommandArguments.getAllArguments());
         }
 
         argument =
                 GetBankAccountCommandArguments.fromString(arguments[0]);
-        if (argument == null)
-        {
+        if (argument == null) {
             return localization.getMessage("unknown_argument",
                     GetBankAccountCommandArguments.getAllArguments());
         }
 
         command =
                 commandMap.get(argument);
-        if (command != null)
-        {
+        if (command != null) {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
@@ -73,18 +70,15 @@ public class GetBankAccountCommand implements Command
 
         BankAccount bankAccount;
 
-        try
-        {
+        try {
             bankAccount =
                     bankAccountService.getBankAccountOfUserByName(user, name).stream().findFirst().orElse(null);
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error");
         }
 
-        if (bankAccount == null)
-        {
+        if (bankAccount == null) {
             return localization.getMessage("no_bank_account_with_name", name);
         }
 
@@ -95,18 +89,15 @@ public class GetBankAccountCommand implements Command
     {
 
         List<BankAccount> bankAccounts;
-        try
-        {
+        try {
             bankAccounts =
                     bankAccountService.getBankAccountsOfUser(user, 10).stream().toList();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (bankAccounts.isEmpty())
-        {
+        if (bankAccounts.isEmpty()) {
             return localization.getMessage("no_bank_accounts_yet");
         }
 

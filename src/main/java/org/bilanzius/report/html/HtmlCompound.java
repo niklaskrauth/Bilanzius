@@ -23,8 +23,7 @@ public class HtmlCompound implements HtmlTag
         StringBuilder builder = new StringBuilder();
 
         for (HtmlTag tag :
-                tags)
-        {
+                tags) {
             builder.append(tag.build());
         }
 

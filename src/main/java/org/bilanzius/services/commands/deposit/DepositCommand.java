@@ -51,22 +51,19 @@ public class DepositCommand implements Command, BankAccountAware
         Function<String,
                 String> command;
 
-        if (arguments == null || arguments.length == 0)
-        {
+        if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", DepositCommandArguments.getAllArguments());
         }
 
         argument =
                 DepositCommandArguments.fromString(arguments[0]);
-        if (argument == null)
-        {
+        if (argument == null) {
             return localization.getMessage("unknown_argument", DepositCommandArguments.getAllArguments());
         }
 
         command =
                 commandMap.get(argument);
-        if (command != null)
-        {
+        if (command != null) {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
@@ -79,8 +76,7 @@ public class DepositCommand implements Command, BankAccountAware
         BigDecimal depositMoney;
         BigDecimal balance;
 
-        try
-        {
+        try {
 
             depositMoney =
                     BigDecimal.valueOf(Double.parseDouble(argument));
@@ -95,12 +91,10 @@ public class DepositCommand implements Command, BankAccountAware
 
             return localization.getMessage("deposit_successful", balance);
         } catch (
-                NumberFormatException e)
-        {
+                NumberFormatException e) {
             return localization.getMessage("invalid_amount");
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
     }

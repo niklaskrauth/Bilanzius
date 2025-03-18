@@ -40,10 +40,8 @@ public enum CreateCategoryCommandArguments
 
     public static CreateCategoryCommandArguments fromString(String argument)
     {
-        for (CreateCategoryCommandArguments c : CreateCategoryCommandArguments.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (CreateCategoryCommandArguments c : CreateCategoryCommandArguments.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

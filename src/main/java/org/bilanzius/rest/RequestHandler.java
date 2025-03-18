@@ -33,8 +33,7 @@ public class RequestHandler implements HttpHandler
         String authHeader =
                 exchange.getRequestHeaders().getFirst("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Basic "))
-        {
+        if (authHeader != null && authHeader.startsWith("Basic ")) {
 
             String base64Credentials = authHeader.substring("Basic ".length());
             String credentials = new String(Base64.getDecoder().decode(base64Credentials));
@@ -45,22 +44,18 @@ public class RequestHandler implements HttpHandler
             HashedPassword hashedPassword = HashedPassword.fromPlainText(parts[1]);
             Optional<User> user;
 
-            try
-            {
+            try {
                 user = userService.findUserWithCredentials(parts[0], hashedPassword);
             } catch (
-                    DatabaseException e)
-            {
+                    DatabaseException e) {
                 exchange.sendResponseHeaders(401, -1);
                 return;
             }
 
-            if (parts.length == 2 && user.isPresent())
-            {
+            if (parts.length == 2 && user.isPresent()) {
                 exchange.setAttribute("user", user.get());
                 return;
-            } else
-            {
+            } else {
                 exchange.sendResponseHeaders(401, -1);
             }
         }
@@ -70,8 +65,7 @@ public class RequestHandler implements HttpHandler
 
     public void handleRequest(HttpExchange exchange, Object response, String method) throws IOException
     {
-        if (method.equalsIgnoreCase(exchange.getRequestMethod()))
-        {
+        if (method.equalsIgnoreCase(exchange.getRequestMethod())) {
 
             Gson gson =
                     new Gson();
@@ -82,12 +76,10 @@ public class RequestHandler implements HttpHandler
             byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
             exchange.sendResponseHeaders(200, responseBytes.length);
 
-            try (OutputStream os = exchange.getResponseBody())
-            {
+            try (OutputStream os = exchange.getResponseBody()) {
                 os.write(responseBytes);
             }
-        } else
-        {
+        } else {
             exchange.sendResponseHeaders(405, -1);
         }
     }

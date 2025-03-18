@@ -27,24 +27,20 @@ public class CreateCategoryCommand implements Command
     @Override
     public String execute(String[] arguments)
     {
-        if (arguments.length != 4)
-        {
+        if (arguments.length != 4) {
             return localization.getMessage("create_category_usage");
         }
 
-        for (int i = 0; i < arguments.length; i += 2)
-        {
+        for (int i = 0; i < arguments.length; i += 2) {
             CreateCategoryCommandArguments argument = CreateCategoryCommandArguments.fromString(arguments[i]);
-            if (argument == null)
-            {
+            if (argument == null) {
                 return localization.getMessage("unknown_argument", CreateCategoryCommandArguments.getAllArguments());
             }
 
             handleArgument(argument, arguments[i + 1]);
         }
 
-        if (this.name != null || this.budget != null)
-        {
+        if (this.name != null || this.budget != null) {
             return createCategory(this.name, this.budget);
         }
 
@@ -53,23 +49,19 @@ public class CreateCategoryCommand implements Command
 
     private void handleArgument(CreateCategoryCommandArguments argument, String value)
     {
-        switch (argument)
-        {
+        switch (argument) {
             case NAME:
                 this.name =
                         value;
                 break;
             case BUDGET:
-                try
-                {
+                try {
                     this.budget = BigDecimal.valueOf(Double.parseDouble(value));
-                    if (this.budget.compareTo(BigDecimal.ZERO) < 0)
-                    {
+                    if (this.budget.compareTo(BigDecimal.ZERO) < 0) {
                         throw new IllegalArgumentException(localization.getMessage("invalid_amount"));
                     }
                 } catch (
-                        NumberFormatException e)
-                {
+                        NumberFormatException e) {
                     throw new IllegalArgumentException(localization.getMessage("invalid_amount"));
                 }
                 break;
@@ -85,8 +77,7 @@ public class CreateCategoryCommand implements Command
 
     private String createCategory(String name, BigDecimal budget)
     {
-        if (checkIfCategoryExists(name))
-        {
+        if (checkIfCategoryExists(name)) {
             return localization.getMessage("category_already_exists", name);
         }
 

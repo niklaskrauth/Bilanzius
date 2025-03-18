@@ -34,16 +34,14 @@ public class CategoryRestController extends RequestHandler
 
     public void getAllCategories(HttpExchange exchange) throws IOException
     {
-        try
-        {
+        try {
             List<Category> categories;
             List<CategoryDTO> categoryDTOs = new ArrayList<>();
 
             User user =
                     getUserFromExchange(exchange);
 
-            if (user == null)
-            {
+            if (user == null) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
             }
@@ -51,8 +49,7 @@ public class CategoryRestController extends RequestHandler
             categories =
                     categoryService.getCategoriesOfUser(user, MAX_BANK_ACCOUNTS);
 
-            if (categories.isEmpty())
-            {
+            if (categories.isEmpty()) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
             }
@@ -63,24 +60,21 @@ public class CategoryRestController extends RequestHandler
 
             getRequestHandler(exchange, categoryDTOs);
         } catch (IOException |
-                 DatabaseException e)
-        {
+                 DatabaseException e) {
             exchange.sendResponseHeaders(500, -1);
         }
     }
 
     private void modifyCategory(CategoryRestConsumer categoryRestConsumer, HttpExchange exchange) throws IOException
     {
-        try
-        {
+        try {
             CategoryDTO categoryDTO;
             Category category;
 
             User user =
                     getUserFromExchange(exchange);
 
-            if (user == null)
-            {
+            if (user == null) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
             }
@@ -89,8 +83,7 @@ public class CategoryRestController extends RequestHandler
                     gson.fromJson(readRequestBody(exchange), CategoryDTO.class);
             Optional<Category> existingCategory = categoryService.getCategoryOfUserByName(user, categoryDTO.name());
 
-            if (existingCategory.isEmpty())
-            {
+            if (existingCategory.isEmpty()) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
             }
@@ -101,8 +94,7 @@ public class CategoryRestController extends RequestHandler
 
         } catch (IOException |
                  JsonSyntaxException |
-                 DatabaseException e)
-        {
+                 DatabaseException e) {
             exchange.sendResponseHeaders(500, -1);
         }
     }

@@ -40,10 +40,8 @@ public enum DeleteCategoryCommandArguments
 
     public static DeleteCategoryCommandArguments fromString(String argument)
     {
-        for (DeleteCategoryCommandArguments c : DeleteCategoryCommandArguments.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (DeleteCategoryCommandArguments c : DeleteCategoryCommandArguments.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

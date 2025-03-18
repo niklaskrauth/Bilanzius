@@ -6,7 +6,8 @@ import java.time.Instant;
 public class Transaction
 {
 
-    public static Transaction create(User user, BankAccount account, Category category, BigDecimal money, String description)
+    public static Transaction create(User user, BankAccount account, Category category, BigDecimal money,
+                                     String description)
     {
         return create(user,
                 account,
@@ -23,7 +24,8 @@ public class Transaction
         );
     }
 
-    public static Transaction create(User user, BankAccount account, Category category, BigDecimal money, Instant created, String description)
+    public static Transaction create(User user, BankAccount account, Category category, BigDecimal money,
+                                     Instant created, String description)
     {
         return new Transaction(
                 0,
@@ -31,7 +33,8 @@ public class Transaction
         );
     }
 
-    public static Transaction create(User user, BankAccount account, BigDecimal money, Instant created, String description)
+    public static Transaction create(User user, BankAccount account, BigDecimal money, Instant created,
+                                     String description)
     {
         return new Transaction(
                 0,
@@ -48,7 +51,8 @@ public class Transaction
 
     private final String description;
 
-    public Transaction(int transactionId, int userId, int accountId, int categoryId, BigDecimal money, Instant created, String description)
+    public Transaction(int transactionId, int userId, int accountId, int categoryId, BigDecimal money,
+                       Instant created, String description)
     {
         this.transactionId
                 =

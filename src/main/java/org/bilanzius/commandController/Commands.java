@@ -125,10 +125,8 @@ public enum Commands
     public static Commands fromString(String command)
     {
         for (Commands c :
-                Commands.values())
-        {
-            if (c.command.equals(command))
-            {
+                Commands.values()) {
+            if (c.command.equals(command)) {
                 return c;
             }
         }

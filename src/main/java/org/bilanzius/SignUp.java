@@ -44,33 +44,28 @@ public class SignUp
                 .defaultValue("1")
                 .validator(input ->
                 {
-                    if (!input.equals("1") && !input.equals("2"))
-                    {
+                    if (!input.equals("1") && !input.equals("2")) {
                         throw new QuestionException(localization.getMessage("invalid_input"));
                     }
                 })
                 .build());
 
-        if (loginOrRegister.equals("1"))
-        {
+        if (loginOrRegister.equals("1")) {
             context.printLocalized("login");
 
             optionalUser =
                     login(context);
 
-            if (optionalUser.isPresent())
-            {
+            if (optionalUser.isPresent()) {
                 return optionalUser.get();
             }
-        } else
-        {
+        } else {
             context.printLocalized("register");
 
             optionalUser =
                     register(context);
 
-            if (optionalUser.isPresent())
-            {
+            if (optionalUser.isPresent()) {
                 return optionalUser.get();
             }
         }
@@ -83,8 +78,7 @@ public class SignUp
     {
         Optional<User> loggedInUser;
 
-        do
-        {
+        do {
             loggedInUser =
                     tryLogin(context);
         } while (loggedInUser.isEmpty());
@@ -96,25 +90,22 @@ public class SignUp
     {
         var username =
                 context.askUser(Question.create()
-                .question(localization.getMessage("username"))
-                .build());
+                        .question(localization.getMessage("username"))
+                        .build());
 
         Optional<User> userOptional;
         User user;
 
-        try
-        {
+        try {
             userOptional =
                     userService.findUserWithName(username);
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             context.printLocalized("database_error");
             return Optional.empty();
         }
 
-        if (userOptional.isEmpty())
-        {
+        if (userOptional.isEmpty()) {
             context.printLocalized("wrongUsername");
             return Optional.empty();
         }
@@ -122,11 +113,10 @@ public class SignUp
         user = userOptional.get();
         var password =
                 context.askUser(Question.create()
-                .question(localization.getMessage("password"))
-                .build());
+                        .question(localization.getMessage("password"))
+                        .build());
 
-        if (!fromPlainText(password).equals(user.getHashedPassword()))
-        {
+        if (!fromPlainText(password).equals(user.getHashedPassword())) {
             context.printLocalized("wrongPassword");
             return Optional.empty();
         }
@@ -153,8 +143,7 @@ public class SignUp
         Optional<User> foundUser;
         User newUser;
 
-        while (userExists == null || userExists)
-        {
+        while (userExists == null || userExists) {
             String username = context.askUser(Question.create()
                     .question(localization.getMessage("username"))
                     .build());
@@ -162,8 +151,7 @@ public class SignUp
             foundUser =
                     userService.findUserWithName(username);
 
-            if (foundUser.isPresent())
-            {
+            if (foundUser.isPresent()) {
                 context.printLocalized("user_exists", foundUser.get().getUsername());
                 userExists
                         =
@@ -175,8 +163,7 @@ public class SignUp
                     .question(localization.getMessage("password"))
                     .build());
 
-            if (!validatePassword(password))
-            {
+            if (!validatePassword(password)) {
                 context.printLocalized("validate_password");
                 continue;
             }
@@ -185,8 +172,7 @@ public class SignUp
                     .question(localization.getMessage("repeat_password"))
                     .build());
 
-            if (!password.equals(repeatPassword))
-            {
+            if (!password.equals(repeatPassword)) {
                 context.printLocalized("passwords_do_not_match");
                 continue;
             }
@@ -194,13 +180,11 @@ public class SignUp
             newUser =
                     User.createUser(username, fromPlainText(password));
 
-            try
-            {
+            try {
                 userService.createUser(newUser);
                 user = userService.findUserWithName(username);
             } catch (
-                    DatabaseException e)
-            {
+                    DatabaseException e) {
                 return Optional.empty();
             }
 
@@ -218,19 +202,16 @@ public class SignUp
         Optional<BankAccount> bankAccount;
         BankAccount createdBankAccount;
 
-        try
-        {
+        try {
             bankAccounts =
                     bankAccountService.getBankAccountsOfUser(user, MAX_BANK_ACCOUNTS);
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             System.out.println(localization.getMessage("database_error", e.toString()));
             return Optional.empty();
         }
 
-        if (bankAccounts.size() == 1)
-        {
+        if (bankAccounts.size() == 1) {
             BankAccount account;
 
             account =
@@ -240,8 +221,7 @@ public class SignUp
             return Optional.of(account);
         }
 
-        if (!bankAccounts.isEmpty())
-        {
+        if (!bankAccounts.isEmpty()) {
             System.out.println(localization.getMessage("select_bank_account"));
 
             bankAccounts.forEach(account -> System.out.println(account.getName()));
@@ -249,24 +229,20 @@ public class SignUp
             System.out.println(localization.getMessage("line_splitter"));
             System.out.println(localization.getMessage("bank_account_name"));
 
-            while (true)
-            {
+            while (true) {
 
                 String bankAccountName = scanner.nextLine();
                 Optional<BankAccount> account;
 
-                try
-                {
+                try {
                     account = bankAccountService.getBankAccountOfUserByName(user, bankAccountName);
                 } catch (
-                        DatabaseException e)
-                {
+                        DatabaseException e) {
                     System.out.println(localization.getMessage("database_error", e.toString()));
                     return Optional.empty();
                 }
 
-                if (account.isPresent())
-                {
+                if (account.isPresent()) {
                     return account;
                 }
 
@@ -284,35 +260,29 @@ public class SignUp
                 =
                 BankAccount.create(user, bankAccountName);
 
-        try
-        {
+        try {
             bankAccountService.createBankAccount(createdBankAccount);
             bankAccount =
                     bankAccountService.getBankAccountOfUserByName(user, createdBankAccount.getName());
-            if (bankAccount.isEmpty())
-            {
+            if (bankAccount.isEmpty()) {
                 return Optional.empty();
             }
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             System.out.println(localization.getMessage("database_error", e.toString()));
             return Optional.empty();
         }
 
         System.out.println(localization.getMessage("bank_account_created", bankAccountName));
 
-        if (user.getMainBankAccountId() == 0)
-        {
+        if (user.getMainBankAccountId() == 0) {
             user.setMainAccountId(bankAccount.get().getAccountId());
 
-            try
-            {
+            try {
                 userService.updateUserMainAccountId(user);
                 user = userService.findUser(user.getId()).orElse(user);
             } catch (
-                    DatabaseException e)
-            {
+                    DatabaseException e) {
                 System.out.println(localization.getMessage("database_error", e.toString()));
                 return Optional.empty();
             }

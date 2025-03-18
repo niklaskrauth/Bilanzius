@@ -42,8 +42,7 @@ public class SqliteBankAccountService implements BankAccountService
     @Override
     public void createBankAccount(BankAccount bankAccount)
     {
-        try
-        {
+        try {
             backend.execute("INSERT INTO bankAccounts (userId, name) VALUES (?,?)",
                     stmt ->
                     {
@@ -51,8 +50,7 @@ public class SqliteBankAccountService implements BankAccountService
                         stmt.setString(2, bankAccount.getName());
                     });
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -60,13 +58,11 @@ public class SqliteBankAccountService implements BankAccountService
     @Override
     public Optional<BankAccount> getBankAccount(long id)
     {
-        try
-        {
+        try {
             return backend.query(BankAccount.class, "SELECT * FROM bankAccounts WHERE id = ?",
                     stmt -> stmt.setLong(1, id)).stream().findFirst();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -74,8 +70,7 @@ public class SqliteBankAccountService implements BankAccountService
     @Override
     public Optional<BankAccount> getBankAccountOfUserByName(User user, String name)
     {
-        try
-        {
+        try {
             return backend.query(BankAccount.class, "SELECT * FROM bankAccounts WHERE userId = ? AND name = ?",
                     stmt ->
                     {
@@ -83,8 +78,7 @@ public class SqliteBankAccountService implements BankAccountService
                         stmt.setString(2, name);
                     }).stream().findFirst();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -92,8 +86,7 @@ public class SqliteBankAccountService implements BankAccountService
     @Override
     public List<BankAccount> getBankAccountsOfUser(User user, int limit)
     {
-        try
-        {
+        try {
             Collection<BankAccount> bankAccounts = backend.query(BankAccount.class,
                     "SELECT * FROM bankAccounts WHERE userId = ? LIMIT ?",
                     stmt ->
@@ -103,8 +96,7 @@ public class SqliteBankAccountService implements BankAccountService
                     });
             return new ArrayList<>(bankAccounts);
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -112,8 +104,7 @@ public class SqliteBankAccountService implements BankAccountService
     @Override
     public void updateBankAccount(BankAccount bankAccount)
     {
-        try
-        {
+        try {
             backend.execute("UPDATE bankAccounts SET name = ?, balance = ? WHERE id = ?",
                     stmt ->
                     {
@@ -122,8 +113,7 @@ public class SqliteBankAccountService implements BankAccountService
                         stmt.setInt(3, bankAccount.getAccountId());
                     });
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -131,13 +121,11 @@ public class SqliteBankAccountService implements BankAccountService
     @Override
     public void deleteBankAccount(BankAccount bankAccount)
     {
-        try
-        {
+        try {
             backend.execute("DELETE FROM bankAccounts WHERE id = ?",
                     stmt -> stmt.setInt(1, bankAccount.getAccountId()));
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }

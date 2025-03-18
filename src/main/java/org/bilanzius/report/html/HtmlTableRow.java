@@ -31,8 +31,7 @@ public class HtmlTableRow implements HtmlTag
 
         for (HtmlTag child
                 :
-                this.children)
-        {
+                this.children) {
             stringBuilder.append(child.build());
         }
 

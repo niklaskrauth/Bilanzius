@@ -26,22 +26,19 @@ public class BilanziusCommand implements Command
         BilanziusCommandArguments argument;
         Supplier<String> command;
 
-        if (arguments == null || arguments.length == 0)
-        {
+        if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", BilanziusCommandArguments.getAllArguments());
         }
 
         argument =
                 BilanziusCommandArguments.fromString(arguments[0]);
-        if (argument == null)
-        {
+        if (argument == null) {
             return localization.getMessage("unknown_argument", BilanziusCommandArguments.getAllArguments());
         }
 
         command =
                 commandMap.get(argument);
-        if (command != null)
-        {
+        if (command != null) {
             return command.get();
         }
 

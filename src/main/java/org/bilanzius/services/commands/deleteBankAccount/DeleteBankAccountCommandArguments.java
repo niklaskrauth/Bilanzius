@@ -40,10 +40,8 @@ public enum DeleteBankAccountCommandArguments
 
     public static DeleteBankAccountCommandArguments fromString(String argument)
     {
-        for (DeleteBankAccountCommandArguments c : DeleteBankAccountCommandArguments.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (DeleteBankAccountCommandArguments c : DeleteBankAccountCommandArguments.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

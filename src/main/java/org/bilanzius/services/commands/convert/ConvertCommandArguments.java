@@ -64,10 +64,8 @@ public enum ConvertCommandArguments
 
     public static ConvertCommandArguments fromString(String argument)
     {
-        for (ConvertCommandArguments c : ConvertCommandArguments.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (ConvertCommandArguments c : ConvertCommandArguments.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

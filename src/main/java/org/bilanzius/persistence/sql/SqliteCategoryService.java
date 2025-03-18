@@ -44,8 +44,7 @@ public class SqliteCategoryService implements CategoryService
     @Override
     public void createCategory(Category category)
     {
-        try
-        {
+        try {
             backend.execute("INSERT INTO categories (userId, name, budget, amountSpent) VALUES (?,?,?,?)",
                     stmt ->
                     {
@@ -55,8 +54,7 @@ public class SqliteCategoryService implements CategoryService
                         stmt.setDouble(4, category.getAmountSpent().doubleValue());
                     });
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -64,14 +62,12 @@ public class SqliteCategoryService implements CategoryService
     @Override
     public Optional<Category> getCategory(long id)
     {
-        try
-        {
+        try {
             return backend.query(Category.class, "SELECT * FROM categories WHERE id = ?", stmt -> stmt.setLong(1, id))
                     .stream()
                     .findFirst();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -79,8 +75,7 @@ public class SqliteCategoryService implements CategoryService
     @Override
     public List<Category> getCategoriesOfUser(User user, int limit)
     {
-        try
-        {
+        try {
             Collection<Category> categories = backend.query(Category.class,
                     "SELECT * FROM categories WHERE userId = ? LIMIT ?",
                     stmt ->
@@ -90,8 +85,7 @@ public class SqliteCategoryService implements CategoryService
                     });
             return new ArrayList<>(categories);
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -99,8 +93,7 @@ public class SqliteCategoryService implements CategoryService
     @Override
     public Optional<Category> getCategoryOfUserByName(User user, String name)
     {
-        try
-        {
+        try {
             return backend.query(Category.class, "SELECT * FROM categories WHERE userId = ? AND name = ?",
                             stmt ->
                             {
@@ -109,8 +102,7 @@ public class SqliteCategoryService implements CategoryService
                             }).stream()
                     .findFirst();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -118,8 +110,7 @@ public class SqliteCategoryService implements CategoryService
     @Override
     public List<Category> getExceededCategoriesOfUser(User user, int limit)
     {
-        try
-        {
+        try {
             Collection<Category> categories = backend.query(Category.class,
                     "SELECT * FROM categories WHERE userId = ? AND amountSpent > budget LIMIT ?",
                     stmt ->
@@ -129,8 +120,7 @@ public class SqliteCategoryService implements CategoryService
                     });
             return new ArrayList<>(categories);
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -138,8 +128,7 @@ public class SqliteCategoryService implements CategoryService
     @Override
     public void updateCategory(Category category)
     {
-        try
-        {
+        try {
             backend.execute("UPDATE categories SET name = ?, budget = ?, amountSpent = ? WHERE id = ?",
                     stmt ->
                     {
@@ -149,8 +138,7 @@ public class SqliteCategoryService implements CategoryService
                         stmt.setInt(4, category.getCategoryId());
                     });
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -158,13 +146,11 @@ public class SqliteCategoryService implements CategoryService
     @Override
     public void deleteCategory(Category category)
     {
-        try
-        {
+        try {
             backend.execute("DELETE FROM categories WHERE id = ?",
                     stmt -> stmt.setInt(1, category.getCategoryId()));
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }

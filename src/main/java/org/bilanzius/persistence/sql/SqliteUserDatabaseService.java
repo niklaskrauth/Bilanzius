@@ -38,16 +38,14 @@ public class SqliteUserDatabaseService implements UserService
     @Override
     public void createUser(User user)
     {
-        try
-        {
+        try {
             backend.execute("INSERT INTO users (user, password) VALUES (?,?)", stmt ->
             {
                 stmt.setString(1, user.getUsername());
                 stmt.setString(2, user.getHashedPassword().getPassword());
             });
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -55,14 +53,12 @@ public class SqliteUserDatabaseService implements UserService
     @Override
     public Optional<User> findUser(long id)
     {
-        try
-        {
+        try {
             return backend.query(User.class, "SELECT * FROM users WHERE id = ?", stmt -> stmt.setLong(1, id))
                     .stream()
                     .findFirst();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -70,8 +66,7 @@ public class SqliteUserDatabaseService implements UserService
     @Override
     public Optional<User> findUserWithCredentials(String username, HashedPassword password)
     {
-        try
-        {
+        try {
             return backend.query(User.class, "SELECT * FROM users WHERE user = ? AND password = ?", stmt ->
                     {
                         stmt.setString(1, username);
@@ -80,8 +75,7 @@ public class SqliteUserDatabaseService implements UserService
                     .stream()
                     .findFirst();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -89,13 +83,11 @@ public class SqliteUserDatabaseService implements UserService
     @Override
     public Optional<User> findUserWithName(String username)
     {
-        try
-        {
+        try {
             return backend.query(User.class, "SELECT * FROM users WHERE user = ?",
                     stmt -> stmt.setString(1, username)).stream().findFirst();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -103,21 +95,18 @@ public class SqliteUserDatabaseService implements UserService
     @Override
     public void updateUserPassword(User user)
     {
-        if (!user.canBeUpdated())
-        {
+        if (!user.canBeUpdated()) {
             throw new DatabaseException("User can't be updated.");
         }
 
-        try
-        {
+        try {
             backend.execute("UPDATE users SET password = ? WHERE id = ?", stmt ->
             {
                 stmt.setString(1, user.getHashedPassword().getPassword());
                 stmt.setInt(2, user.getId());
             });
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -125,21 +114,18 @@ public class SqliteUserDatabaseService implements UserService
     @Override
     public void updateUserMainAccountId(User user)
     {
-        if (!user.canBeUpdated())
-        {
+        if (!user.canBeUpdated()) {
             throw new DatabaseException("User can't be updated.");
         }
 
-        try
-        {
+        try {
             backend.execute("UPDATE users SET mainBankAccountId = ? WHERE id = ?", stmt ->
             {
                 stmt.setInt(1, user.getMainBankAccountId());
                 stmt.setInt(2, user.getId());
             });
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }

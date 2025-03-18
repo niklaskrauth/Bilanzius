@@ -51,27 +51,23 @@ public class WithdrawCommand implements Command, BankAccountAware
         Function<String[],
                 String> command;
 
-        if (arguments == null || arguments.length == 0)
-        {
+        if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", WithdrawCommandArgument.getAllArguments());
         }
 
-        if (arguments.length != 2 && arguments.length != 4)
-        {
+        if (arguments.length != 2 && arguments.length != 4) {
             return localization.getMessage("withdraw_command_usage");
         }
 
         argument =
                 WithdrawCommandArgument.fromString(arguments[0]);
-        if (argument == null)
-        {
+        if (argument == null) {
             return localization.getMessage("unknown_argument", WithdrawCommandArgument.getAllArguments());
         }
 
         command =
                 commandMap.get(argument);
-        if (command != null)
-        {
+        if (command != null) {
             return command.apply(arguments);
         }
 
@@ -86,25 +82,23 @@ public class WithdrawCommand implements Command, BankAccountAware
         Category category;
         Transaction transaction;
 
-        try
-        {
+        try {
             withdrawMoney =
                     BigDecimal.valueOf(Math.abs(Double.parseDouble(arguments[1])));
 
             if (arguments.length == 4 && (WithdrawCommandArgument.CATEGORY.getArgument().equals(arguments[2]) ||
-                    WithdrawCommandArgument.CATEGORY.getArgumentShort().equals(arguments[2])))
-            {
+                    WithdrawCommandArgument.CATEGORY.getArgumentShort().equals(arguments[2]))) {
 
                 categoryName = arguments[3];
                 category =
                         categoryService.getCategoryOfUserByName(user, categoryName).orElse(null);
 
-                if (category == null)
-                {
+                if (category == null) {
                     return localization.getMessage("no_category_with_name", categoryName);
                 }
 
-                transaction = Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(), Instant.now(),
+                transaction = Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(),
+                        Instant.now(),
                         "Withdraw " + withdrawMoney);
 
                 category.setAmountSpent(category.getAmountSpent().subtract(transaction.getMoney()));
@@ -119,27 +113,23 @@ public class WithdrawCommand implements Command, BankAccountAware
                         this.selectedBankAccount.getAccountId()).orElseThrow());
 
             } else if (arguments.length == 2 && (WithdrawCommandArgument.WITHDRAW.getArgument().equals(arguments[0]) ||
-                    WithdrawCommandArgument.WITHDRAW.getArgumentShort().equals(arguments[0])))
-            {
+                    WithdrawCommandArgument.WITHDRAW.getArgumentShort().equals(arguments[0]))) {
 
                 transaction = Transaction.create(
                         user, selectedBankAccount, withdrawMoney.negate(), "Withdraw " + withdrawMoney);
 
                 transactionService.saveTransaction(transaction);
 
-            } else
-            {
+            } else {
                 return localization.getMessage("withdraw_command_usage");
             }
 
             return checkBalance();
         } catch (
-                NumberFormatException e)
-        {
+                NumberFormatException e) {
             return localization.getMessage("invalid_amount");
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
     }
@@ -156,21 +146,17 @@ public class WithdrawCommand implements Command, BankAccountAware
 
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (balance.compareTo(BigDecimal.ZERO) < 0)
-        {
+        if (balance.compareTo(BigDecimal.ZERO) < 0) {
             return localization.getMessage("withdraw_successful_dept", balance);
-        } else
-        {
+        } else {
             return localization.getMessage("withdraw_successful", balance);
         }
     }

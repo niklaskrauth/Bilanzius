@@ -39,10 +39,8 @@ public enum DepositCommandArguments
 
     public static DepositCommandArguments fromString(String argument)
     {
-        for (DepositCommandArguments c : DepositCommandArguments.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (DepositCommandArguments c : DepositCommandArguments.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

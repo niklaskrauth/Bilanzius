@@ -27,7 +27,8 @@ public class ConvertCommand implements Command, BankAccountAware
 
     // TODO: Move this into
     //  the .env file
-    private final String currencyUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json";
+    private final String currencyUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies" +
+            "/eur.json";
 
     public ConvertCommand(BankAccount selectedBankAccount)
     {
@@ -60,24 +61,21 @@ public class ConvertCommand implements Command, BankAccountAware
         ConvertCommandArguments argument;
         Supplier<String> command;
 
-        if (arguments == null || arguments.length == 0)
-        {
+        if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided",
                     ConvertCommandArguments.getAllArguments());
         }
 
         argument =
                 ConvertCommandArguments.fromString(arguments[0]);
-        if (argument == null)
-        {
+        if (argument == null) {
             return localization.getMessage("unknown_argument",
                     ConvertCommandArguments.getAllArguments());
         }
 
         command =
                 commandMap.get(argument);
-        if (command != null)
-        {
+        if (command != null) {
             return command.get();
         }
 
@@ -91,13 +89,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal porsche911CameraPrice = new BigDecimal("128700");
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -114,13 +110,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "btc"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -135,13 +129,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "dem"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -153,8 +145,7 @@ public class ConvertCommand implements Command, BankAccountAware
 
         String currency =
                 "Swiss Franc";
-        if (localization.getCurrentLanguageCode().equals("de"))
-        {
+        if (localization.getCurrentLanguageCode().equals("de")) {
             currency =
                     "Schweizer Franken";
         }
@@ -164,13 +155,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "chf"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -185,13 +174,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "doge"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -206,13 +193,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "eth"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -227,13 +212,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "hkd"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -245,8 +228,7 @@ public class ConvertCommand implements Command, BankAccountAware
 
         String currency =
                 "Jamaican Dollar";
-        if (localization.getCurrentLanguageCode().equals("de"))
-        {
+        if (localization.getCurrentLanguageCode().equals("de")) {
             currency =
                     "Jamaikanische Dollar";
         }
@@ -256,13 +238,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "jmd"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -274,8 +254,7 @@ public class ConvertCommand implements Command, BankAccountAware
 
         String currency =
                 "North Korean Won";
-        if (localization.getCurrentLanguageCode().equals("de"))
-        {
+        if (localization.getCurrentLanguageCode().equals("de")) {
             currency =
                     "Nordkoreanische Won";
         }
@@ -285,13 +264,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "kpw"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -303,8 +280,7 @@ public class ConvertCommand implements Command, BankAccountAware
 
         String currency =
                 "Russian Ruble";
-        if (localization.getCurrentLanguageCode().equals("de"))
-        {
+        if (localization.getCurrentLanguageCode().equals("de")) {
             currency =
                     "Russischer Rubel";
         }
@@ -314,13 +290,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "rub"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -335,13 +309,11 @@ public class ConvertCommand implements Command, BankAccountAware
         BigDecimal exchangeRate = BigDecimal.valueOf(getCurrencyFromJson(jsonObject, "usd"));
         BigDecimal balance;
 
-        try
-        {
+        try {
             balance =
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 

@@ -13,15 +13,13 @@ public class HashedPassword
 
     public static HashedPassword fromPlainText(String plainPassword)
     {
-        try
-        {
+        try {
             MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
 
             byte[] hashedPassword = digest.digest(plainPassword.getBytes(DEFAULT_CHARSET));
             return new HashedPassword(new String(hashedPassword, DEFAULT_CHARSET));
         } catch (
-                NoSuchAlgorithmException ex)
-        {
+                NoSuchAlgorithmException ex) {
             throw new RuntimeException(ex);
         }
     }

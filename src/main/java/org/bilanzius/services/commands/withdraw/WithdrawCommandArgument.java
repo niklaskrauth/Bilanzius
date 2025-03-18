@@ -41,10 +41,8 @@ public enum WithdrawCommandArgument
 
     public static WithdrawCommandArgument fromString(String argument)
     {
-        for (WithdrawCommandArgument c : WithdrawCommandArgument.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (WithdrawCommandArgument c : WithdrawCommandArgument.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

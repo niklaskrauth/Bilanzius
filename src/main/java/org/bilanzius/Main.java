@@ -28,12 +28,10 @@ public class Main
 
     public static void main(String[] args)
     {
-        try
-        {
+        try {
             bootstrap();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             ex.printStackTrace();
         }
     }
@@ -64,19 +62,16 @@ public class Main
         MainRestController mainRestController = new MainRestController();
         mainRestController.start();
 
-        while (true)
-        {
+        while (true) {
             user = signUp.waitUntilLoggedIn(context);
             context.lineSeperator();
 
             Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
 
-            if (bankAccount.isPresent())
-            {
+            if (bankAccount.isPresent()) {
                 CommandController commandController = new CommandController(user, bankAccount.get(), historyInputs);
 
-                while (user != null)
-                {
+                while (user != null) {
                     context.lineSeperator();
                     String input = scanner.nextLine();
                     historyInputs.add(input);
@@ -103,16 +98,14 @@ public class Main
     // "passwort1234"
     private static void createTestUsers(UserService userService)
     {
-        try
-        {
+        try {
             userService.createUser(User.createUser("TestUser",
                     fromPlainText("passwort1234")));
 
             userService.createUser(User.createUser("TestUser2",
                     fromPlainText("passwort5678")));
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             System.out.println("Error creating test users");
         }
     }

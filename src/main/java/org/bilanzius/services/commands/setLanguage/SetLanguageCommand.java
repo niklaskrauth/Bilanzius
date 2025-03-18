@@ -14,20 +14,17 @@ public class SetLanguageCommand implements Command
 
         String languageCode;
 
-        if (arguments.length != 1)
-        {
+        if (arguments.length != 1) {
             return localization.getMessage("set_language_usage");
         }
         languageCode =
                 arguments[0];
 
-        if (!localization.isSupportedLanguage(languageCode))
-        {
+        if (!localization.isSupportedLanguage(languageCode)) {
             return localization.getMessage("unsupported_language");
         }
 
-        if (localization.getCurrentLanguageCode().equals(languageCode))
-        {
+        if (localization.getCurrentLanguageCode().equals(languageCode)) {
             return localization.getMessage("language_already_set", languageCode);
         }
 

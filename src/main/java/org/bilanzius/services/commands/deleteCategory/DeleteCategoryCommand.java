@@ -41,22 +41,19 @@ public class DeleteCategoryCommand implements Command
         Function<String,
                 String> command;
 
-        if (arguments == null || arguments.length == 0)
-        {
+        if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", DeleteCategoryCommandArguments.getAllArguments());
         }
 
         argument =
                 DeleteCategoryCommandArguments.fromString(arguments[0]);
-        if (argument == null)
-        {
+        if (argument == null) {
             return localization.getMessage("unknown_argument", DeleteCategoryCommandArguments.getAllArguments());
         }
 
         command =
                 commandMap.get(argument);
-        if (command != null)
-        {
+        if (command != null) {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
@@ -68,32 +65,26 @@ public class DeleteCategoryCommand implements Command
 
         Category category;
 
-        try
-        {
+        try {
             category =
                     categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (category == null)
-        {
+        if (category == null) {
             return localization.getMessage("no_category_with_name", name);
         }
 
-        if (validateDeleteAction(localization.getMessage("ask_for_deletion_category", category.getName())))
-        {
+        if (validateDeleteAction(localization.getMessage("ask_for_deletion_category", category.getName()))) {
             return localization.getMessage("no_categories_deleted");
         }
 
-        try
-        {
+        try {
             categoryService.deleteCategory(category);
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -105,35 +96,28 @@ public class DeleteCategoryCommand implements Command
 
         List<Category> categories;
 
-        try
-        {
+        try {
             categories =
                     categoryService.getCategoriesOfUser(user, 100).stream().toList();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (categories.isEmpty())
-        {
+        if (categories.isEmpty()) {
             return localization.getMessage("no_categories_created");
         }
 
-        if (validateDeleteAction(localization.getMessage("ask_for_deletion_of_all_categories")))
-        {
+        if (validateDeleteAction(localization.getMessage("ask_for_deletion_of_all_categories"))) {
             return localization.getMessage("no_categories_deleted");
         }
 
-        for (Category category : categories)
-        {
+        for (Category category : categories) {
 
-            try
-            {
+            try {
                 categoryService.deleteCategory(category);
             } catch (
-                    DatabaseException e)
-            {
+                    DatabaseException e) {
                 return localization.getMessage("database_error", e.toString());
             }
 

@@ -45,10 +45,8 @@ public enum BilanziusCommandArguments
 
     public static BilanziusCommandArguments fromString(String argument)
     {
-        for (BilanziusCommandArguments c : BilanziusCommandArguments.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (BilanziusCommandArguments c : BilanziusCommandArguments.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

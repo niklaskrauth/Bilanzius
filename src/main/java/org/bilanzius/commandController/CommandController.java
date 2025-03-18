@@ -96,8 +96,7 @@ public class CommandController
                 Commands.fromString(commandStr);
         Command commandService = commandMap.get(command);
 
-        if (commandService != null)
-        {
+        if (commandService != null) {
             return commandService.execute(arguments);
         }
 
@@ -117,10 +116,8 @@ public class CommandController
     public void setSelectedBankAccount(BankAccount bankAccount)
     {
         this.selectedBankAccount = bankAccount;
-        for (Command command : commandMap.values())
-        {
-            if (command instanceof BankAccountAware)
-            {
+        for (Command command : commandMap.values()) {
+            if (command instanceof BankAccountAware) {
                 ((BankAccountAware) command).setSelectedBankAccount(bankAccount);
             }
         }

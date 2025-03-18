@@ -7,8 +7,7 @@ public class DatabaseProvider
 
     public static void init(DatabaseServiceRepository repository)
     {
-        if (DatabaseProvider.repository != null)
-        {
+        if (DatabaseProvider.repository != null) {
             throw new IllegalStateException("DatabaseProvider was already initialized.");
         }
 

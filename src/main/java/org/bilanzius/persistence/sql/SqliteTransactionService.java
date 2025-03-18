@@ -52,29 +52,28 @@ public class SqliteTransactionService implements TransactionService
     @Override
     public void saveTransaction(Transaction transaction)
     {
-        try
-        {
+        try {
             BankAccount bankAccount = bankAccountService.getBankAccount(transaction.getAccountId()).orElseThrow();
-            if (bankAccount.getUserId() != transaction.getUserId())
-            {
+            if (bankAccount.getUserId() != transaction.getUserId()) {
                 throw new DatabaseException("Bank account does not belong to user");
             }
             bankAccount.setBalance(bankAccount.getBalance().add(transaction.getMoney()));
             bankAccountService.updateBankAccount(bankAccount);
 
-            this.backend.execute("INSERT INTO transactions (userId, accountId, categoryId,created, description, money) VALUES (?,?,?,?,?,?)",
+            this.backend.execute("INSERT INTO transactions (userId, accountId, categoryId,created, description, " +
+                            "money) VALUES (?,?,?,?,?,?)",
                     stmt ->
                     {
                         stmt.setInt(1, transaction.getUserId());
                         stmt.setInt(2, transaction.getAccountId());
-                        stmt.setObject(3, transaction.getCategoryId() == -1 ? null : transaction.getCategoryId(), java.sql.Types.INTEGER);
+                        stmt.setObject(3, transaction.getCategoryId() == -1 ? null : transaction.getCategoryId(),
+                                java.sql.Types.INTEGER);
                         stmt.setString(4, transaction.getCreated().toString());
                         stmt.setString(5, transaction.getDescription());
                         stmt.setDouble(6, transaction.getMoney().doubleValue());
                     });
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -82,9 +81,9 @@ public class SqliteTransactionService implements TransactionService
     @Override
     public List<Transaction> getTransactions(User user, BankAccount account, int limit, int skip)
     {
-        try
-        {
-            return this.backend.query(Transaction.class, "SELECT * FROM transactions WHERE userId=? AND accountId=? LIMIT ? OFFSET ?",
+        try {
+            return this.backend.query(Transaction.class, "SELECT * FROM transactions WHERE userId=? AND accountId=? " +
+                            "LIMIT ? OFFSET ?",
                     stmt ->
                     {
                         stmt.setInt(1, user.getId());
@@ -93,8 +92,7 @@ public class SqliteTransactionService implements TransactionService
                         stmt.setInt(4, skip);
                     }).stream().toList();
         } catch (
-                SQLException ex)
-        {
+                SQLException ex) {
             throw new DatabaseException(ex);
         }
     }

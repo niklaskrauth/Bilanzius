@@ -39,7 +39,7 @@ public class LogCommand implements Command
         StringBuilder stringBuilder = new StringBuilder();
         var dateFormat =
                 DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)
-                .withZone(ZoneId.systemDefault());
+                        .withZone(ZoneId.systemDefault());
 
         logs.stream()
                 .map(x -> x.getMoney() + " - " + x.getDescription() + " (" + Localization.getInstance().formatInstant(x.getCreated()) + ")")

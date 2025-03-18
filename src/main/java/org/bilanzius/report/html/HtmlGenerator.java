@@ -37,21 +37,18 @@ public class HtmlGenerator
         var url =
                 classloader.getResource(name);
 
-        if (url == null)
-        {
+        if (url == null) {
             throw new IllegalStateException("URL is null");
         }
 
-        try
-        {
+        try {
             var path =
                     Paths.get(url.toURI());
             var content =
                     Files.readString(path, StandardCharsets.UTF_8);
 
             return html(content);
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -64,8 +61,7 @@ public class HtmlGenerator
 
     public String build()
     {
-        if (this.htmlCode == null)
-        {
+        if (this.htmlCode == null) {
             throw new RuntimeException("HTML code is null.");
         }
 
@@ -81,8 +77,7 @@ public class HtmlGenerator
 
     private String insertHtmlTags(String input)
     {
-        for (Map.Entry<String, HtmlTag> entry : this.replacements.entrySet())
-        {
+        for (Map.Entry<String, HtmlTag> entry : this.replacements.entrySet()) {
             input = input.replace("{" + entry.getKey() + "}", entry.getValue().build());
         }
 
@@ -92,8 +87,7 @@ public class HtmlGenerator
     private String replaceLanguageKeys(String input)
     {
         for (String s :
-                Localization.getInstance().keySet())
-        {
+                Localization.getInstance().keySet()) {
             input = input.replace("[" + s + "]", Localization.getInstance().getMessage(s));
         }
         return input;

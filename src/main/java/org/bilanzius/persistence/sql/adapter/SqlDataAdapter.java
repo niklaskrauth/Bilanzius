@@ -11,10 +11,10 @@ import java.sql.SQLException;
  * Modellklasse und umgekehrt.
  *
  * @param <T> Die
- *           Modellklasse,
- *           die von diesem
- *           Converter
- *           verwaltet wird.
+ *            Modellklasse,
+ *            die von diesem
+ *            Converter
+ *            verwaltet wird.
  */
 public interface SqlDataAdapter<T>
 {

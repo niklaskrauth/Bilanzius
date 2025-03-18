@@ -42,10 +42,8 @@ public enum GetCategoryCommandArguments
 
     public static GetCategoryCommandArguments fromString(String argument)
     {
-        for (GetCategoryCommandArguments c : GetCategoryCommandArguments.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (GetCategoryCommandArguments c : GetCategoryCommandArguments.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

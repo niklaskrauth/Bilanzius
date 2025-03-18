@@ -44,22 +44,20 @@ public class DeleteBankAccountCommand implements Command
         Function<String,
                 String> command;
 
-        if (arguments == null || arguments.length == 0)
-        {
-            return localization.getMessage("no_arguments_provided", DeleteBankAccountCommandArguments.getAllArguments());
+        if (arguments == null || arguments.length == 0) {
+            return localization.getMessage("no_arguments_provided",
+                    DeleteBankAccountCommandArguments.getAllArguments());
         }
 
         argument =
                 DeleteBankAccountCommandArguments.fromString(arguments[0]);
-        if (argument == null)
-        {
+        if (argument == null) {
             return localization.getMessage("unknown_argument", DeleteBankAccountCommandArguments.getAllArguments());
         }
 
         command =
                 commandMap.get(argument);
-        if (command != null)
-        {
+        if (command != null) {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
@@ -73,57 +71,46 @@ public class DeleteBankAccountCommand implements Command
         List<BankAccount> bankAccounts;
 
 
-        try
-        {
+        try {
             bankAccount =
                     bankAccountService.getBankAccountOfUserByName(user, name).stream().findFirst().orElse(null);
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (bankAccount == null)
-        {
+        if (bankAccount == null) {
             return localization.getMessage("no_bank_account_with_name", name);
         }
 
-        if (user.getMainBankAccountId() == bankAccount.getAccountId())
-        {
+        if (user.getMainBankAccountId() == bankAccount.getAccountId()) {
             return localization.getMessage("cannot_delete_main_bank_account");
         }
 
-        if (bankAccount.getBalance().compareTo(BigDecimal.ZERO) != 0)
-        {
+        if (bankAccount.getBalance().compareTo(BigDecimal.ZERO) != 0) {
             return localization.getMessage("bank_account_not_empty", bankAccount.getName());
         }
 
-        try
-        {
+        try {
             bankAccounts =
                     bankAccountService.getBankAccountsOfUser(user, 100);
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (bankAccounts.size() == 1)
-        {
+        if (bankAccounts.size() == 1) {
             return localization.getMessage("cannot_delete_last_bank_account");
         }
 
-        if (validateDeleteAction(localization.getMessage("ask_for_deletion_bank_account", bankAccount.getName())))
-        {
+        if (validateDeleteAction(localization.getMessage("ask_for_deletion_bank_account", bankAccount.getName()))) {
             return localization.getMessage("no_bank_account_deleted");
         }
 
-        try
-        {
+        try {
             bankAccountService.deleteBankAccount(bankAccount);
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -138,67 +125,56 @@ public class DeleteBankAccountCommand implements Command
         Optional<User> userOptional;
         List<String> deletedBankAccounts = new ArrayList<>();
 
-        try
-        {
+        try {
             bankAccounts =
                     bankAccountService.getBankAccountsOfUser(this.user, 100).stream().toList();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (bankAccounts.isEmpty())
-        {
+        if (bankAccounts.isEmpty()) {
             return localization.getMessage("no_bank_accounts");
         }
 
-        try
-        {
+        try {
             userOptional =
                     userService.findUser(this.user.getId()).stream().findFirst();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
         this.user =
                 userOptional.orElseThrow();
 
-        try
-        {
+        try {
             mainBankAccount = bankAccountService.getBankAccount(this.user.getMainBankAccountId()).orElseThrow();
         } catch (
-                DatabaseException e)
-        {
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (validateDeleteAction(localization.getMessage("ask_for_deletion_all_bank_accounts", mainBankAccount.getName())))
-        {
+        if (validateDeleteAction(localization.getMessage("ask_for_deletion_all_bank_accounts",
+                mainBankAccount.getName()))) {
             return localization.getMessage("no_bank_accounts_deleted");
         }
 
         bankAccounts.forEach(bankAccount ->
         {
-            if (user.getMainBankAccountId() == bankAccount.getAccountId())
-            {
+            if (user.getMainBankAccountId() == bankAccount.getAccountId()) {
                 return;
             }
 
-            if (bankAccount.getBalance().compareTo(BigDecimal.ZERO) != 0)
-            {
+            if (bankAccount.getBalance().compareTo(BigDecimal.ZERO) != 0) {
                 System.out.println(localization.getMessage("bank_account_not_empty", bankAccount.getName()));
                 return;
             }
 
             deletedBankAccounts.add(bankAccount.getName());
-            try
-            {
+            try {
                 bankAccountService.deleteBankAccount(bankAccount);
             } catch (
-                    DatabaseException e)
-            {
+                    DatabaseException e) {
                 System.out.println(localization.getMessage("database_error", e.toString()));
             }
 

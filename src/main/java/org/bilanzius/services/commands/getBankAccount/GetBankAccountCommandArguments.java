@@ -40,10 +40,8 @@ public enum GetBankAccountCommandArguments
 
     public static GetBankAccountCommandArguments fromString(String argument)
     {
-        for (GetBankAccountCommandArguments c : GetBankAccountCommandArguments.values())
-        {
-            if (c.argument.equals(argument) || c.argumentShort.equals(argument))
-            {
+        for (GetBankAccountCommandArguments c : GetBankAccountCommandArguments.values()) {
+            if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;
             }
         }

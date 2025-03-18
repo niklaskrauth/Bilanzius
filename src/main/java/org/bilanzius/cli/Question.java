@@ -51,8 +51,7 @@ public record Question(
 
         public Question build()
         {
-            if (this.question == null)
-            {
+            if (this.question == null) {
                 throw new IllegalArgumentException("Question must not be null.");
             }
             return new Question(this.question, this.repeatUntilValid, this.validator, this.defaultValue);

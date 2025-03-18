@@ -42,28 +42,23 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware
     public String execute(String[] arguments)
     {
 
-        try
-        {
+        try {
 
-            if (arguments.length != 1)
-            {
+            if (arguments.length != 1) {
                 return localization.getMessage("switch_bank_account_usage");
             }
 
-            if (arguments[0].equals(selectedBankAccount.getName()))
-            {
+            if (arguments[0].equals(selectedBankAccount.getName())) {
                 return localization.getMessage("bank_account_already_selected", arguments[0]);
             }
 
             List<BankAccount> bankAccountsOfUser;
             BankAccount newSelectedBankAccount;
 
-            try
-            {
+            try {
                 bankAccountsOfUser = bankAccountService.getBankAccountsOfUser(user, 100);
             } catch (
-                    DatabaseException e)
-            {
+                    DatabaseException e) {
                 return localization.getMessage("database_error", e.toString());
             }
 
@@ -72,8 +67,7 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware
                     .findFirst()
                     .orElse(null);
 
-            if (newSelectedBankAccount == null)
-            {
+            if (newSelectedBankAccount == null) {
                 return localization.getMessage("no_bank_account_with_name", arguments[0]);
             }
 
@@ -81,8 +75,7 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware
 
             return localization.getMessage("bank_account_switched", arguments[0]);
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return localization.getMessage("error_switching_bank_account", e.getMessage());
         }
     }

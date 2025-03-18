@@ -28,13 +28,11 @@ public class MainRestController extends RequestHandler
 
         HttpServer server;
 
-        try
-        {
+        try {
             server =
                     HttpServer.create(new InetSocketAddress(this.port), 0);
         } catch (
-                IOException e)
-        {
+                IOException e) {
             throw new RuntimeException(e);
         }
 
