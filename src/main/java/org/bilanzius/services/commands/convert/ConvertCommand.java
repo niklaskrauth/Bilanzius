@@ -12,7 +12,6 @@ import org.bilanzius.utils.Requests;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -24,7 +23,6 @@ public class ConvertCommand implements Command, BankAccountAware {
     private final BankAccountService bankAccountService;
     private BankAccount selectedBankAccount;
 
-    // TODO: Move this into the .env file
     private final String currencyUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json";
 
     public ConvertCommand(BankAccount selectedBankAccount) {
