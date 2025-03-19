@@ -133,7 +133,7 @@ public class WithdrawCommand implements Command, BankAccountAware
     private void checkCategoryBudget(Category category)
     {
         if (category.getAmountSpent().compareTo(category.getBudget()) > 0) {
-            System.out.println(localization.getMessage("category_exceeded_budget", category));
+            System.out.println(localization.getMessage("category_exceeded_budget", category.toString()));
         }
     }
 
