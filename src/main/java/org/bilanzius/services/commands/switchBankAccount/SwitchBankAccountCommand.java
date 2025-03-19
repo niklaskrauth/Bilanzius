@@ -15,7 +15,8 @@ import org.bilanzius.utils.Localization;
 import java.sql.SQLException;
 import java.util.List;
 
-public class SwitchBankAccountCommand implements Command, BankAccountAware {
+public class SwitchBankAccountCommand implements Command, BankAccountAware
+{
 
     private final User user;
     private final BankAccountService bankAccountService;
@@ -23,7 +24,8 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
     private final Localization localization = Localization.getInstance();
     private BankAccount selectedBankAccount;
 
-    public SwitchBankAccountCommand(User user,  CommandController commandController)   {
+    public SwitchBankAccountCommand(User user, CommandController commandController)
+    {
         this.user = user;
         this.bankAccountService = DatabaseProvider.getBankAccountService();
         this.commandController = commandController;
@@ -31,12 +33,14 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
     }
 
     @Override
-    public void setSelectedBankAccount(BankAccount bankAccount) {
+    public void setSelectedBankAccount(BankAccount bankAccount)
+    {
         this.selectedBankAccount = bankAccount;
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         try {
 
@@ -53,7 +57,8 @@ public class SwitchBankAccountCommand implements Command, BankAccountAware {
 
             try {
                 bankAccountsOfUser = bankAccountService.getBankAccountsOfUser(user, 100);
-            } catch (DatabaseException e) {
+            } catch (
+                    DatabaseException e) {
                 return localization.getMessage("database_error", e.toString());
             }
 

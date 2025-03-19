@@ -3,19 +3,22 @@ package org.bilanzius.services.commands.setLanguage;
 import org.bilanzius.utils.Localization;
 import org.bilanzius.services.Command;
 
-public class SetLanguageCommand implements Command {
+public class SetLanguageCommand implements Command
+{
 
     private final Localization localization = Localization.getInstance();
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         String languageCode;
 
         if (arguments.length != 1) {
             return localization.getMessage("set_language_usage");
         }
-        languageCode = arguments[0];
+        languageCode =
+                arguments[0];
 
         if (!localization.isSupportedLanguage(languageCode)) {
             return localization.getMessage("unsupported_language");

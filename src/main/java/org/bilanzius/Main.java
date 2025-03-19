@@ -21,27 +21,34 @@ import java.util.Scanner;
 
 import static org.bilanzius.utils.HashedPassword.fromPlainText;
 
-public class Main {
+public class Main
+{
 
     public static final int MAX_BANK_ACCOUNTS = 3;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         try {
             bootstrap();
-        } catch (SQLException ex) {
+        } catch (
+                SQLException ex) {
             ex.printStackTrace();
         }
     }
 
     // TODO: prob refactor
-    private static void bootstrap() throws SQLException {
-        // Connect to sqllite database
+    private static void bootstrap() throws SQLException
+    {
+        // Connect to
+        // sqllite database
         setupDatabase();
 
         SignUp signUp;
 
-        Scanner scanner = new Scanner(System.in);
-        IOContext context = new CLIContext(scanner, Localization.getInstance());
+        Scanner scanner =
+                new Scanner(System.in);
+        IOContext context =
+                new CLIContext(scanner, Localization.getInstance());
 
         signUp = new SignUp();
 
@@ -76,22 +83,29 @@ public class Main {
         }
     }
 
-    private static void setupDatabase() throws SQLException {
-        var backend = new SqlBackend();
+    private static void setupDatabase() throws SQLException
+    {
+        var backend =
+                new SqlBackend();
         backend.connect();
         DatabaseProvider.init(new SqlDatabaseServiceRepository(backend));
         createTestUsers(DatabaseProvider.getUserService());
     }
 
-    // Create a new user with name "TestUser" and password "passwort1234"
-    private static void createTestUsers(UserService userService) {
+    // Create a new user
+    // with name "TestUser"
+    // and password
+    // "passwort1234"
+    private static void createTestUsers(UserService userService)
+    {
         try {
             userService.createUser(User.createUser("TestUser",
                     fromPlainText("passwort1234")));
 
             userService.createUser(User.createUser("TestUser2",
                     fromPlainText("passwort5678")));
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e) {
             System.out.println("Error creating test users");
         }
     }

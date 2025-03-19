@@ -5,17 +5,21 @@ import org.bilanzius.report.html.HtmlReport;
 import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
-public class ReportCommand implements Command {
+public class ReportCommand implements Command
+{
 
     private final User user;
 
-    public ReportCommand(User user) {
+    public ReportCommand(User user)
+    {
         this.user = user;
     }
 
     @Override
-    public String execute(String[] arguments) {
-        var reporter = HtmlReport.reporter();
+    public String execute(String[] arguments)
+    {
+        var reporter =
+                HtmlReport.reporter();
         reporter.create(this.user);
         return Localization.getInstance().getMessage("report_result", reporter.getFile().getAbsolutePath());
     }

@@ -6,25 +6,33 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-public class MainRestController extends RequestHandler {
+public class MainRestController extends RequestHandler
+{
 
     private int port = 8080;
     private String mainEndpoint = "/api";
 
-    public MainRestController() {}
-
-    public MainRestController(int port, String mainEndpoint) {
-        this.port = port;
-        this.mainEndpoint = mainEndpoint;
+    public MainRestController()
+    {
     }
 
-    public void start() throws RuntimeException {
+    public MainRestController(int port, String mainEndpoint)
+    {
+        this.port = port;
+        this.mainEndpoint =
+                mainEndpoint;
+    }
+
+    public void start() throws RuntimeException
+    {
 
         HttpServer server;
 
         try {
-            server = HttpServer.create(new InetSocketAddress(this.port), 0);
-        } catch (IOException e) {
+            server =
+                    HttpServer.create(new InetSocketAddress(this.port), 0);
+        } catch (
+                IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -45,16 +53,18 @@ public class MainRestController extends RequestHandler {
         server.start();
     }
 
-    private void getHealth(HttpExchange exchange) throws IOException {
+    private void getHealth(HttpExchange exchange) throws IOException
+    {
         handleRequest(exchange, "The app is alive", "GET");
     }
 
-    private void getHelp(HttpExchange exchange) throws IOException {
+    private void getHelp(HttpExchange exchange) throws IOException
+    {
         String response =
                 """
-                /health - Check if backend is alive
-                /help - Get help
-                """;
+                        /health - Check if backend is alive
+                        /help - Get help
+                        """;
         handleRequest(exchange, response, "GET");
     }
 }

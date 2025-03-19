@@ -1,6 +1,7 @@
 package org.bilanzius.report.html;
 
-public interface HtmlTag {
+public interface HtmlTag
+{
 
     String build();
 }

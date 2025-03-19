@@ -1,10 +1,13 @@
 package org.bilanzius.cli;
 
 @FunctionalInterface
-public interface QuestionValidator {
+public interface QuestionValidator
+{
 
     /**
-     * Validates the input string and throws {@link QuestionException} if invalid.
+     * Validates the input
+     * string and throws
+     * {@link QuestionException} if invalid.
      */
     void validate(String input) throws QuestionException;
 }

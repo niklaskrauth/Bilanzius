@@ -8,56 +8,75 @@ import org.bilanzius.services.Command;
 import org.bilanzius.utils.Localization;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 
-public class CreateCategoryCommand implements Command {
+public class CreateCategoryCommand implements Command
+{
     private User user;
     private final CategoryService categoryService;
     private final Localization localization = Localization.getInstance();
+    private String name =
+            null;
+    private BigDecimal budget = null;
 
-    public CreateCategoryCommand(User user) {
+    public CreateCategoryCommand(User user)
+    {
         this.user = user;
         this.categoryService = DatabaseProvider.getCategoryService();
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
         if (arguments.length != 4) {
             return localization.getMessage("create_category_usage");
         }
-
-        String name = null;
-        BigDecimal budget = null;
 
         for (int i = 0; i < arguments.length; i += 2) {
             CreateCategoryCommandArguments argument = CreateCategoryCommandArguments.fromString(arguments[i]);
             if (argument == null) {
                 return localization.getMessage("unknown_argument", CreateCategoryCommandArguments.getAllArguments());
             }
-            if (argument == CreateCategoryCommandArguments.NAME) {
-                name = arguments[i + 1];
-            } else if (argument == CreateCategoryCommandArguments.BUDGET) {
-                try {
-                    budget = BigDecimal.valueOf(Double.parseDouble(arguments[i + 1]));
-                } catch (NumberFormatException e) {
-                    return localization.getMessage("invalid_amount");
-                }
-            }
+
+            handleArgument(argument, arguments[i + 1]);
         }
 
-        if (name != null || budget != null) {
-            return createCategory(name, budget);
+        if (this.name != null || this.budget != null) {
+            return createCategory(this.name, this.budget);
         }
 
         return localization.getMessage("create_category_usage");
     }
 
-    private boolean checkIfCategoryExists(String name) {
-        Category category = categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
+    private void handleArgument(CreateCategoryCommandArguments argument, String value)
+    {
+        switch (argument) {
+            case NAME:
+                this.name =
+                        value;
+                break;
+            case BUDGET:
+                try {
+                    this.budget = BigDecimal.valueOf(Double.parseDouble(value));
+                    if (this.budget.compareTo(BigDecimal.ZERO) < 0) {
+                        throw new IllegalArgumentException(localization.getMessage("invalid_amount"));
+                    }
+                } catch (
+                        NumberFormatException e) {
+                    throw new IllegalArgumentException(localization.getMessage("invalid_amount"));
+                }
+                break;
+        }
+    }
+
+    private boolean checkIfCategoryExists(String name)
+    {
+        Category category =
+                categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
         return category != null && category.getName().equals(name);
     }
 
-    private String createCategory(String name, BigDecimal budget) {
+    private String createCategory(String name, BigDecimal budget)
+    {
         if (checkIfCategoryExists(name)) {
             return localization.getMessage("category_already_exists", name);
         }

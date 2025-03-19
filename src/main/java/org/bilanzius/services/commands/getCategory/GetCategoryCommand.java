@@ -17,14 +17,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class GetCategoryCommand implements Command {
+public class GetCategoryCommand implements Command
+{
 
     private User user;
     private final CategoryService categoryService;
     private final Map<GetCategoryCommandArguments, Function<String, String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
 
-    public GetCategoryCommand(User user) {
+    public GetCategoryCommand(User user)
+    {
         this.user = user;
         this.categoryService = DatabaseProvider.getCategoryService();
 
@@ -34,21 +36,25 @@ public class GetCategoryCommand implements Command {
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         GetCategoryCommandArguments argument;
-        Function<String, String> command;
+        Function<String,
+                String> command;
 
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided", GetCategoryCommandArguments.getAllArguments());
         }
 
-        argument = GetCategoryCommandArguments.fromString(arguments[0]);
+        argument =
+                GetCategoryCommandArguments.fromString(arguments[0]);
         if (argument == null) {
             return localization.getMessage("unknown_argument", GetCategoryCommandArguments.getAllArguments());
         }
 
-        command = commandMap.get(argument);
+        command =
+                commandMap.get(argument);
         if (command != null) {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
@@ -56,12 +62,15 @@ public class GetCategoryCommand implements Command {
         return localization.getMessage("unknown_argument", GetCategoryCommandArguments.getAllArguments());
     }
 
-    private String exceededCategories() {
+    private String exceededCategories()
+    {
 
         List<Category> categories;
         try {
-            categories = categoryService.getExceededCategoriesOfUser(user, 10).stream().toList();
-        } catch (DatabaseException e) {
+            categories =
+                    categoryService.getExceededCategoriesOfUser(user, 10).stream().toList();
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -75,12 +84,15 @@ public class GetCategoryCommand implements Command {
                 .collect(Collectors.joining("\n"));
     }
 
-    private String categoryByName(String name) {
+    private String categoryByName(String name)
+    {
 
         Category category;
         try {
-            category = categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
-        } catch (DatabaseException e) {
+            category =
+                    categoryService.getCategoryOfUserByName(user, name).stream().findFirst().orElse(null);
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error");
         }
 
@@ -92,12 +104,15 @@ public class GetCategoryCommand implements Command {
                 category.getAmountSpent());
     }
 
-    private String allCategories() {
+    private String allCategories()
+    {
 
         List<Category> categories;
         try {
-            categories = categoryService.getCategoriesOfUser(user, 10).stream().toList();
-        } catch (DatabaseException e) {
+            categories =
+                    categoryService.getCategoriesOfUser(user, 10).stream().toList();
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 

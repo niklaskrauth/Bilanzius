@@ -1,5 +1,6 @@
 package org.bilanzius.services;
 
-public interface Command {
+public interface Command
+{
     String execute(String[] arguments);
 }

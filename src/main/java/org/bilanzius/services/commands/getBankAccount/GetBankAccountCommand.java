@@ -18,14 +18,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class GetBankAccountCommand implements Command {
+public class GetBankAccountCommand implements Command
+{
 
     private User user;
     private final BankAccountService bankAccountService;
     private final Map<GetBankAccountCommandArguments, Function<String, String>> commandMap = new HashMap<>();
     private final Localization localization = Localization.getInstance();
 
-    public GetBankAccountCommand(User user)  {
+    public GetBankAccountCommand(User user)
+    {
         this.user = user;
         this.bankAccountService = DatabaseProvider.getBankAccountService();
 
@@ -38,24 +40,24 @@ public class GetBankAccountCommand implements Command {
     {
 
         GetBankAccountCommandArguments argument;
-        Function<String, String> command;
+        Function<String,
+                String> command;
 
         if (arguments == null || arguments.length == 0) {
             return localization.getMessage("no_arguments_provided",
                     GetBankAccountCommandArguments.getAllArguments());
         }
 
-        argument = GetBankAccountCommandArguments.fromString(arguments[0]);
-        if (argument == null)
-        {
+        argument =
+                GetBankAccountCommandArguments.fromString(arguments[0]);
+        if (argument == null) {
             return localization.getMessage("unknown_argument",
                     GetBankAccountCommandArguments.getAllArguments());
         }
 
         command =
                 commandMap.get(argument);
-        if (command != null)
-        {
+        if (command != null) {
             return command.apply(arguments.length > 1 ? arguments[1] : null);
         }
 
@@ -68,18 +70,15 @@ public class GetBankAccountCommand implements Command {
 
         BankAccount bankAccount;
 
-        try
-        {
+        try {
             bankAccount =
                     bankAccountService.getBankAccountOfUserByName(user, name).stream().findFirst().orElse(null);
-        }
-        catch (DatabaseException e)
-        {
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error");
         }
 
-        if (bankAccount == null)
-        {
+        if (bankAccount == null) {
             return localization.getMessage("no_bank_account_with_name", name);
         }
 
@@ -93,20 +92,18 @@ public class GetBankAccountCommand implements Command {
         try {
             bankAccounts =
                     bankAccountService.getBankAccountsOfUser(user, 10).stream().toList();
-        }
-        catch (DatabaseException e)
-        {
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
-        if (bankAccounts.isEmpty())
-        {
+        if (bankAccounts.isEmpty()) {
             return localization.getMessage("no_bank_accounts_yet");
         }
 
         return bankAccounts.stream()
-                 .map(bankAccount -> localization.getMessage("get_bank_account_information",
-                         bankAccount.getName(), bankAccount.getBalance()))
+                .map(bankAccount -> localization.getMessage("get_bank_account_information",
+                        bankAccount.getName(), bankAccount.getBalance()))
                 .collect(Collectors.joining("\n"));
     }
 }

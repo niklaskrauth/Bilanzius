@@ -2,28 +2,38 @@ package org.bilanzius.services.commands.bilanzius;
 
 import java.util.Arrays;
 
-public enum BilanziusCommandArguments {
+public enum BilanziusCommandArguments
+{
     VERSION("-version", "-v"),
     AUTHORS("-authors", "-a"),
-    DESCRIPTION("-description", "-d");
+    DESCRIPTION(
+            "-description",
+            "-d");
 
     private final String argument;
     private final String argumentShort;
 
-    BilanziusCommandArguments(String argument, String argumentShort) {
-        this.argument = argument;
-        this.argumentShort = argumentShort;
+    BilanziusCommandArguments(String argument, String argumentShort)
+    {
+        this.argument =
+                argument;
+        this.argumentShort
+                =
+                argumentShort;
     }
 
-    public String getArgument() {
+    public String getArgument()
+    {
         return argument;
     }
 
-    public String getArgumentShort() {
+    public String getArgumentShort()
+    {
         return argumentShort;
     }
 
-    public static String getAllArguments() {
+    public static String getAllArguments()
+    {
 
         return Arrays.stream(BilanziusCommandArguments.values()).map(
                 a -> a.getArgument() + " ( " + a.getArgumentShort() + " ) "
@@ -33,7 +43,8 @@ public enum BilanziusCommandArguments {
 
     }
 
-    public static BilanziusCommandArguments fromString(String argument) {
+    public static BilanziusCommandArguments fromString(String argument)
+    {
         for (BilanziusCommandArguments c : BilanziusCommandArguments.values()) {
             if (c.argument.equals(argument) || c.argumentShort.equals(argument)) {
                 return c;

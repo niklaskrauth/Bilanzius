@@ -15,7 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class WithdrawCommand implements Command, BankAccountAware {
+public class WithdrawCommand implements Command, BankAccountAware
+{
 
     private User user;
     private final Map<WithdrawCommandArgument, Function<String[], String>> commandMap = new HashMap<>();
@@ -25,7 +26,8 @@ public class WithdrawCommand implements Command, BankAccountAware {
     private final BankAccountService bankAccountService;
     private final CategoryService categoryService;
 
-    public WithdrawCommand(User user, BankAccount selectedBankAccount) {
+    public WithdrawCommand(User user, BankAccount selectedBankAccount)
+    {
         this.user = user;
         this.transactionService = DatabaseProvider.getTransactionService();
         this.categoryService = DatabaseProvider.getCategoryService();
@@ -36,12 +38,14 @@ public class WithdrawCommand implements Command, BankAccountAware {
     }
 
     @Override
-    public void setSelectedBankAccount(BankAccount bankAccount) {
+    public void setSelectedBankAccount(BankAccount bankAccount)
+    {
         this.selectedBankAccount = bankAccount;
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         WithdrawCommandArgument argument;
         Function<String[], String> command;
@@ -54,12 +58,14 @@ public class WithdrawCommand implements Command, BankAccountAware {
             return localization.getMessage("withdraw_command_usage");
         }
 
-        argument = WithdrawCommandArgument.fromString(arguments[0]);
+        argument =
+                WithdrawCommandArgument.fromString(arguments[0]);
         if (argument == null) {
             return localization.getMessage("unknown_argument", WithdrawCommandArgument.getAllArguments());
         }
 
-        command = commandMap.get(argument);
+        command =
+                commandMap.get(argument);
         if (command != null) {
             return command.apply(arguments);
         }
@@ -67,7 +73,8 @@ public class WithdrawCommand implements Command, BankAccountAware {
         return localization.getMessage("withdraw_command_usage");
     }
 
-    private String withdrawMoney(String[] arguments) {
+    private String withdrawMoney(String[] arguments)
+    {
 
         BigDecimal withdrawMoney;
         String categoryName;
@@ -87,10 +94,11 @@ public class WithdrawCommand implements Command, BankAccountAware {
                     return localization.getMessage("no_category_with_name", categoryName);
                 }
 
-                transaction = Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(), Instant.now(),
-                        "Withdraw " + withdrawMoney);
+                transaction = Transaction.create(user, selectedBankAccount, category, withdrawMoney.negate(),
+                        Instant.now(), "Withdraw " + withdrawMoney);
 
-                category.setAmountSpent(category.getAmountSpent().subtract(transaction.getMoney()));
+                category.setAmountSpent(category.getAmountSpent().add(transaction.getMoney()));
+                this.checkCategoryBudget(category);
                 categoryService.updateCategory(category);
 
                 transactionService.saveTransaction(transaction);
@@ -103,7 +111,8 @@ public class WithdrawCommand implements Command, BankAccountAware {
             } else if (arguments.length == 2 && (WithdrawCommandArgument.WITHDRAW.getArgument().equals(arguments[0]) ||
                     WithdrawCommandArgument.WITHDRAW.getArgumentShort().equals(arguments[0]))) {
 
-                transaction = Transaction.create(user, selectedBankAccount, withdrawMoney.negate(), "Withdraw " + withdrawMoney);
+                transaction = Transaction.create(
+                        user, selectedBankAccount, withdrawMoney.negate(), "Withdraw " + withdrawMoney);
 
                 transactionService.saveTransaction(transaction);
 
@@ -112,20 +121,31 @@ public class WithdrawCommand implements Command, BankAccountAware {
             }
 
             return checkBalance();
-        } catch (NumberFormatException e) {
+        } catch (
+                NumberFormatException e) {
             return localization.getMessage("invalid_amount");
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
     }
 
-    private String checkBalance() {
+    private void checkCategoryBudget(Category category)
+    {
+        if (category.getAmountSpent().compareTo(category.getBudget()) > 0) {
+            System.out.println(localization.getMessage("category_exceeded_budget", category.toString()));
+        }
+    }
+
+    private String checkBalance()
+    {
 
         BigDecimal balance;
 
         try {
             balance = bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 

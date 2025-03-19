@@ -13,18 +13,21 @@ import org.bilanzius.utils.Localization;
 import java.sql.SQLException;
 import java.util.List;
 
-public class RenameBankAccountCommand implements Command {
+public class RenameBankAccountCommand implements Command
+{
     private User user;
     private final BankAccountService bankAccountService;
     private final Localization localization = Localization.getInstance();
 
-    public RenameBankAccountCommand(User user) {
+    public RenameBankAccountCommand(User user)
+    {
         this.user = user;
         this.bankAccountService = DatabaseProvider.getBankAccountService();
     }
 
     @Override
-    public String execute(String[] arguments) {
+    public String execute(String[] arguments)
+    {
 
         List<BankAccount> bankAccountsOfUser;
 
@@ -34,7 +37,8 @@ public class RenameBankAccountCommand implements Command {
 
         try {
             bankAccountsOfUser = bankAccountService.getBankAccountsOfUser(user, 100);
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 
@@ -53,7 +57,8 @@ public class RenameBankAccountCommand implements Command {
 
         try {
             bankAccountService.updateBankAccount(renamedBankAccount);
-        } catch (DatabaseException e) {
+        } catch (
+                DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
 

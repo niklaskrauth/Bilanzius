@@ -5,10 +5,12 @@ import org.bilanzius.persistence.models.Category;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SqlCategoryAdapter implements SqlDataAdapter<Category> {
+public class SqlCategoryAdapter implements SqlDataAdapter<Category>
+{
 
     @Override
-    public Category deserialize(ResultSet resultSet) throws SQLException {
+    public Category deserialize(ResultSet resultSet) throws SQLException
+    {
         return new Category(
                 resultSet.getInt("id"),
                 resultSet.getInt("userId"),
