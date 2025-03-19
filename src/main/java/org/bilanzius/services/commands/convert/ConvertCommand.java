@@ -42,6 +42,8 @@ public class ConvertCommand implements Command, BankAccountAware {
         commandMap.put(ConvertCommandArguments.RUSSIAN_RUBLE, this::convertToRussianRuble);
         commandMap.put(ConvertCommandArguments.US_DOLLAR, this::convertToUsDollar);
         commandMap.put(ConvertCommandArguments.PORSCHE_911_CAMERA, this::convertToPorsche911Camera);
+        commandMap.put(ConvertCommandArguments.WASHING_MACHINE, this::convertToWashingMachine);
+        commandMap.put(ConvertCommandArguments.BANANA, this::convertToBanana);
     }
 
     @Override
@@ -74,9 +76,8 @@ public class ConvertCommand implements Command, BankAccountAware {
         return localization.getMessage("unknown_argument", ConvertCommandArguments.getAllArguments());
     }
 
-    private String convertToPorsche911Camera() {
-
-        BigDecimal porsche911CameraPrice = new BigDecimal("128700");
+    private String convertToItem(String itemPrice, String itemName) {
+        BigDecimal price = new BigDecimal(itemPrice);
         BigDecimal balance;
 
         try {
@@ -85,8 +86,20 @@ public class ConvertCommand implements Command, BankAccountAware {
             return localization.getMessage("database_error", e.toString());
         }
 
-        BigDecimal part = balance.divide(porsche911CameraPrice, RoundingMode.HALF_EVEN);
-        return localization.getMessage("convert_buy_part_of", part, "Porsche 911 Camera");
+        BigDecimal part = balance.divide(price, RoundingMode.HALF_EVEN);
+        return localization.getMessage("convert_buy_part_of", part, itemName);
+    }
+
+    private String convertToPorsche911Camera() {
+        return convertToItem("128700", "Porsche 911 Camera");
+    }
+
+    private String convertToWashingMachine() {
+        return convertToItem("500", "Washing Machine");
+    }
+
+    private String convertToBanana() {
+        return convertToItem("1", "Banana");
     }
 
     private String convertCurrency(String currencyCode, String currencyName) {
