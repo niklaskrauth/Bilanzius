@@ -38,8 +38,7 @@ public class Main
 
     private static void bootstrap() throws SQLException
     {
-        // Connect to
-        // sqllite database
+        // Connect to sqllite database
         setupDatabase();
 
         SignUp signUp = new SignUp();
@@ -47,6 +46,7 @@ public class Main
         IOContext context = new CLIContext(scanner, Localization.getInstance());
         List<String> historyInputs = new ArrayList<>();
         MainRestController mainRestController = new MainRestController();
+        CommandController commandController;
         User user;
 
 
@@ -63,9 +63,9 @@ public class Main
             Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
 
             if (bankAccount.isPresent()) {
-                CommandController commandController = new CommandController(user, bankAccount.get(), historyInputs);
+                commandController = new CommandController(user, bankAccount.get(), historyInputs);
 
-                while (user != null) {
+                while (true) {
                     context.lineSeperator();
                     String input = scanner.nextLine();
                     historyInputs.add(input);
@@ -79,8 +79,7 @@ public class Main
 
     private static void setupDatabase() throws SQLException
     {
-        var backend =
-                new SqlBackend();
+        var backend = new SqlBackend();
         backend.connect();
         DatabaseProvider.init(new SqlDatabaseServiceRepository(backend));
         createTestUsers(DatabaseProvider.getUserService());
