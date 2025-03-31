@@ -31,38 +31,32 @@ public class Main
         try {
             bootstrap();
         } catch (
-                SQLException ex) {
+                SQLException | RuntimeException ex) {
             ex.printStackTrace();
         }
     }
 
-    // TODO: prob refactor
     private static void bootstrap() throws SQLException
     {
         // Connect to
         // sqllite database
         setupDatabase();
 
-        SignUp signUp;
-
-        Scanner scanner =
-                new Scanner(System.in);
-        IOContext context =
-                new CLIContext(scanner, Localization.getInstance());
-
-        signUp = new SignUp();
-
-        createTestUsers(DatabaseProvider.getUserService());
-
-        WelcomeUser.welcomeMessage();
-
+        SignUp signUp = new SignUp();
+        Scanner scanner = new Scanner(System.in);
+        IOContext context = new CLIContext(scanner, Localization.getInstance());
         List<String> historyInputs = new ArrayList<>();
+        MainRestController mainRestController = new MainRestController();
         User user;
 
-        MainRestController mainRestController = new MainRestController();
+
+        createTestUsers(DatabaseProvider.getUserService());
+        WelcomeUser.welcomeMessage();
+
         mainRestController.start();
 
         while (true) {
+
             user = signUp.waitUntilLoggedIn(context);
             context.lineSeperator();
 
@@ -92,10 +86,8 @@ public class Main
         createTestUsers(DatabaseProvider.getUserService());
     }
 
-    // Create a new user
-    // with name "TestUser"
-    // and password
-    // "passwort1234"
+    // Create a new user with Name "TestUser" and password "passwort1234"
+    // and a second user with Name "TestUser2" and password "passwort5678"
     private static void createTestUsers(UserService userService)
     {
         try {
