@@ -13,8 +13,8 @@ public class SqlTransactionAdapter implements SqlDataAdapter<Transaction>
     public Transaction deserialize(ResultSet resultSet) throws SQLException
     {
         return new Transaction(resultSet.getInt("id"), resultSet.getInt("userId"),
-                resultSet.getInt("accountId"), resultSet.getInt("categoryId"),
-                resultSet.getBigDecimal("money"), Instant.parse(resultSet.getString("created")),
-                resultSet.getString("description"));
+            resultSet.getInt("accountId"), resultSet.getInt("categoryId"),
+            resultSet.getBigDecimal("money"), Instant.parse(resultSet.getString("created")),
+            resultSet.getString("description"));
     }
 }

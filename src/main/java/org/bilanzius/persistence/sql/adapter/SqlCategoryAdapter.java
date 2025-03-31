@@ -12,11 +12,11 @@ public class SqlCategoryAdapter implements SqlDataAdapter<Category>
     public Category deserialize(ResultSet resultSet) throws SQLException
     {
         return new Category(
-                resultSet.getInt("id"),
-                resultSet.getInt("userId"),
-                resultSet.getString("name"),
-                resultSet.getBigDecimal("budget"),
-                resultSet.getBigDecimal("amountSpent")
+            resultSet.getInt("id"),
+            resultSet.getInt("userId"),
+            resultSet.getString("name"),
+            resultSet.getBigDecimal("budget"),
+            resultSet.getBigDecimal("amountSpent")
         );
     }
 }
