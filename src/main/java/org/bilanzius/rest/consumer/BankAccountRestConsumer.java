@@ -10,7 +10,6 @@ import java.io.IOException;
 public interface BankAccountRestConsumer
 {
 
-    void accept(User user,
-                BankAccount bankAccount, BankAccountDTO bankAccountDTO) throws IOException;
+    void accept(User user, BankAccount bankAccount, BankAccountDTO bankAccountDTO) throws IOException;
 
 }

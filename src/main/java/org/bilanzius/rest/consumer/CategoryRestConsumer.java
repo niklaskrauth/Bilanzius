@@ -10,7 +10,6 @@ import java.io.IOException;
 public interface CategoryRestConsumer
 {
 
-    void accept(User user,
-                Category category, CategoryDTO categoryDTO) throws IOException;
+    void accept(User user, Category category, CategoryDTO categoryDTO) throws IOException;
 
 }

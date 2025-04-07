@@ -19,8 +19,7 @@ public class SqliteTransactionService implements TransactionService
 
     SqliteTransactionService(SqlBackend backend, BankAccountService bankAccountService) throws SQLException
     {
-        this.backend =
-                backend;
+        this.backend = backend;
         this.backend.registerAdapter(Transaction.class, new SqlTransactionAdapter());
         this.bankAccountService = bankAccountService;
 
@@ -72,8 +71,7 @@ public class SqliteTransactionService implements TransactionService
                         stmt.setString(5, transaction.getDescription());
                         stmt.setDouble(6, transaction.getMoney().doubleValue());
                     });
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -91,8 +89,7 @@ public class SqliteTransactionService implements TransactionService
                         stmt.setInt(3, limit);
                         stmt.setInt(4, skip);
                     }).stream().toList();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }

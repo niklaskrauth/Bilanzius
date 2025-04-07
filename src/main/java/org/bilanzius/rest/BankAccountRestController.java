@@ -26,8 +26,7 @@ public class BankAccountRestController extends RequestHandler
 
     public BankAccountRestController()
     {
-        this.gson =
-                new Gson();
+        this.gson = new Gson();
         this.bankAccountService = DatabaseProvider.getBankAccountService();
     }
 
@@ -38,16 +37,14 @@ public class BankAccountRestController extends RequestHandler
             List<BankAccount> bankAccounts;
             List<BankAccountDTO> bankAccountDTOs = new ArrayList<>();
 
-            User user =
-                    getUserFromExchange(exchange);
+            User user = getUserFromExchange(exchange);
 
             if (user == null) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
             }
 
-            bankAccounts =
-                    bankAccountService.getBankAccountsOfUser(user, MAX_BANK_ACCOUNTS);
+            bankAccounts = bankAccountService.getBankAccountsOfUser(user, MAX_BANK_ACCOUNTS);
 
             if (bankAccounts.isEmpty()) {
                 exchange.sendResponseHeaders(404, -1);
@@ -59,8 +56,7 @@ public class BankAccountRestController extends RequestHandler
             ).forEach(bankAccountDTOs::add);
 
             getRequestHandler(exchange, bankAccountDTOs);
-        } catch (IOException |
-                 DatabaseException e) {
+        } catch (IOException | DatabaseException e) {
             exchange.sendResponseHeaders(404, -1);
         }
     }
@@ -71,17 +67,14 @@ public class BankAccountRestController extends RequestHandler
             BankAccountDTO bankAccountDTO;
             BankAccount bankAccount;
 
-            User user =
-                    getUserFromExchange(exchange);
+            User user = getUserFromExchange(exchange);
 
             if (user == null) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
             }
 
-            bankAccountDTO
-                    =
-                    gson.fromJson(readRequestBody(exchange), BankAccountDTO.class);
+            bankAccountDTO = gson.fromJson(readRequestBody(exchange), BankAccountDTO.class);
             Optional<BankAccount> existingBankAccount = bankAccountService.getBankAccountOfUserByName(user,
                     bankAccountDTO.name());
 
@@ -90,13 +83,10 @@ public class BankAccountRestController extends RequestHandler
                 return;
             }
 
-            bankAccount =
-                    existingBankAccount.get();
+            bankAccount = existingBankAccount.get();
             bankAccountRestConsumer.accept(user, bankAccount, bankAccountDTO);
 
-        } catch (IOException |
-                 JsonSyntaxException |
-                 DatabaseException e) {
+        } catch (IOException | JsonSyntaxException | DatabaseException e) {
             exchange.sendResponseHeaders(500, -1);
         }
     }
@@ -105,8 +95,7 @@ public class BankAccountRestController extends RequestHandler
     {
         modifyBankAccount((user, bankAccount, bankAccountDTO) ->
         {
-            bankAccount =
-                    BankAccount.create(user, bankAccountDTO.name());
+            bankAccount = BankAccount.create(user, bankAccountDTO.name());
             bankAccountService.createBankAccount(bankAccount);
             postRequestHandler(exchange, bankAccountDTO);
         }, exchange);

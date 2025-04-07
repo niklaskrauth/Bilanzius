@@ -19,8 +19,7 @@ public class SqliteBankAccountService implements BankAccountService
 
     SqliteBankAccountService(SqlBackend backend) throws SQLException
     {
-        this.backend =
-                backend;
+        this.backend = backend;
         this.backend.registerAdapter(BankAccount.class, new SqlBankAccountAdapter());
         this.createSchema();
     }
@@ -49,8 +48,7 @@ public class SqliteBankAccountService implements BankAccountService
                         stmt.setInt(1, bankAccount.getUserId());
                         stmt.setString(2, bankAccount.getName());
                     });
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -61,8 +59,7 @@ public class SqliteBankAccountService implements BankAccountService
         try {
             return backend.query(BankAccount.class, "SELECT * FROM bankAccounts WHERE id = ?",
                     stmt -> stmt.setLong(1, id)).stream().findFirst();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -77,8 +74,7 @@ public class SqliteBankAccountService implements BankAccountService
                         stmt.setInt(1, user.getId());
                         stmt.setString(2, name);
                     }).stream().findFirst();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -95,8 +91,7 @@ public class SqliteBankAccountService implements BankAccountService
                         stmt.setInt(2, limit);
                     });
             return new ArrayList<>(bankAccounts);
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -112,8 +107,7 @@ public class SqliteBankAccountService implements BankAccountService
                         stmt.setDouble(2, bankAccount.getBalance().doubleValue());
                         stmt.setInt(3, bankAccount.getAccountId());
                     });
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -124,8 +118,7 @@ public class SqliteBankAccountService implements BankAccountService
         try {
             backend.execute("DELETE FROM bankAccounts WHERE id = ?",
                     stmt -> stmt.setInt(1, bankAccount.getAccountId()));
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }

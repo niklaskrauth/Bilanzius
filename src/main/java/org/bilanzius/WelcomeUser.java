@@ -8,8 +8,7 @@ public class WelcomeUser
 
     public static void welcomeMessage()
     {
-        String ASCII_BILANZIUS =
-                """
+        String ASCII_BILANZIUS = """
                         ####################################################################################################################################
                                                                                                                                                            \s
                         BBBBBBBBBBBBBBBBB     iiii  lllllll                                                        iiii                                    \s

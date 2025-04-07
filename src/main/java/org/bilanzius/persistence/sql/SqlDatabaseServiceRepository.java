@@ -14,8 +14,7 @@ public class SqlDatabaseServiceRepository implements DatabaseServiceRepository
 
     public SqlDatabaseServiceRepository(SqlBackend sqlBackend) throws SQLException
     {
-        this.userService =
-                new SqliteUserDatabaseService(sqlBackend);
+        this.userService = new SqliteUserDatabaseService(sqlBackend);
         this.bankAccountService = new SqliteBankAccountService(sqlBackend);
         this.transactionService = new SqliteTransactionService(sqlBackend, this.bankAccountService);
         this.categoryService = new SqliteCategoryService(sqlBackend);

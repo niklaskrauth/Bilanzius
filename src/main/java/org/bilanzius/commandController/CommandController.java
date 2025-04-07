@@ -44,8 +44,7 @@ public class CommandController
         this.user = user;
         this.selectedBankAccount = selectedBankAccount;
 
-        commandMap =
-                new HashMap<>();
+        commandMap = new HashMap<>();
 
         commandMap.put(Commands.EXIT, new ExitCommand(user));
         commandMap.put(Commands.HELP, new HelpCommand());
@@ -84,16 +83,11 @@ public class CommandController
     public String handleInput(String input)
     {
 
-        String[] parts =
-                input.split(" ", 2);
-        String commandStr =
-                parts[0];
-        String[] arguments
-                =
-                parts.length > 1 ? parts[1].split(" ") : new String[0];
+        String[] parts = input.split(" ", 2);
+        String commandStr = parts[0];
+        String[] arguments = parts.length > 1 ? parts[1].split(" ") : new String[0];
 
-        Commands command =
-                Commands.fromString(commandStr);
+        Commands command = Commands.fromString(commandStr);
         Command commandService = commandMap.get(command);
 
         if (commandService != null) {

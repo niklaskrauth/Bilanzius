@@ -30,8 +30,7 @@ public class Main
     {
         try {
             bootstrap();
-        } catch (
-                SQLException | RuntimeException ex) {
+        } catch (SQLException | RuntimeException ex) {
             ex.printStackTrace();
         }
     }
@@ -90,13 +89,10 @@ public class Main
     private static void createTestUsers(UserService userService)
     {
         try {
-            userService.createUser(User.createUser("TestUser",
-                    fromPlainText("passwort1234")));
+            userService.createUser(User.createUser("TestUser", fromPlainText("passwort1234")));
 
-            userService.createUser(User.createUser("TestUser2",
-                    fromPlainText("passwort5678")));
-        } catch (
-                DatabaseException e) {
+            userService.createUser(User.createUser("TestUser2", fromPlainText("passwort5678")));
+        } catch (DatabaseException e) {
             System.out.println("Error creating test users");
         }
     }

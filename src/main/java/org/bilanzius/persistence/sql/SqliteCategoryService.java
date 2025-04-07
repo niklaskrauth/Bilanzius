@@ -52,8 +52,7 @@ public class SqliteCategoryService implements CategoryService
                         stmt.setDouble(3, category.getBudget().doubleValue());
                         stmt.setDouble(4, category.getAmountSpent().doubleValue());
                     });
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -65,8 +64,7 @@ public class SqliteCategoryService implements CategoryService
             return backend.query(Category.class, "SELECT * FROM categories WHERE id = ?", stmt -> stmt.setLong(1, id))
                     .stream()
                     .findFirst();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -83,8 +81,7 @@ public class SqliteCategoryService implements CategoryService
                         stmt.setInt(2, limit);
                     });
             return new ArrayList<>(categories);
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -100,8 +97,7 @@ public class SqliteCategoryService implements CategoryService
                                 stmt.setString(2, name);
                             }).stream()
                     .findFirst();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -118,8 +114,7 @@ public class SqliteCategoryService implements CategoryService
                         stmt.setInt(2, limit);
                     });
             return new ArrayList<>(categories);
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -136,8 +131,7 @@ public class SqliteCategoryService implements CategoryService
                         stmt.setDouble(3, category.getAmountSpent().doubleValue());
                         stmt.setInt(4, category.getCategoryId());
                     });
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -148,8 +142,7 @@ public class SqliteCategoryService implements CategoryService
         try {
             backend.execute("DELETE FROM categories WHERE id = ?",
                     stmt -> stmt.setInt(1, category.getCategoryId()));
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }

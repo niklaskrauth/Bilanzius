@@ -25,8 +25,7 @@ public class SqlBackend
 
     public void connect(String connectionString) throws SQLException
     {
-        this.connection =
-                DriverManager.getConnection(connectionString);
+        this.connection = DriverManager.getConnection(connectionString);
     }
 
     public void close() throws SQLException
@@ -43,15 +42,11 @@ public class SqlBackend
                                    PreparedStatementConsumer preparedStatementConsumer) throws SQLException,
             DatabaseException
     {
-        var adapter =
-                findAdapter(modelClass);
+        var adapter = findAdapter(modelClass);
 
-        try (var query =
-                     constructPreparedStatement(sqlCommand, preparedStatementConsumer)) {
+        try (var query = constructPreparedStatement(sqlCommand, preparedStatementConsumer)) {
             var executedQuery = query.executeQuery();
-            List<T> result
-                    =
-                    new ArrayList<>();
+            List<T> result = new ArrayList<>();
 
             while (executedQuery.next()) {
                 result.add(adapter.deserialize(executedQuery));
@@ -63,17 +58,14 @@ public class SqlBackend
 
     public void execute(@Language("sql") String sqlCommand) throws SQLException
     {
-        execute(sqlCommand,
-                stmt ->
+        execute(sqlCommand, stmt ->
                 {
                 });
     }
 
     public void execute(@Language("sql") String sqlCommand, PreparedStatementConsumer preparedStatementConsumer) throws SQLException
     {
-        try (var statement
-                     =
-                     constructPreparedStatement(sqlCommand, preparedStatementConsumer)) {
+        try (var statement = constructPreparedStatement(sqlCommand, preparedStatementConsumer)) {
             statement.execute();
         }
     }
@@ -81,8 +73,7 @@ public class SqlBackend
     private PreparedStatement constructPreparedStatement(@Language("sql") String sqlCommand,
                                                          PreparedStatementConsumer preparedStatementConsumer) throws SQLException
     {
-        var query =
-                connection.prepareStatement(sqlCommand);
+        var query = connection.prepareStatement(sqlCommand);
         preparedStatementConsumer.accept(query);
         return query;
     }
@@ -91,8 +82,7 @@ public class SqlBackend
             "unchecked")
     private <T> SqlDataAdapter<T> findAdapter(Class<T> modelClass) throws DatabaseException
     {
-        var adapter =
-                (SqlDataAdapter<T>) adapters.get(modelClass);
+        var adapter = (SqlDataAdapter<T>) adapters.get(modelClass);
 
         if (adapter == null) {
             throw new DatabaseException();

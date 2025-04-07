@@ -20,8 +20,7 @@ public class HtmlTableRow implements HtmlTag
 
     private HtmlTableRow(List<HtmlTag> children)
     {
-        this.children =
-                children;
+        this.children = children;
     }
 
     @Override
@@ -29,9 +28,7 @@ public class HtmlTableRow implements HtmlTag
     {
         StringBuilder stringBuilder = new StringBuilder("<tr>");
 
-        for (HtmlTag child
-                :
-                this.children) {
+        for (HtmlTag child : this.children) {
             stringBuilder.append(child.build());
         }
 

@@ -27,8 +27,7 @@ public class CategoryRestController extends RequestHandler
 
     public CategoryRestController()
     {
-        this.gson =
-                new Gson();
+        this.gson = new Gson();
         this.categoryService = DatabaseProvider.getCategoryService();
     }
 
@@ -38,16 +37,14 @@ public class CategoryRestController extends RequestHandler
             List<Category> categories;
             List<CategoryDTO> categoryDTOs = new ArrayList<>();
 
-            User user =
-                    getUserFromExchange(exchange);
+            User user = getUserFromExchange(exchange);
 
             if (user == null) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
             }
 
-            categories =
-                    categoryService.getCategoriesOfUser(user, MAX_BANK_ACCOUNTS);
+            categories = categoryService.getCategoriesOfUser(user, MAX_BANK_ACCOUNTS);
 
             if (categories.isEmpty()) {
                 exchange.sendResponseHeaders(404, -1);
@@ -59,8 +56,7 @@ public class CategoryRestController extends RequestHandler
             ).forEach(categoryDTOs::add);
 
             getRequestHandler(exchange, categoryDTOs);
-        } catch (IOException |
-                 DatabaseException e) {
+        } catch (IOException | DatabaseException e) {
             exchange.sendResponseHeaders(500, -1);
         }
     }
@@ -71,16 +67,14 @@ public class CategoryRestController extends RequestHandler
             CategoryDTO categoryDTO;
             Category category;
 
-            User user =
-                    getUserFromExchange(exchange);
+            User user = getUserFromExchange(exchange);
 
             if (user == null) {
                 exchange.sendResponseHeaders(404, -1);
                 return;
             }
 
-            categoryDTO =
-                    gson.fromJson(readRequestBody(exchange), CategoryDTO.class);
+            categoryDTO = gson.fromJson(readRequestBody(exchange), CategoryDTO.class);
             Optional<Category> existingCategory = categoryService.getCategoryOfUserByName(user, categoryDTO.name());
 
             if (existingCategory.isEmpty()) {
@@ -88,13 +82,10 @@ public class CategoryRestController extends RequestHandler
                 return;
             }
 
-            category =
-                    existingCategory.get();
+            category = existingCategory.get();
             categoryRestConsumer.accept(user, category, categoryDTO);
 
-        } catch (IOException |
-                 JsonSyntaxException |
-                 DatabaseException e) {
+        } catch (IOException | JsonSyntaxException | DatabaseException e) {
             exchange.sendResponseHeaders(500, -1);
         }
     }
@@ -103,8 +94,7 @@ public class CategoryRestController extends RequestHandler
     {
         modifyCategory((user, category, categoryDTO) ->
         {
-            category =
-                    Category.create(user, categoryDTO.name(), categoryDTO.budget());
+            category = Category.create(user, categoryDTO.name(), categoryDTO.budget());
             categoryService.createCategory(category);
             postRequestHandler(exchange, categoryDTO);
         }, exchange);
