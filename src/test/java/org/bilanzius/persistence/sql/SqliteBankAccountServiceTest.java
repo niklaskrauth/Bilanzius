@@ -11,12 +11,14 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-class SqliteBankAccountServiceTest extends SqlTest {
+class SqliteBankAccountServiceTest extends SqlTest
+{
 
     private static final String NAME = "account";
 
     @Test
-    void testCreateAndGet() {
+    void testCreateAndGet()
+    {
         var service = bankAccountService();
 
         service.createBankAccount(BankAccount.create(ModelUtils.existingUser(), NAME));
@@ -28,7 +30,8 @@ class SqliteBankAccountServiceTest extends SqlTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdate()
+    {
         var service = bankAccountService();
 
         service.createBankAccount(BankAccount.create(ModelUtils.existingUser(), NAME));
@@ -43,7 +46,8 @@ class SqliteBankAccountServiceTest extends SqlTest {
     }
 
     @Test
-    void testDelete() {
+    void testDelete()
+    {
         var service = bankAccountService();
 
         service.createBankAccount(BankAccount.create(ModelUtils.existingUser(), NAME));
@@ -53,7 +57,8 @@ class SqliteBankAccountServiceTest extends SqlTest {
     }
 
     @Test
-    void testDatabaseExceptionIfNoDatabaseConnection() throws SQLException {
+    void testDatabaseExceptionIfNoDatabaseConnection() throws SQLException
+    {
         // Simulate connection lost
         var service = bankAccountService();
         this.sqlBackend.close();
@@ -66,12 +71,15 @@ class SqliteBankAccountServiceTest extends SqlTest {
         Assertions.assertThrows(DatabaseException.class, () -> service.deleteBankAccount(ModelUtils.existingBankAccount()));
     }
 
-    private BankAccountService bankAccountService() {
-        try {
-            var backend = requestBackend();
-            return new SqliteBankAccountService(backend);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+    private BankAccountService bankAccountService()
+    {
+        try
+            {
+                var backend = requestBackend();
+                return new SqliteBankAccountService(backend);
+            } catch (SQLException ex)
+            {
+                throw new RuntimeException(ex);
+            }
     }
 }

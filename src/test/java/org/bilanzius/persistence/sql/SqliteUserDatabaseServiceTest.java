@@ -9,14 +9,16 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-class SqliteUserDatabaseServiceTest extends SqlTest {
+class SqliteUserDatabaseServiceTest extends SqlTest
+{
 
     private static final String USERNAME = "test";
     private static final HashedPassword DEFAULT_PASSWORD = HashedPassword.fromPlainText("123");
     private static final HashedPassword OTHER_PASSWORD = HashedPassword.fromPlainText("password");
 
     @Test
-    void testDatabaseExceptionIfNoDatabaseConnection() throws SQLException {
+    void testDatabaseExceptionIfNoDatabaseConnection() throws SQLException
+    {
         // Simulate connection lost
         var service = userService();
         this.sqlBackend.close();
@@ -30,7 +32,8 @@ class SqliteUserDatabaseServiceTest extends SqlTest {
     }
 
     @Test
-    void testFindUserByName() {
+    void testFindUserByName()
+    {
         // Setup test
         var service = userService();
         service.createUser(User.createUser(USERNAME, DEFAULT_PASSWORD));
@@ -44,7 +47,8 @@ class SqliteUserDatabaseServiceTest extends SqlTest {
     }
 
     @Test
-    void testFindUserWithCredentials() {
+    void testFindUserWithCredentials()
+    {
         var service = userService();
         service.createUser(User.createUser(USERNAME, DEFAULT_PASSWORD));
 
@@ -57,7 +61,8 @@ class SqliteUserDatabaseServiceTest extends SqlTest {
     }
 
     @Test
-    void testFindUserById() {
+    void testFindUserById()
+    {
         // Setup test
         var service = userService();
         service.createUser(User.createUser(USERNAME, DEFAULT_PASSWORD));
@@ -71,7 +76,8 @@ class SqliteUserDatabaseServiceTest extends SqlTest {
     }
 
     @Test
-    void testUpdateUserPassword() {
+    void testUpdateUserPassword()
+    {
         // Setup test
         var service = userService();
         var creatingUser = User.createUser(USERNAME, DEFAULT_PASSWORD);
@@ -94,7 +100,8 @@ class SqliteUserDatabaseServiceTest extends SqlTest {
 
 
     @Test
-    void testUpdateNewUser() {
+    void testUpdateNewUser()
+    {
         // Setup test
         var service = userService();
         var user = User.createUser(USERNAME, DEFAULT_PASSWORD);
@@ -104,7 +111,8 @@ class SqliteUserDatabaseServiceTest extends SqlTest {
     }
 
     @Test
-    void testUpdateUserMainAccount() {
+    void testUpdateUserMainAccount()
+    {
         // Setup test
         var service = userService();
         service.createUser(User.createUser(USERNAME, DEFAULT_PASSWORD));
@@ -120,12 +128,15 @@ class SqliteUserDatabaseServiceTest extends SqlTest {
         Assertions.assertEquals(42, sameUser.getMainBankAccountId());
     }
 
-    private SqliteUserDatabaseService userService() {
-        try {
-            var backend = requestBackend();
-            return new SqliteUserDatabaseService(backend);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+    private SqliteUserDatabaseService userService()
+    {
+        try
+            {
+                var backend = requestBackend();
+                return new SqliteUserDatabaseService(backend);
+            } catch (SQLException ex)
+            {
+                throw new RuntimeException(ex);
+            }
     }
 }

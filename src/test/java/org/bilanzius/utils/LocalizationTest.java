@@ -3,7 +3,8 @@ package org.bilanzius.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class LocalizationTest {
+class LocalizationTest
+{
 
     private static final String NON_EXISTING_KEY = "unit_non_existing_key";
     private static final String EXISTING_KEY = "login";
@@ -13,14 +14,16 @@ class LocalizationTest {
     private static final String EXISTING_KEY_WITH_PARAMS_VALUE = "Withdrawal successful. Your new balance is 1.";
 
     @Test
-    void testSupportedLanguages() {
+    void testSupportedLanguages()
+    {
         var language = Localization.getInstance();
         Assertions.assertTrue(language.isSupportedLanguage("en"));
         Assertions.assertFalse(language.isSupportedLanguage("invalid"));
     }
 
     @Test
-    void testGetMessage() {
+    void testGetMessage()
+    {
         var language = Localization.getInstance();
         language.setLocale("en");
 
@@ -30,7 +33,8 @@ class LocalizationTest {
     }
 
     @Test
-    void testGetMessageWithEmptyArray() {
+    void testGetMessageWithEmptyArray()
+    {
         var language = Localization.getInstance();
         language.setLocale("en");
 
@@ -39,7 +43,8 @@ class LocalizationTest {
     }
 
     @Test
-    void testGetMessageWithParams() {
+    void testGetMessageWithParams()
+    {
         var language = Localization.getInstance();
         language.setLocale("en");
 
