@@ -30,14 +30,16 @@ public class Main
     {
         try {
             bootstrap();
-        } catch (SQLException | RuntimeException ex) {
+        } catch (
+            SQLException | RuntimeException ex) {
             ex.printStackTrace();
         }
     }
 
     private static void bootstrap() throws SQLException
     {
-        // Connect to sqllite database
+        // Connect to
+        // sqllite database
         setupDatabase();
 
         SignUp signUp = new SignUp();
@@ -45,7 +47,6 @@ public class Main
         IOContext context = new CLIContext(scanner, Localization.getInstance());
         List<String> historyInputs = new ArrayList<>();
         MainRestController mainRestController = new MainRestController();
-        CommandController commandController;
         User user;
 
 
@@ -62,9 +63,9 @@ public class Main
             Optional<BankAccount> bankAccount = signUp.waitUntilBankAccountSelect(scanner, user);
 
             if (bankAccount.isPresent()) {
-                commandController = new CommandController(user, bankAccount.get(), historyInputs);
+                CommandController commandController = new CommandController(user, bankAccount.get(), historyInputs);
 
-                while (true) {
+                while (user != null) {
                     context.lineSeperator();
                     String input = scanner.nextLine();
                     historyInputs.add(input);
@@ -78,7 +79,8 @@ public class Main
 
     private static void setupDatabase() throws SQLException
     {
-        var backend = new SqlBackend();
+        var backend =
+            new SqlBackend();
         backend.connect();
         DatabaseProvider.init(new SqlDatabaseServiceRepository(backend));
         createTestUsers(DatabaseProvider.getUserService());
@@ -89,10 +91,13 @@ public class Main
     private static void createTestUsers(UserService userService)
     {
         try {
-            userService.createUser(User.createUser("TestUser", fromPlainText("passwort1234")));
+            userService.createUser(User.createUser("TestUser",
+                fromPlainText("passwort1234")));
 
-            userService.createUser(User.createUser("TestUser2", fromPlainText("passwort5678")));
-        } catch (DatabaseException e) {
+            userService.createUser(User.createUser("TestUser2",
+                fromPlainText("passwort5678")));
+        } catch (
+            DatabaseException e) {
             System.out.println("Error creating test users");
         }
     }

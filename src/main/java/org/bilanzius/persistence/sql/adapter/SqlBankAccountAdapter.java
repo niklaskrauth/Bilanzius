@@ -11,10 +11,10 @@ public class SqlBankAccountAdapter implements SqlDataAdapter<BankAccount>
     public BankAccount deserialize(ResultSet resultSet) throws SQLException
     {
         return new BankAccount(
-                resultSet.getInt("id"),
-                resultSet.getInt("userId"),
-                resultSet.getString("name"),
-                resultSet.getBigDecimal("balance")
+            resultSet.getInt("id"),
+            resultSet.getInt("userId"),
+            resultSet.getString("name"),
+            resultSet.getBigDecimal("balance")
         );
     }
 }

@@ -53,14 +53,14 @@ public class Localization
         try {
             String message = this.messages.getString(key);
             if (params != null && params.length > 0) {
-                message =
-                        MessageFormat.format(message, params);
+                message = MessageFormat.format(message, params);
             }
             return message;
-        } catch (MissingResourceException ex) {
+        } catch (
+            MissingResourceException ex) {
             return "MISSING" +
-                    " KEY: "
-                    + key;
+                " KEY: "
+                + key;
         }
     }
 

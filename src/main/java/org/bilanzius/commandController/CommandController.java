@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class CommandController
 {
-    private final Map<Commands, Command> commandMap;
+    private final Map<Commands, Command> knownCommands;
     private final Localization localization = Localization.getInstance();
     private BankAccount selectedBankAccount;
 
@@ -44,55 +44,50 @@ public class CommandController
         this.user = user;
         this.selectedBankAccount = selectedBankAccount;
 
-        commandMap = new HashMap<>();
+        //Hier werden die einzelnen Befehle über das Enum auf die Klassen gemappt
+        this.knownCommands = new HashMap<>();
 
-        commandMap.put(Commands.EXIT, new ExitCommand(user));
-        commandMap.put(Commands.HELP, new HelpCommand());
-        commandMap.put(Commands.BILANZIUS, new BilanziusCommand());
-        commandMap.put(Commands.HISTORY, new HistoryCommand(historyInputs));
+        register(Commands.EXIT, new ExitCommand(user));
+        register(Commands.HELP, new HelpCommand());
+        register(Commands.BILANZIUS, new BilanziusCommand());
+        register(Commands.HISTORY, new HistoryCommand(historyInputs));
 
-        commandMap.put(Commands.DEPOSIT, new DepositCommand(user, this.selectedBankAccount));
-        commandMap.put(Commands.WITHDRAW, new WithdrawCommand(user, this.selectedBankAccount));
-        commandMap.put(Commands.CONVERT, new ConvertCommand(this.selectedBankAccount));
-        commandMap.put(Commands.REPORT, new ReportCommand(user));
+        register(Commands.DEPOSIT, new DepositCommand(user, this.selectedBankAccount));
+        register(Commands.WITHDRAW, new WithdrawCommand(user, this.selectedBankAccount));
+        register(Commands.CONVERT, new ConvertCommand(this.selectedBankAccount));
+        register(Commands.REPORT, new ReportCommand(user));
 
         // Sprachbefehle
-        commandMap.put(Commands.GETLANGUAGES, new GetLanguagesCommand());
-        commandMap.put(Commands.SETLANGUAGE, new SetLanguageCommand());
+        register(Commands.GETLANGUAGES, new GetLanguagesCommand());
+        register(Commands.SETLANGUAGE, new SetLanguageCommand());
 
         // Kategoriebefehle
-        commandMap.put(Commands.CREATECATEGORY, new CreateCategoryCommand(user));
-        commandMap.put(Commands.GETCATEGORIES, new GetCategoryCommand(user));
-        commandMap.put(Commands.DELETECATEGORY, new DeleteCategoryCommand(user));
+        register(Commands.CREATECATEGORY, new CreateCategoryCommand(user));
+        register(Commands.GETCATEGORIES, new GetCategoryCommand(user));
+        register(Commands.DELETECATEGORY, new DeleteCategoryCommand(user));
 
         //Bankkonto Befehle
-        commandMap.put(Commands.CREATEBANKACCOUNT, new CreateBankAccountCommand(user));
-        commandMap.put(Commands.GETBANKACCOUNT, new GetBankAccountCommand(user));
-        commandMap.put(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user));
-        commandMap.put(Commands.RENAMEBANKACCOUNT, new RenameBankAccountCommand(user));
-        commandMap.put(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, this));
-        commandMap.put(Commands.LOG, new LogCommand(this));
-
-        //Hier werden die
-        // einzelnen
-        // Befehle über das
-        // Enum auf die
-        // Klassen gemappt
+        register(Commands.CREATEBANKACCOUNT, new CreateBankAccountCommand(user));
+        register(Commands.GETBANKACCOUNT, new GetBankAccountCommand(user));
+        register(Commands.DELETEBANKACCOUNT, new DeleteBankAccountCommand(user));
+        register(Commands.RENAMEBANKACCOUNT, new RenameBankAccountCommand(user));
+        register(Commands.SWITCHBANKACCOUNT, new SwitchBankAccountCommand(user, this));
+        register(Commands.LOG, new LogCommand(this));
     }
 
     public String handleInput(String input)
     {
-
         String[] parts = input.split(" ", 2);
         String commandStr = parts[0];
-        String[] arguments = parts.length > 1 ? parts[1].split(" ") : new String[0];
+        String[] arguments = parseArguments(parts);
 
         Commands command = Commands.fromString(commandStr);
-        Command commandService = commandMap.get(command);
+        Command commandService = knownCommands.get(command);
 
-        if (commandService != null) {
-            return commandService.execute(arguments);
-        }
+        if (commandService != null)
+            {
+                return commandService.execute(arguments);
+            }
 
         return localization.getMessage("unknown_command");
     }
@@ -110,11 +105,23 @@ public class CommandController
     public void setSelectedBankAccount(BankAccount bankAccount)
     {
         this.selectedBankAccount = bankAccount;
-        for (Command command : commandMap.values()) {
-            if (command instanceof BankAccountAware) {
-                ((BankAccountAware) command).setSelectedBankAccount(bankAccount);
+        for (Command command : knownCommands.values())
+            {
+                if (command instanceof BankAccountAware)
+                    {
+                        ((BankAccountAware) command).setSelectedBankAccount(bankAccount);
+                    }
             }
-        }
+    }
+
+    private String[] parseArguments(String[] parts)
+    {
+        return parts.length > 1 ? parts[1].split(" ") : new String[0];
+    }
+
+    private void register(Commands type, Command commandImpl)
+    {
+        this.knownCommands.put(type, commandImpl);
     }
 
 }
