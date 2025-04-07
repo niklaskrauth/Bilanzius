@@ -6,8 +6,7 @@ public class PasswordValidator
 {
 
     private static final String PASSWORD_PATTERN =
-            "^(?=.*[0-9])" +
-                    "(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$";
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$";
     // Needs to contain: 8
     // chars, 1 digit, 1
     // lowercase, 1

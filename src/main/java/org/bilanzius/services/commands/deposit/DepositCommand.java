@@ -90,11 +90,9 @@ public class DepositCommand implements Command, BankAccountAware
                     bankAccountService.getBankAccount(selectedBankAccount.getAccountId()).orElseThrow().getBalance();
 
             return localization.getMessage("deposit_successful", balance);
-        } catch (
-                NumberFormatException e) {
+        } catch (NumberFormatException | NullPointerException e) {
             return localization.getMessage("invalid_amount");
-        } catch (
-                DatabaseException e) {
+        } catch (DatabaseException e) {
             return localization.getMessage("database_error", e.toString());
         }
     }

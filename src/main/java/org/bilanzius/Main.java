@@ -79,8 +79,7 @@ public class Main
 
     private static void setupDatabase() throws SQLException
     {
-        var backend =
-            new SqlBackend();
+        var backend = new SqlBackend();
         backend.connect();
         DatabaseProvider.init(new SqlDatabaseServiceRepository(backend));
         createTestUsers(DatabaseProvider.getUserService());

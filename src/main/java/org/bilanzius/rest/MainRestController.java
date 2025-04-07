@@ -19,8 +19,7 @@ public class MainRestController extends RequestHandler
     public MainRestController(int port, String mainEndpoint)
     {
         this.port = port;
-        this.mainEndpoint =
-                mainEndpoint;
+        this.mainEndpoint = mainEndpoint;
     }
 
     public void start() throws RuntimeException
@@ -29,10 +28,8 @@ public class MainRestController extends RequestHandler
         HttpServer server;
 
         try {
-            server =
-                    HttpServer.create(new InetSocketAddress(this.port), 0);
-        } catch (
-                IOException e) {
+            server = HttpServer.create(new InetSocketAddress(this.port), 0);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -60,8 +57,7 @@ public class MainRestController extends RequestHandler
 
     private void getHelp(HttpExchange exchange) throws IOException
     {
-        String response =
-                """
+        String response = """
                         /health - Check if backend is alive
                         /help - Get help
                         """;

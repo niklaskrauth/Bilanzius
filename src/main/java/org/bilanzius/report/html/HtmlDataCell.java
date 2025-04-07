@@ -19,8 +19,7 @@ public class HtmlDataCell implements HtmlTag
     private HtmlDataCell(String tag, String content)
     {
         this.tag = tag;
-        this.content =
-                content;
+        this.content = content;
     }
 
     @Override

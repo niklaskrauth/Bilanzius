@@ -18,8 +18,7 @@ public class Transaction
 
     public static Transaction create(User user, BankAccount account, BigDecimal money, String description)
     {
-        return new Transaction(
-                0,
+        return new Transaction(0,
                 user.getId(), account.getAccountId(), -1, money, Instant.now(), description // -1 as default categoryId
         );
     }
@@ -27,8 +26,7 @@ public class Transaction
     public static Transaction create(User user, BankAccount account, Category category, BigDecimal money,
                                      Instant created, String description)
     {
-        return new Transaction(
-                0,
+        return new Transaction(0,
                 user.getId(), account.getAccountId(), category.getCategoryId(), money, created, description
         );
     }
@@ -36,8 +34,7 @@ public class Transaction
     public static Transaction create(User user, BankAccount account, BigDecimal money, Instant created,
                                      String description)
     {
-        return new Transaction(
-                0,
+        return new Transaction(0,
                 user.getId(), account.getAccountId(), -1, money, created, description // -1 as default categoryId
         );
     }
@@ -54,19 +51,13 @@ public class Transaction
     public Transaction(int transactionId, int userId, int accountId, int categoryId, BigDecimal money,
                        Instant created, String description)
     {
-        this.transactionId
-                =
-                transactionId;
+        this.transactionId = transactionId;
         this.userId = userId;
-        this.accountId =
-                accountId;
-        this.categoryId =
-                categoryId;
+        this.accountId = accountId;
+        this.categoryId = categoryId;
         this.money = money;
-        this.created =
-                created;
-        this.description =
-                description;
+        this.created = created;
+        this.description = description;
     }
 
     public int getTransactionId()

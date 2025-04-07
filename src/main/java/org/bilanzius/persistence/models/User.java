@@ -7,9 +7,7 @@ public class User
 
     public static User createUser(String username, HashedPassword password)
     {
-        return new User(0,
-                username,
-                password, 0);
+        return new User(0, username, password, 0);
     }
 
     private final int id;
@@ -17,12 +15,10 @@ public class User
     private HashedPassword hashedPassword;
     private int mainBankAccountId;
 
-    public User(int id,
-                String username, HashedPassword hashedPassword, int mainBankAccountId)
+    public User(int id, String username, HashedPassword hashedPassword, int mainBankAccountId)
     {
         this.id = id;
-        this.username =
-                username;
+        this.username = username;
         this.hashedPassword = hashedPassword;
         this.mainBankAccountId = mainBankAccountId;
     }
