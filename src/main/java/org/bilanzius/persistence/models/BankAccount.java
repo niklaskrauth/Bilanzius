@@ -7,8 +7,7 @@ public class BankAccount
 
     public static BankAccount create(User user, String name)
     {
-        return new BankAccount(0, user.getId(), name, new BigDecimal("0.0")
-        );
+        return new BankAccount(0, user.getId(), name, new BigDecimal("0.0"));
     }
 
     private final int accountId;

@@ -7,8 +7,7 @@ public class Category
 
     public static Category create(User user, String name, BigDecimal budget)
     {
-        return new Category(0, user.getId(), name, budget, new BigDecimal("0.0")
-        );
+        return new Category(0, user.getId(), name, budget, new BigDecimal("0.0"));
     }
 
     private final int categoryId;

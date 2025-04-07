@@ -32,35 +32,31 @@ public enum Commands
     CONVERT("/convert",
         Localization.getInstance().getMessage("convert_short_description"),
         ConvertCommandArguments.getAllArguments()),
-    GETLANGUAGES(
-        "/getLanguages"
-        ,
+    GETLANGUAGES("/getLanguages",
         Localization.getInstance().getMessage("get_languages_description"), null),
-    SETLANGUAGE(
-        "/setLanguage",
+    SETLANGUAGE("/setLanguage",
         Localization.getInstance().getMessage("set_language_description"), null),
-    CREATECATEGORY(
-        "/createCategory", Localization.getInstance().getMessage("create_category_short_description"),
+    CREATECATEGORY("/createCategory",
+        Localization.getInstance().getMessage("create_category_short_description"),
         CreateCategoryCommandArguments.getAllArguments()),
-    GETCATEGORIES(
-        "/getCategory",
+    GETCATEGORIES("/getCategory",
         Localization.getInstance().getMessage("get_category_short_description"),
         GetCategoryCommandArguments.getAllArguments()),
-    DELETECATEGORY(
-        "/deleteCategory", Localization.getInstance().getMessage("delete_category_short_description"),
+    DELETECATEGORY("/deleteCategory",
+        Localization.getInstance().getMessage("delete_category_short_description"),
         DeleteCategoryCommandArguments.getAllArguments()),
-    CREATEBANKACCOUNT(
-        "/createBankAccount", Localization.getInstance().getMessage("create_bank_account_short_description"), null),
-    GETBANKACCOUNT(
-        "/getBankAccount", Localization.getInstance().getMessage("get_bank_account_short_description"),
+    CREATEBANKACCOUNT("/createBankAccount",
+        Localization.getInstance().getMessage("create_bank_account_short_description"), null),
+    GETBANKACCOUNT("/getBankAccount",
+        Localization.getInstance().getMessage("get_bank_account_short_description"),
         GetBankAccountCommandArguments.getAllArguments()),
-    DELETEBANKACCOUNT(
-        "/deleteBankAccount", Localization.getInstance().getMessage("delete_bank_account_short_description"),
+    DELETEBANKACCOUNT("/deleteBankAccount",
+        Localization.getInstance().getMessage("delete_bank_account_short_description"),
         DeleteCategoryCommandArguments.getAllArguments()),
-    RENAMEBANKACCOUNT(
-        "/renameBankAccount", Localization.getInstance().getMessage("rename_bank_account_short_description"), null),
-    SWITCHBANKACCOUNT(
-        "/switchBankAccount", Localization.getInstance().getMessage("switch_bank_account_short_description"), null),
+    RENAMEBANKACCOUNT("/renameBankAccount",
+        Localization.getInstance().getMessage("rename_bank_account_short_description"), null),
+    SWITCHBANKACCOUNT("/switchBankAccount",
+        Localization.getInstance().getMessage("switch_bank_account_short_description"), null),
     HISTORY("/history",
         Localization.getInstance().getMessage("history_short_description"), null),
     REPORT("/report",
