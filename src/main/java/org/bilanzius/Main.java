@@ -31,7 +31,7 @@ public class Main
         try {
             bootstrap();
         } catch (
-                SQLException | RuntimeException ex) {
+            SQLException | RuntimeException ex) {
             ex.printStackTrace();
         }
     }
@@ -80,7 +80,7 @@ public class Main
     private static void setupDatabase() throws SQLException
     {
         var backend =
-                new SqlBackend();
+            new SqlBackend();
         backend.connect();
         DatabaseProvider.init(new SqlDatabaseServiceRepository(backend));
         createTestUsers(DatabaseProvider.getUserService());
@@ -92,12 +92,12 @@ public class Main
     {
         try {
             userService.createUser(User.createUser("TestUser",
-                    fromPlainText("passwort1234")));
+                fromPlainText("passwort1234")));
 
             userService.createUser(User.createUser("TestUser2",
-                    fromPlainText("passwort5678")));
+                fromPlainText("passwort5678")));
         } catch (
-                DatabaseException e) {
+            DatabaseException e) {
             System.out.println("Error creating test users");
         }
     }

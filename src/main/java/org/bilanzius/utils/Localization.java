@@ -31,8 +31,7 @@ public class Localization
     public static Localization getInstance()
     {
         if (instance == null) {
-            instance =
-                    new Localization("en"); // Standard auf Englisch
+            instance = new Localization("en"); // Standard auf Englisch
         }
         return instance;
     }
@@ -40,10 +39,8 @@ public class Localization
     public void setLocale(String languageCode)
     {
         this.currentLanguageCode = languageCode;
-        this.locale =
-                Locale.of(languageCode);
-        this.messages =
-                ResourceBundle.getBundle("messages", locale);
+        this.locale = Locale.of(languageCode);
+        this.messages = ResourceBundle.getBundle("messages", locale);
     }
 
     public String getCurrentLanguageCode()
@@ -54,28 +51,24 @@ public class Localization
     public String getMessage(String key, Object... params)
     {
         try {
-            String message
-                    =
-                    this.messages.getString(key);
+            String message = this.messages.getString(key);
             if (params != null && params.length > 0) {
-                message =
-                        MessageFormat.format(message, params);
+                message = MessageFormat.format(message, params);
             }
             return message;
         } catch (
-                MissingResourceException ex) {
+            MissingResourceException ex) {
             return "MISSING" +
-                    " KEY: "
-                    + key;
+                " KEY: "
+                + key;
         }
     }
 
     public String formatInstant(Instant instant)
     {
-        var dateFormat =
-                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)
-                        .withLocale(this.locale)
-                        .withZone(ZoneId.systemDefault());
+        var dateFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)
+            .withLocale(this.locale)
+            .withZone(ZoneId.systemDefault());
 
         return dateFormat.format(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()));
     }

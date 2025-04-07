@@ -29,7 +29,7 @@ public class SignUp
     public SignUp()
     {
         this.userService =
-                DatabaseProvider.getUserService();
+            DatabaseProvider.getUserService();
         this.bankAccountService = DatabaseProvider.getBankAccountService();
     }
 
@@ -40,21 +40,21 @@ public class SignUp
         context.lineSeperator();
 
         var loginOrRegister = context.askUser(Question.create()
-                .question(localization.getMessage("login_or_register"))
-                .defaultValue("1")
-                .validator(input ->
-                {
-                    if (!input.equals("1") && !input.equals("2")) {
-                        throw new QuestionException(localization.getMessage("invalid_input"));
-                    }
-                })
-                .build());
+            .question(localization.getMessage("login_or_register"))
+            .defaultValue("1")
+            .validator(input ->
+            {
+                if (!input.equals("1") && !input.equals("2")) {
+                    throw new QuestionException(localization.getMessage("invalid_input"));
+                }
+            })
+            .build());
 
         if (loginOrRegister.equals("1")) {
             context.printLocalized("login");
 
             optionalUser =
-                    login(context);
+                login(context);
 
             if (optionalUser.isPresent()) {
                 return optionalUser.get();
@@ -63,7 +63,7 @@ public class SignUp
             context.printLocalized("register");
 
             optionalUser =
-                    register(context);
+                register(context);
 
             if (optionalUser.isPresent()) {
                 return optionalUser.get();
@@ -80,7 +80,7 @@ public class SignUp
 
         do {
             loggedInUser =
-                    tryLogin(context);
+                tryLogin(context);
         } while (loggedInUser.isEmpty());
 
         return loggedInUser;
@@ -89,18 +89,18 @@ public class SignUp
     public Optional<User> tryLogin(IOContext context)
     {
         var username =
-                context.askUser(Question.create()
-                        .question(localization.getMessage("username"))
-                        .build());
+            context.askUser(Question.create()
+                .question(localization.getMessage("username"))
+                .build());
 
         Optional<User> userOptional;
         User user;
 
         try {
             userOptional =
-                    userService.findUserWithName(username);
+                userService.findUserWithName(username);
         } catch (
-                DatabaseException e) {
+            DatabaseException e) {
             context.printLocalized("database_error");
             return Optional.empty();
         }
@@ -112,9 +112,9 @@ public class SignUp
 
         user = userOptional.get();
         var password =
-                context.askUser(Question.create()
-                        .question(localization.getMessage("password"))
-                        .build());
+            context.askUser(Question.create()
+                .question(localization.getMessage("password"))
+                .build());
 
         if (!fromPlainText(password).equals(user.getHashedPassword())) {
             context.printLocalized("wrongPassword");
@@ -130,7 +130,7 @@ public class SignUp
     public Optional<User> register(IOContext context)
     {
         Boolean userExists
-                = null; //
+            = null; //
         // null = not
         // existing (wrong
         // inputs), true =
@@ -145,23 +145,23 @@ public class SignUp
 
         while (userExists == null || userExists) {
             String username = context.askUser(Question.create()
-                    .question(localization.getMessage("username"))
-                    .build());
+                .question(localization.getMessage("username"))
+                .build());
 
             foundUser =
-                    userService.findUserWithName(username);
+                userService.findUserWithName(username);
 
             if (foundUser.isPresent()) {
                 context.printLocalized("user_exists", foundUser.get().getUsername());
                 userExists
-                        =
-                        true;
+                    =
+                    true;
                 continue;
             }
 
             String password = context.askUser(Question.create()
-                    .question(localization.getMessage("password"))
-                    .build());
+                .question(localization.getMessage("password"))
+                .build());
 
             if (!validatePassword(password)) {
                 context.printLocalized("validate_password");
@@ -169,8 +169,8 @@ public class SignUp
             }
 
             String repeatPassword = context.askUser(Question.create()
-                    .question(localization.getMessage("repeat_password"))
-                    .build());
+                .question(localization.getMessage("repeat_password"))
+                .build());
 
             if (!password.equals(repeatPassword)) {
                 context.printLocalized("passwords_do_not_match");
@@ -178,19 +178,19 @@ public class SignUp
             }
 
             newUser =
-                    User.createUser(username, fromPlainText(password));
+                User.createUser(username, fromPlainText(password));
 
             try {
                 userService.createUser(newUser);
                 user = userService.findUserWithName(username);
             } catch (
-                    DatabaseException e) {
+                DatabaseException e) {
                 return Optional.empty();
             }
 
             context.printLocalized("user_created", newUser.getUsername());
             userExists =
-                    false;
+                false;
         }
         return user;
     }
@@ -203,10 +203,9 @@ public class SignUp
         BankAccount createdBankAccount;
 
         try {
-            bankAccounts =
-                    bankAccountService.getBankAccountsOfUser(user, MAX_BANK_ACCOUNTS);
+            bankAccounts = bankAccountService.getBankAccountsOfUser(user, MAX_BANK_ACCOUNTS);
         } catch (
-                DatabaseException e) {
+            DatabaseException e) {
             System.out.println(localization.getMessage("database_error", e.toString()));
             return Optional.empty();
         }
@@ -214,8 +213,7 @@ public class SignUp
         if (bankAccounts.size() == 1) {
             BankAccount account;
 
-            account =
-                    bankAccounts.getFirst();
+            account = bankAccounts.getFirst();
 
             System.out.println(localization.getMessage("only_one_bank_account", account.getName()));
             return Optional.of(account);
@@ -237,7 +235,7 @@ public class SignUp
                 try {
                     account = bankAccountService.getBankAccountOfUserByName(user, bankAccountName);
                 } catch (
-                        DatabaseException e) {
+                    DatabaseException e) {
                     System.out.println(localization.getMessage("database_error", e.toString()));
                     return Optional.empty();
                 }
@@ -257,18 +255,18 @@ public class SignUp
         String bankAccountName = scanner.nextLine();
 
         createdBankAccount
-                =
-                BankAccount.create(user, bankAccountName);
+            =
+            BankAccount.create(user, bankAccountName);
 
         try {
             bankAccountService.createBankAccount(createdBankAccount);
             bankAccount =
-                    bankAccountService.getBankAccountOfUserByName(user, createdBankAccount.getName());
+                bankAccountService.getBankAccountOfUserByName(user, createdBankAccount.getName());
             if (bankAccount.isEmpty()) {
                 return Optional.empty();
             }
         } catch (
-                DatabaseException e) {
+            DatabaseException e) {
             System.out.println(localization.getMessage("database_error", e.toString()));
             return Optional.empty();
         }
@@ -282,7 +280,7 @@ public class SignUp
                 userService.updateUserMainAccountId(user);
                 user = userService.findUser(user.getId()).orElse(user);
             } catch (
-                    DatabaseException e) {
+                DatabaseException e) {
                 System.out.println(localization.getMessage("database_error", e.toString()));
                 return Optional.empty();
             }
