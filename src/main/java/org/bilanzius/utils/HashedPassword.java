@@ -18,8 +18,7 @@ public class HashedPassword
 
             byte[] hashedPassword = digest.digest(plainPassword.getBytes(DEFAULT_CHARSET));
             return new HashedPassword(new String(hashedPassword, DEFAULT_CHARSET));
-        } catch (
-                NoSuchAlgorithmException ex) {
+        } catch (NoSuchAlgorithmException ex) {
             throw new RuntimeException(ex);
         }
     }

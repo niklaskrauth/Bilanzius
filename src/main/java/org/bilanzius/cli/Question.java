@@ -24,16 +24,13 @@ public record Question(
 
         public Builder question(String question)
         {
-            this.question =
-                    question;
+            this.question = question;
             return this;
         }
 
         public Builder validator(QuestionValidator validator)
         {
-            this.validator
-                    =
-                    validator;
+            this.validator = validator;
             return this;
         }
 

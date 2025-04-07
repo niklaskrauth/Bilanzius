@@ -30,14 +30,11 @@ public class HtmlReport implements Report
     @Override
     public void create(User user)
     {
-        var report =
-                HtmlGenerator.create()
+        var report = HtmlGenerator.create()
                         .htmlFromResources("report.html")
-                        .replace(
-                                "user", PlainText.text(user.getUsername()));
+                        .replace("user", PlainText.text(user.getUsername()));
 
-        var bankAccounts =
-                DatabaseProvider.getBankAccountService().getBankAccountsOfUser(user, 100);
+        var bankAccounts = DatabaseProvider.getBankAccountService().getBankAccountsOfUser(user, 100);
         var bankAccountTable = bankAccounts.stream()
                 .map(account -> (HtmlTag) HtmlTableRow.row(
                         HtmlDataCell.cell(account.getName()),
@@ -45,16 +42,12 @@ public class HtmlReport implements Report
                 ))
                 .toList();
 
-        report.replace(
-                "account",
-                HtmlCompound.compound(bankAccountTable));
-        report.replace(
-                "transactions", transactions(user, bankAccounts));
+        report.replace("account", HtmlCompound.compound(bankAccountTable));
+        report.replace("transactions", transactions(user, bankAccounts));
 
         try {
             Files.writeString(this.file.toPath(), report.build());
-        } catch (
-                IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -66,10 +59,7 @@ public class HtmlReport implements Report
 
     private HtmlCompound transactions(User user, List<BankAccount> accounts)
     {
-        List<HtmlTag> tags
-                =
-                new ArrayList<>();
-
+        List<HtmlTag> tags = new ArrayList<>();
 
         for (BankAccount account : accounts) {
             tags.add(HtmlTableRow.row(
@@ -79,8 +69,7 @@ public class HtmlReport implements Report
                     HtmlDataCell.head(Localization.getInstance().getMessage("report_money"))
             ));
 
-            var list =
-                    DatabaseProvider.getTransactionService().getTransactions(user, account, 100, 0).stream()
+            var list = DatabaseProvider.getTransactionService().getTransactions(user, account, 100, 0).stream()
                             .map(x -> (HtmlTag) HtmlTableRow.row(
                                     HtmlDataCell.cell(""),
                                     HtmlDataCell.cell(Localization.getInstance().formatInstant(x.getCreated())),

@@ -41,8 +41,7 @@ public class SqlBackend
     public <T> Collection<T> query(Class<T> modelClass, @Language("sql") String sqlCommand, PreparedStatementConsumer preparedStatementConsumer)
         throws SQLException, DatabaseException
     {
-        var adapter =
-            findAdapter(modelClass);
+        var adapter = findAdapter(modelClass);
 
         try (var query = constructPreparedStatement(sqlCommand, preparedStatementConsumer))
             {
@@ -86,8 +85,7 @@ public class SqlBackend
         "unchecked")
     private <T> SqlDataAdapter<T> findAdapter(Class<T> modelClass) throws DatabaseException
     {
-        var adapter =
-            (SqlDataAdapter<T>) adapters.get(modelClass);
+        var adapter = (SqlDataAdapter<T>) adapters.get(modelClass);
 
         if (adapter == null)
             {

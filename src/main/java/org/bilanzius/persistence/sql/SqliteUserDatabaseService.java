@@ -16,8 +16,7 @@ public class SqliteUserDatabaseService implements UserService
 
     SqliteUserDatabaseService(SqlBackend backend) throws SQLException
     {
-        this.backend =
-                backend;
+        this.backend = backend;
         this.backend.registerAdapter(User.class, new SqlUserAdapter());
 
         this.createSchema();
@@ -44,8 +43,7 @@ public class SqliteUserDatabaseService implements UserService
                 stmt.setString(1, user.getUsername());
                 stmt.setString(2, user.getHashedPassword().getPassword());
             });
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -57,8 +55,7 @@ public class SqliteUserDatabaseService implements UserService
             return backend.query(User.class, "SELECT * FROM users WHERE id = ?", stmt -> stmt.setLong(1, id))
                     .stream()
                     .findFirst();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -74,8 +71,7 @@ public class SqliteUserDatabaseService implements UserService
                     })
                     .stream()
                     .findFirst();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -86,8 +82,7 @@ public class SqliteUserDatabaseService implements UserService
         try {
             return backend.query(User.class, "SELECT * FROM users WHERE user = ?",
                     stmt -> stmt.setString(1, username)).stream().findFirst();
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -105,8 +100,7 @@ public class SqliteUserDatabaseService implements UserService
                 stmt.setString(1, user.getHashedPassword().getPassword());
                 stmt.setInt(2, user.getId());
             });
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }
@@ -124,8 +118,7 @@ public class SqliteUserDatabaseService implements UserService
                 stmt.setInt(1, user.getMainBankAccountId());
                 stmt.setInt(2, user.getId());
             });
-        } catch (
-                SQLException ex) {
+        } catch (SQLException ex) {
             throw new DatabaseException(ex);
         }
     }

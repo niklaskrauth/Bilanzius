@@ -12,10 +12,8 @@ public class CLIContext implements IOContext
 
     public CLIContext(Scanner scanner, Localization localization)
     {
-        this.scanner =
-                scanner;
-        this.localization =
-                localization;
+        this.scanner = scanner;
+        this.localization = localization;
     }
 
     @Override
@@ -23,8 +21,7 @@ public class CLIContext implements IOContext
     {
         do {
             System.out.print(question.question() + (question.defaultValue() == null || question.defaultValue().isBlank() ? " " : " [" + question.defaultValue() + "] "));
-            String input =
-                    scanner.nextLine();
+            String input = scanner.nextLine();
 
             if (input.isBlank()) {
                 input = question.defaultValue();
@@ -33,8 +30,7 @@ public class CLIContext implements IOContext
             try {
                 question.validator().validate(input);
                 return input;
-            } catch (
-                    QuestionException ex) {
+            } catch (QuestionException ex) {
                 System.out.println(ex.getMessage());
             }
         } while (question.repeatUntilValid());
@@ -65,7 +61,6 @@ public class CLIContext implements IOContext
     @Override
     public void lineSeperator()
     {
-        printLocalized(
-                "line_splitter");
+        printLocalized("line_splitter");
     }
 }

@@ -7,10 +7,7 @@ public class BankAccount
 
     public static BankAccount create(User user, String name)
     {
-        return new BankAccount(
-                0,
-                user.getId(), name, new BigDecimal("0.0")
-        );
+        return new BankAccount(0, user.getId(), name, new BigDecimal("0.0"));
     }
 
     private final int accountId;
@@ -20,12 +17,10 @@ public class BankAccount
 
     public BankAccount(int accountId, int userId, String name, BigDecimal balance)
     {
-        this.accountId =
-                accountId;
+        this.accountId = accountId;
         this.userId = userId;
         this.name = name;
-        this.balance =
-                balance;
+        this.balance = balance;
     }
 
     public int getAccountId()
@@ -55,8 +50,7 @@ public class BankAccount
 
     public void setBalance(BigDecimal balance)
     {
-        this.balance =
-                balance;
+        this.balance = balance;
     }
 
     @Override

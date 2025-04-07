@@ -25,8 +25,7 @@ public class HtmlGenerator
 
     public HtmlGenerator html(String htmlCode)
     {
-        this.htmlCode =
-                htmlCode;
+        this.htmlCode = htmlCode;
         return this;
     }
 
@@ -34,18 +33,15 @@ public class HtmlGenerator
     {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-        var url =
-                classloader.getResource(name);
+        var url = classloader.getResource(name);
 
         if (url == null) {
             throw new IllegalStateException("URL is null");
         }
 
         try {
-            var path =
-                    Paths.get(url.toURI());
-            var content =
-                    Files.readString(path, StandardCharsets.UTF_8);
+            var path = Paths.get(url.toURI());
+            var content = Files.readString(path, StandardCharsets.UTF_8);
 
             return html(content);
         } catch (Exception ex) {
@@ -65,12 +61,9 @@ public class HtmlGenerator
             throw new RuntimeException("HTML code is null.");
         }
 
-        var result =
-                this.htmlCode;
-        result =
-                insertHtmlTags(result);
-        result =
-                replaceLanguageKeys(result);
+        var result = this.htmlCode;
+        result = insertHtmlTags(result);
+        result = replaceLanguageKeys(result);
 
         return result;
     }
@@ -86,8 +79,7 @@ public class HtmlGenerator
 
     private String replaceLanguageKeys(String input)
     {
-        for (String s :
-                Localization.getInstance().keySet()) {
+        for (String s : Localization.getInstance().keySet()) {
             input = input.replace("[" + s + "]", Localization.getInstance().getMessage(s));
         }
         return input;
