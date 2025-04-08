@@ -11,10 +11,12 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-class SqliteCategoryServiceTest extends SqlTest {
+class SqliteCategoryServiceTest extends SqlTest
+{
 
     @Test
-    void testCreateAndDeleteCategory() {
+    void testCreateAndDeleteCategory()
+    {
         var service = categoryService();
         service.createCategory(Category.create(ModelUtils.existingUser(), "category", BigDecimal.ZERO));
 
@@ -25,7 +27,8 @@ class SqliteCategoryServiceTest extends SqlTest {
     }
 
     @Test
-    void testGetCategoryByUser() {
+    void testGetCategoryByUser()
+    {
         var service = categoryService();
         service.createCategory(Category.create(ModelUtils.existingUser(), "category", BigDecimal.ZERO));
 
@@ -34,7 +37,8 @@ class SqliteCategoryServiceTest extends SqlTest {
     }
 
     @Test
-    void testUpdateCategory() {
+    void testUpdateCategory()
+    {
         var service = categoryService();
         service.createCategory(Category.create(ModelUtils.existingUser(), "category", BigDecimal.ZERO));
 
@@ -53,7 +57,8 @@ class SqliteCategoryServiceTest extends SqlTest {
     }
 
     @Test
-    void testDatabaseExceptionIfNoDatabaseConnection() throws SQLException {
+    void testDatabaseExceptionIfNoDatabaseConnection() throws SQLException
+    {
         // Simulate connection lost
         var service = categoryService();
         this.sqlBackend.close();
@@ -67,12 +72,15 @@ class SqliteCategoryServiceTest extends SqlTest {
         Assertions.assertThrows(DatabaseException.class, () -> service.getExceededCategoriesOfUser(ModelUtils.existingUser(), 1));
     }
 
-    private CategoryService categoryService() {
-        try {
-            var backend = requestBackend();
-            return new SqliteCategoryService(backend);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+    private CategoryService categoryService()
+    {
+        try
+            {
+                var backend = requestBackend();
+                return new SqliteCategoryService(backend);
+            } catch (SQLException ex)
+            {
+                throw new RuntimeException(ex);
+            }
     }
 }

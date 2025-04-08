@@ -1,0 +1,98 @@
+\documentclass{article}
+
+\usepackage[german]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+\definecolor{yellouw}{rgb}{0.62,0.53334,0.050}
+\definecolor{keywordcolor}{rgb}{0.0, 0.33, 0.84}  % Blauton für Keywords
+\definecolor{stringcolor}{rgb}{0.2, 0.7, 0.2}  % Grünton für Strings
+\definecolor{commentcolor}{rgb}{0.5, 0.5, 0.5}  % Grauton für Kommentare
+\newcommand{\CodeSymbol}[1]{\textcolor{red}{#1}}
+\definecolor{pred}{rgb}{0.9,0.3,0.3}
+
+\lstdefinestyle{codeStyle}{
+    backgroundcolor=\color{backcolour},
+    numberstyle=\tiny\color{codegray},
+     basicstyle=\ttfamily\footnotesize,
+    columns=fullflexible,
+    framexleftmargin=15pt,
+    texcl=true,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=10pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    literate={\{}{{\CodeSymbol{\{}}}1
+                  {\}}{{\CodeSymbol{\}}}}1
+                  {>}{{\CodeSymbol{$>$}}}1
+                  {\.}{{\CodeSymbol{.}}}1
+                  {;}{{\CodeSymbol{$;$}}}1,
+    moredelim=[il][\textcolor{yellouw}@\textcolor{yellouw}]{@},
+    tabsize=2,
+    keywordstyle=\color{keywordcolor}\bfseries,  % Stil für Keywords
+    stringstyle=\color{pred},  % Stil für Strings
+    commentstyle=\color{stringcolor}\itshape,  % Stil für Kommentare
+    morekeywords={abstract, continue, for, new, switch, assert, default, goto, package,
+    synchronized, boolean, do, if, private, this, break, double, implements,
+    protected, throw, byte, else, import, public, throws, case, enum,
+    instanceof, return, transient, catch, extends, int, short, try, char,
+    final, interface, static, void, class, finally, long, strictfp, volatile,
+    const, float, native, super, while, var},  % Erweiterte Keyword-Liste
+}
+% TODO: header
+\title{Programmentwurf – Protokoll}
+
+\begin{document}
+
+
+\begin{titlepage}
+\begin{center}
+\vspace*{-2cm}
+\hfill\includegraphics[width=4cm]{dhbw-logo.png}\\[2cm]
+{\Huge Advanced Software Engineering}\\[1cm]
+{\Huge\scshape Programmentwurf - Protokoll}\\[1cm]
+{\large von}\\[0.5cm]
+\todo{Namen + Matrikelnummern einfügen}
+{\large\bfseries Vorname Nachname (123456)}\\[0.5cm]
+{\large\bfseries Vorname Nachname (123456)}\\[0.5cm]
+{\large\bfseries Vorname Nachname (123456)}\\[1.5cm]
+
+{\large Abgabedatum 04. Mai 2025}
+\vfill
+\end{center}
+\end{titlepage}
+
+\definecolor{sickblue}{RGB}{52, 101, 204}
+\newcommand{\task}[1]{\textit{\textcolor{sickblue}{[#1]}\newline\newline}}
+
+{
+  \hypersetup{linkcolor=black}
+  \tableofcontents
+}
+\include{kapitel1_einfuehrung/kapitel}
+\include{kapitel2_architektur/kapitel}
+\include{kapitel3_solid/kapitel}
+\include{kapitel4_other_principals/kapitel}
+\include{kapitel5_unit_tests/kapitel}
+\include{kapitel6_ddd/kapitel}
+\include{kapitel7_refactoring/kapitel}
+\include{kapitel8_entwurfsmuster/kapitel}
+
+\end{document}

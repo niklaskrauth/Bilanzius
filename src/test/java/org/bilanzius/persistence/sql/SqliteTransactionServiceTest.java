@@ -12,10 +12,12 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.Instant;
 
-public class SqliteTransactionServiceTest extends SqlTest {
+class SqliteTransactionServiceTest extends SqlTest
+{
 
     @Test
-    void testCreateTransaction() {
+    void testCreateTransaction()
+    {
         var service = transactionService();
         service.saveTransaction(new Transaction(1, 1, 1, 1, BigDecimal.ZERO, Instant.now(), "1234"));
         service.saveTransaction(new Transaction(1, 1, 1, -1, BigDecimal.ZERO, Instant.now(), "1234"));
@@ -25,14 +27,16 @@ public class SqliteTransactionServiceTest extends SqlTest {
     }
 
     @Test
-    void testCreateTransactionInvalidUser() {
+    void testCreateTransactionInvalidUser()
+    {
         var service = transactionService();
 
         Assertions.assertThrows(DatabaseException.class, () -> service.saveTransaction(new Transaction(1, 5, 1, 1, BigDecimal.ZERO, Instant.now(), "1234")));
     }
 
     @Test
-    void testDatabaseExceptionIfNoDatabaseConnection() throws SQLException {
+    void testDatabaseExceptionIfNoDatabaseConnection() throws SQLException
+    {
         // Simulate connection lost
         var service = transactionService();
         this.sqlBackend.close();
@@ -41,12 +45,15 @@ public class SqliteTransactionServiceTest extends SqlTest {
         Assertions.assertThrows(DatabaseException.class, () -> service.getTransactions(ModelUtils.existingUser(), ModelUtils.existingBankAccount(), 10, 0));
     }
 
-    private SqliteTransactionService transactionService() {
-        try {
-            var backend = requestBackend();
-            return new SqliteTransactionService(backend, new MockedBankAccountService());
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+    private SqliteTransactionService transactionService()
+    {
+        try
+            {
+                var backend = requestBackend();
+                return new SqliteTransactionService(backend, new MockedBankAccountService());
+            } catch (SQLException ex)
+            {
+                throw new RuntimeException(ex);
+            }
     }
 }
