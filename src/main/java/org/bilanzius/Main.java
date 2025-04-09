@@ -2,7 +2,7 @@ package org.bilanzius;
 
 import org.bilanzius.cli.CLIContext;
 import org.bilanzius.cli.IOContext;
-import org.bilanzius.commandController.CommandController;
+import org.bilanzius.commands.CommandController;
 import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.DatabaseProvider;
 import org.bilanzius.persistence.UserService;

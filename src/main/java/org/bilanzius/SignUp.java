@@ -184,7 +184,6 @@ public class SignUp
 
     public Optional<BankAccount> waitUntilBankAccountSelect(Scanner scanner, User user)
     {
-
         List<BankAccount> bankAccounts;
         Optional<BankAccount> bankAccount;
         BankAccount createdBankAccount;
