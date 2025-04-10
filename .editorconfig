@@ -8,7 +8,6 @@ indent_style = space
 insert_final_newline = false
 max_line_length = 80
 tab_width = 4
-ij_java_block_brace_style = gnu
 ij_java_class_brace_style = next_line
 ij_java_method_brace_style = next_line
 ij_java_lambda_brace_style = next_line
