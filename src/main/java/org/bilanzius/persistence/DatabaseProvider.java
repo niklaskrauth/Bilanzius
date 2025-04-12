@@ -3,35 +3,35 @@ package org.bilanzius.persistence;
 public class DatabaseProvider
 {
 
-    private static DatabaseServiceRepository repository;
+    private static DatabaseService databaseService;
 
-    public static void init(DatabaseServiceRepository repository)
+    public static void init(DatabaseService repository)
     {
-        if (DatabaseProvider.repository != null) {
+        if (DatabaseProvider.databaseService != null) {
             throw new IllegalStateException("DatabaseProvider was already initialized.");
         }
 
-        DatabaseProvider.repository = repository;
+        DatabaseProvider.databaseService = repository;
     }
 
     public static UserService getUserService()
     {
-        return DatabaseProvider.repository.getUserService();
+        return DatabaseProvider.databaseService.getUserService();
     }
 
     public static TransactionService getTransactionService()
     {
-        return DatabaseProvider.repository.getTransactionService();
+        return DatabaseProvider.databaseService.getTransactionService();
     }
 
     public static BankAccountService getBankAccountService()
     {
-        return DatabaseProvider.repository.getBankAccountService();
+        return DatabaseProvider.databaseService.getBankAccountService();
     }
 
     public static CategoryService getCategoryService()
     {
-        return DatabaseProvider.repository.getCategoryService();
+        return DatabaseProvider.databaseService.getCategoryService();
     }
 
     private DatabaseProvider()

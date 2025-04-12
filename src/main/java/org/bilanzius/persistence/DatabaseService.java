@@ -1,6 +1,6 @@
 package org.bilanzius.persistence;
 
-public interface DatabaseServiceRepository
+public interface DatabaseService
 {
 
     UserService getUserService();

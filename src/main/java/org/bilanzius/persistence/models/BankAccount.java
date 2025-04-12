@@ -57,12 +57,12 @@ public class BankAccount
     public String toString()
     {
         return "Account{ " +
-                "accountId" +
-                "=" + accountId +
-                ", userId=" + userId +
-                ", name='" + name + '\'' +
-                ", balance" +
-                "=" + balance +
-                '}';
+            "accountId" +
+            "=" + accountId +
+            ", userId=" + userId +
+            ", name='" + name + '\'' +
+            ", balance" +
+            "=" + balance +
+            '}';
     }
 }
