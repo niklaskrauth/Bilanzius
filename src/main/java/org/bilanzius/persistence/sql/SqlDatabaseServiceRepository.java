@@ -4,7 +4,7 @@ import org.bilanzius.persistence.*;
 
 import java.sql.SQLException;
 
-public class SqlDatabaseServiceRepository implements DatabaseServiceRepository
+public class SqlDatabaseServiceRepository implements DatabaseService
 {
 
     private final UserService userService;
