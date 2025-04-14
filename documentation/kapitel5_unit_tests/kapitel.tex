@@ -69,14 +69,30 @@ Als Framework für die automatisierten Tests wird JUnit verwendet. Das Maven Sur
     \item \textbf{Thorough}\newline 
 Es werden Unit und Integrationstests verwendet. Da als Datenbank SQLite eingesetzt wird und die Datenbank dadurch lokal läuft, wird im Code selbst nicht zwischen Unit und Integrationstests unterschieden.  
 
-Die Testabdeckung ist mit 19\% nicht hoch, wobei der Datenbank-Layer mit einer Abdeckung von über 95\% höher ist als der Rest. Die einzelnen Befehle werden aktuell nicht automatisiert getestet, dies liegt an dem hohen Aufwand  
-
+Die Testabdeckung liegt derzeit bei lediglich 22\% und ist somit nicht besonders hoch. Auffällig ist dabei, dass der Datenbank-Layer mit einer Abdeckung von über 95\% deutlich besser getestet ist als andere Komponenten. Derzeit werden nur einzelne Befehle automatisiert getestet, was vor allem dem hohen Implementierungsaufwand geschuldet ist. Dieser entsteht insbesondere dadurch, dass für die Tests Datenbank-Services gemockt werden müssen.
  
     \item \textbf{Professional}\newline 
-
+Unsere automatisierten Softwaretests sind professionell, da diese einer klaren Struktur folgen: Die zu einer Klasse gehörenden Tests befinden sich immer in der entsprechenden Datei Namens \textit{[domain.package.Example]Test}. Die Tests sind sinnvoll benannt und testen immer nur einen Pfad einer Funktionalität. Der Testcode folgt den allgemeinen Regeln zu Clean Code.
 \end{itemize}
 
 
 \subsection{Fakes und Mocks (4P)}
 \task{Analyse und Begründung des Einsatzes von 2 Fake/Mock-Objekten (die Fake/Mocks sind ohne 
 Dritthersteller-Bibliothek/Framework zu implementieren); zusätzlich jeweils UML Diagramm mit Beziehungen zwischen Mock, zu mockender Klasse und Aufrufer des Mocks}
+
+\subsubsection*{CategoryService Mock}
+\lstinputlisting[language=Java,style=codeStyle]{kapitel5_unit_tests/mock/mock1.java}
+In diesem Unit Test wird der Create Category Command getestet. Um nicht die Datenbanklogik testen zu müssen wird ein Mock Objekt eingesetzt. Der MockedCategoryService ist eine Implementierung des CategoryService Interface.  
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{kapitel5_unit_tests/mock1.drawio.png}
+\end{figure}
+\newpage
+\subsubsection*{BankAccountService Mock}
+\lstinputlisting[language=Java,style=codeStyle]{kapitel5_unit_tests/mock/mock2.java}
+In den Tests der Klasse \textit{SqliteTransactionServiceTest} wird der TransactionService getestet. Dieser benötigt als Abhängigkeit einen BankAccount Service. Da dieser nicht mitgetestet werden soll wird der BankAccount Service gemockt.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{kapitel5_unit_tests/mock2.drawio.png}
+\end{figure}
