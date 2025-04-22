@@ -4,11 +4,11 @@
 \task{jeweils eine Klasse als positives und negatives Beispiel für SRP; jeweils UML und Beschreibung der Aufgabe bzw. der Aufgaben und möglicher Lösungsweg des Negativ-Beispiels (inkl. UML)}
 
 \subsubsection*{Positiv-Beispiel}
-\includegraphics[width=\linewidth]{kapitel3_solid/SignUp.png}
+\includegraphics[width=\linewidth]{kapitel3_solid/BankAccountRestController.png}
 Der BankAccountRestController ist eine Klasse, welche die CRUD-Endpunkte für die Bankkonten anbietet.
 
 \subsubsection*{Negativ-Beispiel}
-\includegraphics[width=\linewidth]{kapitel3_solid/BankAccountRestController.png}
+\includegraphics[width=\linewidth]{kapitel3_solid/SignUp.png}
 Die SingUp-Klasse ist für das Anmelden und Registrieren eines Benutzers vor dem Programm dar. Dadurch das die Methoden waitUntilLoggedIn() sowie waitUntilBankAccountIsSelect() eher weniger mit dem Anmelden zu tun haben, müsste man diese in eine neue Klasse wie zum Beispiel WaitUntil extrahieren.
 
 
