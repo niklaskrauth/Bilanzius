@@ -15,7 +15,7 @@ Der Code Smell wurde gelöst, indem die Methode \textit{convertCurrency(String c
 \lstinputlisting[language=Java,style=codeStyle]{kapitel7_refactoring/codesmell3.java}
 
 \subsubsection*{Lösung}
-\todo{Erklären was gemacht wurde und warum es gemacht wurde. Warum ist da jetzt gefühlt 7x mehr Code, was bringt das?}
+Dadurch das bei weiteren Commands das Switch-Statement komplexer geworden wäre, wurde es durch eine Hash-Map ersetzt für mehr flexibilität. Dazu wurde nun auch der Code für die Commands in eigene Klassen ausgelagert. Das hat generll auch zu einer verbesserten lesbarkeit gewirkt.
 \lstinputlisting[language=Java,style=codeStyle]{kapitel7_refactoring/codesmell4.java}
 \newpage
 \subsection{2 Refactorings (6P)}
@@ -24,7 +24,7 @@ Der Code Smell wurde gelöst, indem die Methode \textit{convertCurrency(String c
 \subsubsection*{Refactoring 1: Replace Error Code with Exceptions \textit{main/Commit 2cc1fce}} 
 Alle Methoden von UserService werfen eine DatabaseException die nicht abgefangen wurde. Daher wurden try-catch-Block um die jeweiligen Methoden hinzugefügt. \todo{UML? Vergleich zu vorher, bzw. was war der Error Code?}
 \subsubsection*{Refactoring 2: Rename Methods \textit{main/Commit d3be454}}
-Die Methode login() in der Klasse SignUp wurde zu waitUntilLoggedIn() umbennant da in der Methode gerwartet wird bis der Benutzter eingeloggt ist und daraufhin dann entscheidet. 
+Die Methode login() in der Klasse SignUp wurde zu waitUntilLoggedIn() umbenannt da in der Methode erwartet wird bis der Benutzter eingeloggt ist und daraufhin dann entscheidet.
 \newline\newline
 \includegraphics[width=\linewidth]{kapitel7_refactoring/Refactor2.png}
  
