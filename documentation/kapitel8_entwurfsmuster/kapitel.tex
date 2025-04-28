@@ -23,32 +23,33 @@ Die \texttt{Localization}-Klasse wird einmalig instanziiert und stellt eine glob
     {kapitel8_entwurfsmuster/UMLs/localizaition.drawio.png}
 \end{figure}
 
-\subsection{Entwurfsmuster: Strategy (Verhaltensmuster) (4P)}
+\subsection{Entwurfsmuster: Factory/Builder (Erzeugungsmuster) (4P)}
 
-\textbf{Einsatz im Projekt:} Datenbankdienste wie \texttt{BankAccountService} \& \texttt{SqliteBankAccountService}
+\textbf{Bezeichnung:} Factory / Builder (statische Factorymethode) \\
+\textbf{Einsatz im Projekt:} Klassen wie \texttt{BankAccount}, \texttt{Transaction}, \texttt{User} (z.\,B. \texttt{BankAccount.create()})
 
 \subsection*{Sinnvoller Einsatz}
-Im \texttt{DatabaseProvider} wird zur Laufzeit entschieden, welche konkrete Datenbankimplementierung (\texttt{SqliteBankAccountService}, \texttt{SqliteCategoryService} usw.) verwendet wird. Dies erfolgt über das Interface \texttt{BankAccountService}, \texttt{CategoryService}, etc.
+Objekte wie Bankkonten oder Transaktionen sollen immer im konsistenten Zustand erstellt werden.
+Statt viele verschiedene Konstruktoren zu nutzen, wird eine kontrollierte \texttt{create()}-Methode verwendet.
+Dadurch wird die Instanziierung vereinfacht und typische Fehler bei der Objekterstellung werden vermieden.
 
-\subsubsection*{DatabaseProvider:}
+
+\subsection*{Codebeispiel: Statische Factory-Methode \texttt{create()}}
 \lstinputlisting[
-    language=Java,style=codeStyle]{kapitel8_entwurfsmuster/code/dbprovider.java}
+    language=Java,style=codeStyle]{kapitel8_entwurfsmuster/code/BankAccount.java}
 
-\subsubsection*{BankAccountService:}
-\lstinputlisting[
-    language=Java,style=codeStyle]{kapitel8_entwurfsmuster/code/accountService.java}
-
-
-\subsection*{Begründung}
-\begin{enumerate}
-    \item Flexible Austauschbarkeit von Algorithmen (hier: DB-Strategien)
-    \item Gute Erweiterbarkeit
-    \item Unterstützung von losen Kopplungen und Testbarkeit
-\end{enumerate}
 
 \subsection*{UML-Diagramm}
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]
-    {kapitel8_entwurfsmuster/UMLs/db.drawio1.png}
+    \includegraphics[width=0.6\linewidth]
+    {kapitel8_entwurfsmuster/UMLs/BankAccount.drawio.png}
 \end{figure}
+
+\subsection*{Begründung}
+\begin{itemize}
+    \item Einheitliche Instanziierung über statische Fabrikmethoden
+    \item Vermeidung fehleranfälliger Konstruktoraufrufe mit falschen Parametern
+    \item Möglichkeit zur Vorbelegung von Standardwerten (z.\,B. \texttt{balance = 0})
+    \item Erhöhte Lesbarkeit und Wartbarkeit
+\end{itemize}
