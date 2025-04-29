@@ -32,6 +32,10 @@ Wir haben uns für dieses Schichtenmodell entschieden, weil es:
 \end{itemize}
 
 \subsubsection*{UML-Diagramm}
+
+Das UML zeigt einen Ausschnitt der Klassen und ihre Einteilung zu den drei Schichten.
+Zur verbesserten Übersicht sind nicht alle Klassen und Interfaces aufgeführt, da dies zu groß wäre, um noch was zu erkennen zu können.
+
 \includegraphics[width=\linewidth]{kapitel2_architektur/Softwarearchitekturen.drawio.png}
 
 
@@ -78,5 +82,6 @@ Dadurch verletzt \texttt{SignUp} die Dependency Rule gleich mehrfach:
 \end{itemize}
 
 Hier hängt die fachlich zentrale Klasse direkt von mehreren äußeren Schichten ab – Verletzung der Clean Architecture Grundsätze.
+\newline
 
 \includegraphics[width=\linewidth]{kapitel2_architektur/DepRulNeg.png}
