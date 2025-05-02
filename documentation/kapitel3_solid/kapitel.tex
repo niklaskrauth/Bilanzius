@@ -79,7 +79,7 @@ Die Schnittstelle \texttt{BankAccountService} definiert ausschließlich Methoden
 \textbf{UML}
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.65\linewidth]{kapitel3_solid/ISP_positive_BankAccountService.drawio.png}
+    \includegraphics[width=0.65\linewidth]{kapitel3_solid/ISP_pos_bankaccount.drawio.png}
 \end{figure}
 
 \subsubsection*{Negativ-Beispiel}
@@ -95,7 +95,7 @@ Das wirkt erstmal schlank, aber: In der Praxis gibt es viele Commands, die keine
 \textbf{UML - Ist-Zustand}\newline
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{kapitel3_solid/ISP_negative_Command.drawio.png}
+    \includegraphics[width=\linewidth]{kapitel3_solid/ISP_neg_Command2.drawio.png}
 \end{figure}
 \newline
 \textbf{Verbesserungsvorschlag}\newline
@@ -105,5 +105,5 @@ Dann können z.B. \texttt{HelpCommand} und \texttt{ExitCommand} \texttt{SimpleCo
 \textbf{UML Verbesserung}
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{kapitel3_solid/ISP_negative_BetterCommand.drawio.png}
+    \includegraphics[width=\linewidth]{kapitel3_solid/ISP_neg_betterCommand2.drawio.png}
 \end{figure}
