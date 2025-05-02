@@ -30,8 +30,7 @@ public class Main
     {
         try {
             bootstrap();
-        } catch (
-            SQLException | RuntimeException ex) {
+        } catch (SQLException | RuntimeException ex) {
             ex.printStackTrace();
         }
     }
@@ -56,7 +55,6 @@ public class Main
         mainRestController.start();
 
         while (true) {
-
             user = signUp.waitUntilLoggedIn(context);
             context.lineSeperator();
 

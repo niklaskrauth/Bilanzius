@@ -2,7 +2,6 @@ package org.bilanzius.persistence.sql;
 
 import org.bilanzius.persistence.DatabaseException;
 import org.bilanzius.persistence.sql.adapter.SqlDataAdapter;
-import org.intellij.lang.annotations.Language;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -38,7 +37,7 @@ public class SqlBackend
         adapters.put(modelClass, adapter);
     }
 
-    public <T> Collection<T> query(Class<T> modelClass, @Language("sql") String sqlCommand, PreparedStatementConsumer preparedStatementConsumer)
+    public <T> Collection<T> query(Class<T> modelClass, String sqlCommand, PreparedStatementConsumer preparedStatementConsumer)
         throws SQLException, DatabaseException
     {
         var adapter = findAdapter(modelClass);
@@ -57,7 +56,7 @@ public class SqlBackend
             }
     }
 
-    public void execute(@Language("sql") String sqlCommand) throws SQLException
+    public void execute(String sqlCommand) throws SQLException
     {
         execute(sqlCommand,
             stmt ->
@@ -65,7 +64,7 @@ public class SqlBackend
             });
     }
 
-    public void execute(@Language("sql") String sqlCommand, PreparedStatementConsumer preparedStatementConsumer) throws SQLException
+    public void execute(String sqlCommand, PreparedStatementConsumer preparedStatementConsumer) throws SQLException
     {
         try (var statement = constructPreparedStatement(sqlCommand, preparedStatementConsumer))
             {
@@ -73,7 +72,7 @@ public class SqlBackend
             }
     }
 
-    private PreparedStatement constructPreparedStatement(@Language("sql") String sqlCommand,
+    private PreparedStatement constructPreparedStatement(String sqlCommand,
                                                          PreparedStatementConsumer preparedStatementConsumer) throws SQLException
     {
         var query = connection.prepareStatement(sqlCommand);

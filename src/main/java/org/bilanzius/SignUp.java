@@ -86,8 +86,8 @@ public class SignUp
     public Optional<User> tryLogin(IOContext context)
     {
         var username = context.askUser(Question.create()
-                .question(localization.getMessage("username"))
-                .build());
+            .question(localization.getMessage("username"))
+            .build());
 
         Optional<User> userOptional;
         User user;
@@ -107,10 +107,10 @@ public class SignUp
 
         user = userOptional.get();
         var password = context.askUser(Question.create()
-                .question(localization.getMessage("password"))
-                .build());
+            .question(localization.getMessage("password"))
+            .build());
 
-        if (!fromPlainText(password).equals(user.getHashedPassword())) {
+        if (password == null || !fromPlainText(password).equals(user.getHashedPassword())) {
             context.printLocalized("wrongPassword");
             return Optional.empty();
         }
@@ -123,15 +123,10 @@ public class SignUp
 
     public Optional<User> register(IOContext context)
     {
-        Boolean userExists = null; //
-        // null = not
-        // existing (wrong
-        // inputs), true =
-        // already exists
-        // in DB, false =
-        // does not exist
-        // in DB and inputs
-        // are correct
+        Boolean userExists = null;
+        // null = not existing (wrong inputs),
+        // true = already exists in DB,
+        // false = does not exist in DB and inputs are correct
         Optional<User> user = Optional.empty();
         Optional<User> foundUser;
         User newUser;
