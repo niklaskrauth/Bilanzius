@@ -1,5 +1,8 @@
 # Informationen zur Entwicklung von Bilanzius
 
+### Protokoll
+Das Protokoll zum Programmentwurf befindet sich in der README.pdf.
+
 ### Architketur
 
 Main <-> CommandController <-> Command1 / Command2 / ... <-> Andere Services / ...
